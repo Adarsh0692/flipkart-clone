@@ -1,0 +1,50 @@
+.main{
+    display: flex;
+    height: 60vh;
+    margin: 20px 0;
+    padding: 0 10px;
+    /* box-shadow: 0 0 1px 0 ; */
+   
+}
+.left{
+    /* border: 1px solid red; */
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    text-align: center;
+    background-color: white;
+   
+}
+.left span{
+    font-size: 2rem;
+    word-spacing: 10px;
+    font-weight: 300;
+}
+.right{
+    /* border: 1px solid red; */
+    width: 80%;
+    background-color: white;
+    overflow-x: hidden;
+    overflow: scroll;
+    display: flex;
+}
+.right::-webkit-scrollbar {
+    display: none;
+}
+.box{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 15px;
+    
+}
+.box span{
+    margin: 8px 0;
+}
+.box img{
+    height: 150px;
+    margin: 20px 0;
+}

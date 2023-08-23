@@ -1,0 +1,24 @@
+.category{
+    display: flex;
+    text-align: center;
+    justify-content: space-around;
+    background-color: white;
+    padding: 1rem;
+   
+    box-shadow: 0 0 1.5px 0 ;
+}
+
+.img{
+    height: 70px;
+    
+}
+.categoryDiv{
+    cursor: pointer;
+   
+}
+.category p{
+    font-weight: 500;
+}
+.categoryDiv:hover{
+    color: #1976D2
+}

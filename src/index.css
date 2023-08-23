@@ -1,13 +1,26 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+input[type="text"]:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: #aaa; /* Change border color when focused */
+    box-shadow: none; /* Remove any box shadow when focused */
+}
+span{
+    font-size: 17px;
+}
+body{
+    background-color: #F1F3F6;
+    /* overflow-x: hidden; */
+}
+.carousel{
+    padding: 10px 0;
+}
+.carousel img{
+    height: 300px;
+    /* width: 90%; */
 }

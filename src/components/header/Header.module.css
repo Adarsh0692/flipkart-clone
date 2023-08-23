@@ -1,0 +1,33 @@
+.searchInput{
+    height: 2.5rem;
+    width: 30vw;
+    padding: 0 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 3px 0 0 3px;
+
+}
+.logo{
+    cursor: pointer;
+    width: 80px;
+   margin-right: -40px;
+}
+.loginBtn{
+    height: 2rem;
+    width: 10vw;
+    background-color: white;
+    border: none;
+    color: #1976D2;
+    font-weight: bold;
+    font-size: large;
+    border-radius: 3px;
+}
+.searchDiv{
+    display: flex;
+}
+.cart{
+   margin-left: 15px;
+}
+.cartdiv{
+    cursor: pointer;
+}
