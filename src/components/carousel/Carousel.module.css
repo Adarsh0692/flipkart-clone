@@ -3,7 +3,7 @@
     height: 60vh;
     margin: 20px 0;
     padding: 0 10px;
-    /* box-shadow: 0 0 1px 0 ; */
+    position: relative;
    
 }
 .left{
@@ -30,6 +30,9 @@
     overflow-x: hidden;
     overflow: scroll;
     display: flex;
+    scroll-behavior: smooth;
+    position: relative;
+    cursor: pointer;
 }
 .right::-webkit-scrollbar {
     display: none;
@@ -39,12 +42,26 @@
     display: flex;
     flex-direction: column;
     padding: 25px 15px;
-    
+    /* border: 1px solid red; */
+    width: 20vw;
 }
 .box span{
     margin: 8px 0;
 }
 .box img{
     height: 150px;
+    /* width: 400px; */
     margin: 20px 0;
+}
+.box img:hover{
+    transform: scale(1.05);
+}
+.name{
+    font-weight: 500;
+}
+.shop{
+    color: green;
+}
+.allCat{
+    color: rgb(180, 177, 177);
 }

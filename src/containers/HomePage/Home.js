@@ -10,16 +10,16 @@ function Home() {
     <div>
       <CategorySection/>
       <HeroCurusal/>
-      <Carousel for='Best of Electronics' electronicsData={electronicsData}/>
-      <Carousel for='Beauty, Food, Toys & more' electronicsData={electronicsData}/>
-      <Carousel for='Best Quality' electronicsData={electronicsData}/>
-      <Carousel for='Top Rated' electronicsData={electronicsData}/>
-      <Carousel for='Home & Kitchen Essentials' electronicsData={electronicsData}/>
-      <Carousel for='Monsoon Essentials' electronicsData={electronicsData}/>
-      <Carousel for='Sports, Healthcare & more' electronicsData={electronicsData}/>
-      <Carousel for='Discounts for You' electronicsData={electronicsData}/>
-      <Carousel for='Pick Your Styles' electronicsData={electronicsData}/>
-      <Carousel for='Get Set For Sports' electronicsData={electronicsData}/>
+      <Carousel categoryFor='Best of Electronics' data={electronicsData}/>
+      <Carousel categoryFor='Beauty, Food, Toys & more' data={electronicsData}/>
+      <Carousel categoryFor='Best Quality' data={electronicsData}/>
+      <Carousel categoryFor='Top Rated' data={electronicsData}/>
+      <Carousel categoryFor='Home & Kitchen Essentials' data={electronicsData}/>
+      <Carousel categoryFor='Monsoon Essentials' data={electronicsData}/>
+      <Carousel categoryFor='Sports, Healthcare & more' data={electronicsData}/>
+      <Carousel categoryFor='Discounts categoryFor You' data={electronicsData}/>
+      <Carousel categoryFor='Pick Your Styles' data={electronicsData}/>
+      <Carousel categoryFor='Get Set categoryFor Sportsdata' data={electronicsData}/>
     </div>
   )
 }
