@@ -3,6 +3,7 @@
     padding: 0;
     font-family: 'Poppins', sans-serif;
     font-family: 'Roboto', sans-serif;
+    
 }
 
 input[type="text"]:focus {
@@ -10,8 +11,15 @@ input[type="text"]:focus {
     border-color: #aaa; /* Change border color when focused */
     box-shadow: none; /* Remove any box shadow when focused */
 }
+input[type="checkbox"] {
+    width: 15px;
+    height: 20px;
+    /* Add any other styling properties you want */
+    margin-right: 15px;
+    cursor: pointer;
+  }
 span{
-    font-size: 17px;
+    font-size: 15px;
 }
 body{
     background-color: #F1F3F6;

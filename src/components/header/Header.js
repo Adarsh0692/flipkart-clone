@@ -20,27 +20,20 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{padding:'0 5rem'}}>
         <Toolbar
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-around",
+            
           }}
         >
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton> */}
+          
           <Typography
             variant="h6"
             component="div"
@@ -65,6 +58,7 @@ function Header() {
                   height: "2.5rem",
                   width: "2rem",
                   borderRadius: "0 3px 3px 0",
+                  cursor:'pointer'
                 }}
               />
             </div>
