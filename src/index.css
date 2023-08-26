@@ -25,6 +25,10 @@ body{
     background-color: #F1F3F6;
     /* overflow-x: hidden; */
 }
+h1{
+   font-size: 1.2rem;
+   font-weight: 500;
+}
 .carousel{
     padding: 10px 0;
 }

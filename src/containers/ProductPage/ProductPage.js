@@ -7,6 +7,7 @@ import Slider from "@mui/material/Slider";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchIcon from "@mui/icons-material/Search";
+import ProductList from "./ProductList";
 
 function valuetext(value) {
   return `${value}Rs`;
@@ -49,10 +50,11 @@ function ProductPage() {
   const [value, setValue] = useState([100, 10000]);
   const [assuredCheckbox, setAssuredCheckbox] = useState(false);
   const [isBrandShow, setIsBrandShow] = useState(false);
-  const [isRatingShow, setIsRatingShow] = useState(false);
-  const [isDiscountShow, setIsDiscountShow] = useState(false);
+  const [isRatingShow, setIsRatingShow] = useState(true);
+  const [isDiscountShow, setIsDiscountShow] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const [showAllBrands, setShowAllBrands] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('')
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -70,8 +72,8 @@ function ProductPage() {
     const updatedFilters = selectedFilter.filter((filter) => filter != item);
     setSelectedFilter(updatedFilters);
     console.log(updatedFilters);
-    //for remove price filter
 
+    //for remove price filter
     if (item.startsWith("₹")) {
       setValue([100, 10000]);
     }
@@ -139,7 +141,6 @@ function ProductPage() {
   //handle Brands
   function handleBrandFilter(filter) {
     if (!selectedFilter.includes(filter)) {
-     
       setBrands((prevBrands) =>
         prevBrands.map((brand) =>
           brand.value === filter ? { ...brand, checked: true } : brand
@@ -158,6 +159,9 @@ function ProductPage() {
       setSelectedFilter(updatedBrandFilter);
     }
   }
+
+  //handle search brand 
+  const searchBrands = brands.filter(brand => brand.label.toLowerCase().includes(searchQuery.toLowerCase()))
 
   //handle Rating
   function handleRaing(value, label) {
@@ -202,6 +206,35 @@ function ProductPage() {
     }
   }
 
+  //Handle clear All btn
+  function handleClearAllFilters() {
+    setSelectedFilter([]);
+    setValue([100, 10000])
+    setAssuredCheckbox(false);
+
+    //for brand filter
+    const updatedBrands = brands.map(brand => ({...brand, checked: false}))
+      setBrands(updatedBrands)
+       //for rate filter
+    const updatedRate = rating.map(rate => ({...rate, checked: false}))
+      setRating(updatedRate)
+       //for discount filter
+    const updatedDiscount = discount.map(disc => ({...disc, checked: false}))
+      setDiscount(updatedDiscount)
+   
+    //if Brands filter present-
+    // const brandNames = brands.map((brand) => brand.label);
+    // const isBrandFilter = selectedFilter.some((item) =>
+    //   brandNames.includes(item)
+    // );
+    // if (isBrandFilter) {
+    //   const updatedBrands = brands.map(brand => ({...brand, checked: false}))
+    //   setBrands(updatedBrands)
+    // }
+   
+
+  }
+
   return (
     <div className={style.product_main}>
       <div className={style.filterDiv}>
@@ -211,7 +244,7 @@ function ProductPage() {
           <div className={style.clrBtn}>
             <span className={style.filterSpan}>Filters</span>
             {selectedFilter.length > 0 && (
-              <Button onClick={() => setSelectedFilter([])}>Clear all</Button>
+              <Button onClick={handleClearAllFilters}>Clear all</Button>
             )}
           </div>
           <div className={style.filterContainer}>
@@ -229,7 +262,9 @@ function ProductPage() {
           </div>
           {selectedFilter.length > 4 && (
             <div>
-              <Button onClick={() => setShowAll(!showAll)}>{showAll ? "Show Less" : "Show More"}</Button>
+              <Button onClick={() => setShowAll(!showAll)}>
+                {showAll ? "Show Less" : "Show More"}
+              </Button>
             </div>
           )}
         </div>
@@ -291,23 +326,28 @@ function ProductPage() {
               <div className={style.searchDiv}>
                 <SearchIcon sx={{ fontSize: "20px", color: "gray" }} />
 
-                <input type="text" placeholder=" Search Brand" />
+                <input type="text" placeholder=" Search Brand" value={searchQuery} onChange={(e) =>setSearchQuery(e.target.value)} />
               </div>
-              {brands.slice(0, showAllBrands? brands.length: 6).map((brand, i) => (
-                <div key={i} className={style.brandMap}>
-                  <input
-                    type="checkbox"
-                    checked={brand.checked}
-                    onChange={() => handleBrandFilter(brand.value)}
-                  />
-                  <label htmlFor="">{brand.label}</label>
+              {searchBrands
+                .slice(0, showAllBrands ? searchBrands.length : 6)
+                .map((brand, i) => (
+                  <div key={i} className={style.brandMap}>
+                    <input
+                      type="checkbox"
+                      checked={brand.checked}
+                      onChange={() => handleBrandFilter(brand.value)}
+                    />
+                    <label htmlFor="">{brand.label}</label>
+                  </div>
+                ))}
+              {brands.length > 6 && (
+                <div>
+                  <Button onClick={() => setShowAllBrands(!showAllBrands)}>
+                    {showAllBrands ? `show Less` : `${brands.length} more`}
+                  </Button>
                 </div>
-              ))}
-              {brands.length>6 && <div>
-                   <Button onClick={() => setShowAllBrands(!showAllBrands)}>{showAllBrands? `show Less` : `${brands.length} more`}</Button>
-               </div>}
+              )}
             </div>
-            
           )}
         </div>
 
@@ -373,7 +413,9 @@ function ProductPage() {
           )}
         </div>
       </div>
-      <div className={style.productListDiv}></div>
+      <div className={style.productListDiv}>
+        <ProductList/>
+      </div>
     </div>
   );
 }

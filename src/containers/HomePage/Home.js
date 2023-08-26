@@ -17,9 +17,9 @@ function Home() {
       <Carousel categoryFor='Home & Kitchen Essentials' data={electronicsData}/>
       <Carousel categoryFor='Monsoon Essentials' data={electronicsData}/>
       <Carousel categoryFor='Sports, Healthcare & more' data={electronicsData}/>
-      <Carousel categoryFor='Discounts categoryFor You' data={electronicsData}/>
+      <Carousel categoryFor='Discounts category for You' data={electronicsData}/>
       <Carousel categoryFor='Pick Your Styles' data={electronicsData}/>
-      <Carousel categoryFor='Get Set categoryFor Sportsdata' data={electronicsData}/>
+      <Carousel categoryFor='Get Set category for Sportsdata' data={electronicsData}/>
     </div>
   )
 }

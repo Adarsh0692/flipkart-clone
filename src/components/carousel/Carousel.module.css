@@ -58,9 +58,11 @@
 }
 .name{
     font-weight: 500;
+    font-size: 1.2rem;
 }
 .shop{
     color: green;
+    font-size: 1.3rem;
 }
 .allCat{
     color: rgb(180, 177, 177);

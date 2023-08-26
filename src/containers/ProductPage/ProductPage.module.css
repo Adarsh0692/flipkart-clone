@@ -4,31 +4,34 @@
     gap: 10px;
 }
 .filterDiv{
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: white;
-    /* padding: 20px; */
+    /* box-shadow: 0 10px 16px 0 rgba(0,0,0,.11); */
+ 
     width: 23%;
-    /* height: 100vh; */
+    height: auto;
 }
+
 .filterSpan{
     font-size: 23px;
     font-weight: 500;
 }
 .productListDiv{
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,.11);
     background-color: white;
-    /* border: 1px solid red; */
+   
     width: 77%;
     min-height: 100vh;
 }
 .allFilters{
     padding: 15px;
     border-bottom: 1px solid lightgray;
+    background-color: white;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,.11);
 }
 
 .filterContainer{
     display: flex;
     flex-wrap: wrap;
+    
 }
 .curFilter{
     padding: 5px 10px;
@@ -49,12 +52,16 @@
 .priceDiv{
     border-bottom: 1px solid lightgray;
     padding: 15px;
+    background-color: white;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,.11);
 }
 .assured{
     display: flex;
     border-bottom: 1px solid lightgray;
     padding: 20px;
     gap: 20px;
+    background-color: white;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,.11);
 }
 .assured input{
     cursor: pointer;
@@ -66,6 +73,8 @@
 .brandContainer{
     border-bottom: 1px solid lightgray;
     padding: 20px;
+    background-color: white;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,.11);
 }
 .allBrand{
     margin: 15px 0;
@@ -94,4 +103,118 @@
     cursor: pointer;
     /* border: 1px solid red; */
     height: 2rem;
+}
+
+/* Product List style from here */
+
+.productType{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 15px;
+   
+}
+.upperDiv{
+    border-bottom: 1px solid lightgray;
+   
+}
+.productType span{
+    color: gray;
+    font-size: .8rem;
+}
+.sortBy{
+    padding: 0 15px;
+    display: flex;
+    gap: 1.5rem;
+   
+}
+.sortBy span{
+    font-size: 1rem;
+    font-weight: 500;
+}
+.sortBy div{
+    padding-bottom: 5px;
+    cursor: pointer;
+    font-weight: 400;
+}
+.active{
+    color: #2874f0;
+    border-bottom: 3px solid #2874f0; 
+}
+
+.proListDiv{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cart{
+    /* border: 1px solid red; */
+    padding: 16px;
+    width: 16vw;
+    transition: box-shadow .2s ease-in-out;
+    cursor: pointer;
+}
+.cart:hover{
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,.11)
+}
+.imgDiv img{
+   height: 100%;
+   width: 80%;
+   object-fit: contain;
+  
+}
+.imgDiv{
+    /* border: 1px solid red; */
+    text-align: center;
+    height: 60%;
+    position: relative;
+}
+.heart{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+.discp{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.gram{
+    color: gray;
+    font-size: 14px;
+}
+.rateDiv{
+  display: flex;
+ align-items: center;
+ flex-wrap: wrap;
+  gap: 1rem;
+  padding: .5rem 0;
+}
+.rateDiv img{
+    width: 6vw;
+}
+.rateDiv div{
+    background-color: green;
+    color: #fff;
+     padding: 3px 5px;
+     border-radius: 4px;
+     display: flex;
+     align-items: center;
+     gap: 2px;
+     
+}
+
+.newpriceDiv{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+}
+.newpriceDiv span{
+    color: green;
+}
+.oldPrice{
+  text-decoration: line-through;
+  color: gray;
 }
