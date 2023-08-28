@@ -1,0 +1,118 @@
+.prodMainContainer{
+    background-color: #ffff;
+    padding: 15px;
+    border-bottom: 1px solid lightgray;
+    height: 100vh;
+    display: flex;
+}
+.singleProLeftSide{
+    display: flex;
+    height: 85vh;
+    position: relative;
+   
+}
+.imageContainer{
+width: 40%;
+height: 100vh;
+}
+
+.imgMap{
+    width: 15%;
+}
+.imgDiv{
+    height: 12%;
+    padding: 5px 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+.imgDiv img{
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    text-align: center;
+    padding: 5px;
+}
+.activeShowImg{
+    border: 2px solid #2874f0;
+}
+.showImg{
+    width: 85%;
+    height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #f0f0f0;
+   position: relative;
+   cursor: pointer;
+}
+.showImg img{
+    margin: 0 50px;
+    width: 100%;
+    height: 90%;
+   
+}
+
+.cartBtn{
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+    margin: 10px 0;
+}
+.cartBtn button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    width: 15.7vw;
+    font-size: 1rem;
+   
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    transition: box-shadow .2s ease;
+    cursor: pointer;
+}
+.cartBtn button:hover{
+    box-shadow: 0 4px 6px 0 rgba(0,0,0,.12)
+}
+.cartBtn button:first-child{
+    background-color: #FF9F00;
+    color: #ffff;
+    font-weight: 500;
+}
+.cartBtn button:last-child{
+    background-color: #FB641B;
+    color: #ffff;
+    font-weight: 550;
+}
+.fav{
+position: absolute;
+top: 2rem;
+right: 1.5rem;
+/* height: 30px;
+width: 30px; */
+padding: 10px 12px 7px 12px;
+border-radius: 50%;
+box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+border: 1px solid #e0e0e0;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+/* right side style from here */
+.discription{
+    width: 60%;
+    max-height: 100vh;
+    overflow-y: hidden;
+    overflow-y: scroll;
+    /* padding: 20px; */
+}
+.discription::-webkit-scrollbar{
+    display: none;
+}

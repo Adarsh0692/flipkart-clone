@@ -23,8 +23,8 @@ function Header() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <Box sx={{ flexGrow: 0 }}>
-      <AppBar position="static" sx={{padding:'0 5rem'}}>
+    <Box sx={{ flexGrow: 0, mb:'60px' }}>
+      <AppBar position="fixed"  sx={{padding:'0 5rem'}}>
         <Toolbar
           sx={{
             display: "flex",

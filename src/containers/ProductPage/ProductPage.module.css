@@ -145,6 +145,7 @@
 .proListDiv{
     display: flex;
     flex-wrap: wrap;
+     border-bottom: 1px solid lightgray;
 }
 
 .cart{
@@ -161,6 +162,7 @@
    height: 100%;
    width: 80%;
    object-fit: contain;
+  
   
 }
 .imgDiv{
@@ -217,4 +219,44 @@
 .oldPrice{
   text-decoration: line-through;
   color: gray;
+}
+
+/* pagination style from here */
+
+.pagination_container{
+    height: 10vh;
+    /* border: 1px solid red; */
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 8rem;
+    padding: 10px 15px;
+}
+.pagination_container span{
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+.pagination{
+    /* border: 1px solid red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+   
+    font-size: 1.1rem;
+}
+.page{
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+   width: 30px;
+   height: 30px;
+    border-radius: 50%;
+}
+.activePage{
+   
+    background-color: #2874f0; 
+    color: #fff;
 }

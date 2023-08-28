@@ -69,7 +69,7 @@ function ProductPage() {
 
   //Remove perticuler filter
   function handleRemoveFilter(item) {
-    const updatedFilters = selectedFilter.filter((filter) => filter != item);
+    const updatedFilters = selectedFilter.filter((filter) => filter !== item);
     setSelectedFilter(updatedFilters);
     console.log(updatedFilters);
 
@@ -119,7 +119,7 @@ function ProductPage() {
     setValue([100, 10000]);
     const currentPriceFilter = `₹${value[0]}-₹${value[1]}`;
     const updatedFilter = selectedFilter.filter(
-      (filter) => filter != currentPriceFilter
+      (filter) => filter !== currentPriceFilter
     );
     setSelectedFilter(updatedFilter);
   }
@@ -132,7 +132,7 @@ function ProductPage() {
     } else {
       setAssuredCheckbox(false);
       const updatedAssured = selectedFilter.filter(
-        (filter) => filter != "Plus(FAssured)"
+        (filter) => filter !== "Plus(FAssured)"
       );
       setSelectedFilter(updatedAssured);
     }
