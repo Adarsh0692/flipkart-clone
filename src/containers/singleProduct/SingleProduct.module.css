@@ -93,8 +93,7 @@ height: 100vh;
 position: absolute;
 top: 2rem;
 right: 1.5rem;
-/* height: 30px;
-width: 30px; */
+background-color: #ffff;
 padding: 10px 12px 7px 12px;
 border-radius: 50%;
 box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
@@ -106,13 +105,186 @@ justify-content: center;
 
 
 /* right side style from here */
+
 .discription{
     width: 60%;
     max-height: 100vh;
     overflow-y: hidden;
     overflow-y: scroll;
-    /* padding: 20px; */
+   
+    padding: 10px 0 10px 20px;
 }
 .discription::-webkit-scrollbar{
     display: none;
+}
+.prodDetails span{
+     font-size: 1.2rem;
+}
+.rateDiv{
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+    align-items: center;
+}.rateDiv img{
+    width: 6vw;
+}
+.rateDiv div{
+    background-color: green;
+    color: #fff;
+     padding: 3px 5px;
+     border-radius: 4px;
+     display: flex;
+     align-items: center;
+     gap: 2px;
+     
+}
+.rateDiv span{
+    color: #878787;
+    font-size: 1rem;
+}
+.priceDiv{
+    display: flex;
+    align-items: baseline;
+    padding-top: 8px;
+    gap: 10px;
+}
+.priceDiv :first-child{
+    font-size: 2rem;
+    font-weight: 500;
+}
+.priceDiv span{
+    font-size: 1rem;
+    color: #878787;
+    text-decoration: line-through;
+}
+.priceDiv div:last-child{
+    color: green;
+}
+.offerDiv{
+    margin-top: 15px ;
+}
+
+.offerDiv div{
+ display: flex;
+ flex-direction: column;
+ margin: 10px 0;
+ gap: 10px;
+}
+.offerDiv div span{
+    font-size: .9rem;
+    display: flex;
+    gap: 10px;
+}
+.offerDiv div span span{
+    color: #2874f0;
+    font-weight: 500;
+}
+.deliver{
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-top: 2rem;
+}
+.deliver span{
+    color: gray;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.loc{
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #2874f0; 
+    padding: 5px 0;
+}
+.loc input{
+    border: none;
+    padding: 0 10px ;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+.loc button{
+    background: none;
+    border: none;
+    color: #2874f0;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.service span:first-child{
+    padding: 1px 5px;
+    border-radius: 50%;
+    color: #fff;
+    background-color: #2874f0;
+    font-size: 12px;
+    margin-right: 10px;
+}
+.service span:last-child{
+    font-size: .9rem;
+    font-weight: 400;
+    color: black;
+}
+.impt{
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.impt div{
+    font-size: 1rem;
+    width: 8vw;
+    color: gray;
+    font-weight: 500;
+
+}
+.impt span{
+    font-size: .9rem;
+}
+.desc{
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+.desc div:first-child{
+    color: gray;
+    font-weight: 500;
+}
+.spTable{
+    border: 1px solid #e0e0e0;
+    margin-top: 2rem;
+}
+.spTable div:first-child{
+    padding: 2rem;
+    border: 1px solid #e0e0e0;
+    color: black;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+.spTable div:nth-child(2){
+    padding: 2rem;
+    border: 1px solid #e0e0e0;
+}
+.spTable div{
+    padding: 2rem;
+}
+.spTable table{
+    margin: 20px 0;
+}
+.tbody{
+  display: flex;
+  padding: 15px 0;
+}
+.gnTable{
+    border: 1px solid #e0e0e0;
+}
+.tbody td:first-child{
+    /* border: 1px solid #e0e0e0; */
+    width: 30%;
+}
+.tbody td:last-child{
+    /* border: 1px solid #e0e0e0; */
+    width: 70%;
+    display: flex;
+    align-items: stretch;
+}
+.inBox{
+    display: flex;
+    gap: 11rem;
 }

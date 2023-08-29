@@ -3,6 +3,9 @@ import style from "./SingleProduct.module.css";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import StarIcon from "@mui/icons-material/Star";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const image = [
   {
@@ -56,7 +59,11 @@ function SingleProduct() {
             <div className={style.showImg}>
               <img src={image[imgindex].image} alt="" />
               <div className={style.fav}>
-                <span><FavoriteIcon sx={{fontSize:'1.2rem',color:'lightgray'}}/></span>
+                <span>
+                  <FavoriteIcon
+                    sx={{ fontSize: "1.2rem", color: "lightgray" }}
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -71,7 +78,189 @@ function SingleProduct() {
             </button>
           </div>
         </div>
-        <div className={style.discription}></div>
+        <div className={style.discription}>
+          <div className={style.prodDetails}>
+            <span>
+              Saffola Rolled Oats,Creamy 100% Natural, High Protein & Fibre,
+              Healthy Cereal, Pouch (1 kg)
+            </span>
+            <div className={style.rateDiv}>
+              <div>
+                4.4 <StarIcon sx={{ fontSize: "1rem" }} />
+              </div>
+              <span>1234 Rating </span> <span>&</span> <span>1223 Reviews</span>
+              <img
+                src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
+                alt=""
+              />
+            </div>
+            <div className={style.priceDiv}>
+              <div>₹211</div>
+              <span>₹230</span>
+              <div>5% Off</div>
+            </div>
+            <div className={style.offerDiv}>
+              <span>Available offers</span>
+              <div>
+                <span>
+                  <LocalOfferIcon
+                    sx={{ color: "green", fontSize: "1.2rem", mr: "10px" }}
+                  />{" "}
+                  Eligible for Flipkart Pay Later <span> T&C</span>
+                </span>
+                <span>
+                  <LocalOfferIcon
+                    sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
+                  />{" "}
+                  Buy for 100 get ₹100 off your Next Buy <span> T&C</span>
+                </span>
+                <span>
+                  <LocalOfferIcon
+                    sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
+                  />{" "}
+                  Buy this product & get Rs.150 off on your next purchase of
+                  Water Geysers <span> T&C</span>
+                </span>
+                <span>
+                  <LocalOfferIcon
+                    sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
+                  />{" "}
+                  Bank Offer5% Cashback on Flipkart Axis Bank Card{" "}
+                  <span> T&C</span>
+                </span>
+              </div>
+            </div>
+            <div className={style.deliver}>
+              <span>Delivery</span>
+              <div className={style.loc}>
+                <span>
+                  <LocationOnIcon
+                    sx={{ fontSize: "1.2rem", color: "#2874f0" }}
+                  />
+                </span>
+                <input type="text" placeholder="Enter Delivery Pincode" />
+                <button>Check</button>
+              </div>
+            </div>
+            <div className={style.deliver}>
+              <span>Quantity</span>
+              <div>
+                <span>1 Kg</span>
+              </div>
+            </div>
+            <div className={style.deliver}>
+              <span>Services</span>
+              <div className={style.service}>
+                <span>₹</span>
+                <span>Cash on Delivery available</span>
+              </div>
+            </div>
+            <div className={style.impt}>
+              <div>Important Note</div>
+
+              <span>
+                The colour and design of the delivered product may slightly vary
+                from what is shown in the image.
+              </span>
+            </div>
+            <div className={style.desc}>
+              <div>Description</div>
+
+              <div>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+                impedit aliquid blanditiis sint eveniet perferendis, omnis
+                aperiam ducimus vel magnam distinctio voluptate corrupti fugit
+                architecto ad sit aliquam. Ab maiores ipsa asperiores voluptatum
+                velit quos perspiciatis similique adipisci doloribus deserunt.
+              </div>
+            </div>
+            <div className={style.spTable}>
+              <div>Specifications</div>
+              <div className={style.gnTable}>
+                In The Box
+                <table>
+                  <tbody>
+                    <tr className={style.inBox}>
+                      <td>Pack of</td>
+                      <td>
+                        <ul>
+                          <li>1</li>
+                        </ul>
+                      </td>
+                    </tr>
+                   
+                  </tbody>
+                </table>
+              </div>
+              <div className={style.gnTable}>
+                General
+                <table>
+                  <tbody>
+                    <tr className={style.tbody}>
+                      <td>Brand</td>
+                      <td>
+                        <ul>
+                          <li>Saffola</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr className={style.tbody}>
+                      <td>Brand</td>
+                      <td>
+                        <ul>
+                          <li>
+                            Rolled Oats,Creamy 100% Natural, High Protein &
+                            Fibre, Healthy Cereal,
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr className={style.tbody}>
+                      <td>Brand</td>
+                      <td>
+                        <ul>
+                          <li>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Omnis eum dolores unde vel hic, officia neque
+                            error id nisi placeat?
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                Legal Disclaimer
+                <table>
+                  <tbody>
+                    <tr className={style.tbody}>
+                      <td>Important Note</td>
+                      <td>
+                        <ul>
+                          <li>
+                            Flipkart endeavors to ensure the accuracy of the
+                            information about the products. It is pertinent to
+                            note that, actual product packaging and materials
+                            may contain more and/or different information which
+                            may include nutritional information/allergen
+                            declaration/special instruction for intended
+                            use/warning/directions etc. We recommend the
+                            consumers to always read the label carefully before
+                            using or consuming any products. Please do not
+                            solely rely on the information provided on this
+                            website. For additional information, please contact
+                            the manufacturer.
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

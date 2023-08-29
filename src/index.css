@@ -36,3 +36,11 @@ h1{
     height: 300px;
     /* width: 90%; */
 }
+li{
+    list-style: none;
+    /* margin-left: 10rem; */
+    color: black;
+}
+td{
+    color: #aaa;
+}
