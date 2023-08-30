@@ -6,6 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import RatingProgressBar from "./RatingProgressBar";
 
 const image = [
   {
@@ -33,6 +34,15 @@ const image = [
       "https://rukminim2.flixcart.com/image/612/612/xif0q/nut-dry-fruit/i/t/n/250-gold-makhana-1-pouch-farmley-original-imagqdth9nwgkhdu.jpeg?q=70",
   },
 ];
+
+const ratings = {
+  '5star': 90578,
+  '4star': 39947,
+  '3star': 12807,
+  '2star': 3550,
+  '1star': 4880
+};
+
 function SingleProduct() {
   const [imgindex, setImgIndex] = useState(0);
 
@@ -188,7 +198,6 @@ function SingleProduct() {
                         </ul>
                       </td>
                     </tr>
-                   
                   </tbody>
                 </table>
               </div>
@@ -257,6 +266,100 @@ function SingleProduct() {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+            <div className={style.reviewSection}>
+              <div className={style.rateTopDiv}>
+                <div>Rating & Reviews</div>
+                <button>Rate Product</button>
+              </div>
+              <div className={style.rateBar}>
+                <div>
+                  <div className={style.totalRate}>
+                    <div>
+                      4.4{" "}
+                      <p>
+                        <StarIcon sx={{ fontSize: "2rem" }} />
+                      </p>
+                    </div>
+                    <span>23132222 Ratings & </span>
+                    <span>2132 Reviews</span>
+                  </div>
+                  <div className={style.Rtbar}>
+                    <div className={style.star}>
+                      <ul>
+                        <li>
+                          5{" "}
+                          <span>
+                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                          </span>
+                        </li>
+                        <li>
+                          4{" "}
+                          <span>
+                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                          </span>
+                        </li>
+                        <li>
+                          3{" "}
+                          <span>
+                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                          </span>
+                        </li>
+                        <li>
+                          2{" "}
+                          <span>
+                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                          </span>
+                        </li>
+                        <li>
+                          1{" "}
+                          <span>
+                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className={style.bars}>
+                      <ul>
+                        <li>
+                          <RatingProgressBar color={'#388e3c'}/>
+                        </li>
+                        <li>
+                          <RatingProgressBar color={'#388e3c'}/>
+                        </li>
+                        <li>
+                          <RatingProgressBar color={'#388e3c'}/>
+                        </li>
+                        <li>
+                          <RatingProgressBar color={'#ff9f00'}/>
+                        </li>
+                        <li>
+                          <RatingProgressBar color={'#ff6161'}/>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className={style.noOfReview}>
+                      <ul>
+                        <li>
+                          <span>{ratings['5star']}</span>
+                        </li>
+                        <li>
+                          <span>{ratings['4star']}</span>
+                        </li>
+                        <li>
+                          <span>{ratings['3star']}</span>
+                        </li>
+                        <li>
+                          <span>{ratings['2star']}</span>
+                        </li>
+                        <li>
+                          <span>{ratings['1star']}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

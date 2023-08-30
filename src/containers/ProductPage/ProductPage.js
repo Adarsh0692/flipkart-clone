@@ -343,7 +343,7 @@ function ProductPage() {
               {brands.length > 6 && (
                 <div>
                   <Button onClick={() => setShowAllBrands(!showAllBrands)}>
-                    {showAllBrands ? `show Less` : `${brands.length} more`}
+                    {showAllBrands ? `show Less` : `${brands.length -6} more`}
                   </Button>
                 </div>
               )}
