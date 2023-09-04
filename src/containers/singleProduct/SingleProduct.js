@@ -7,6 +7,15 @@ import StarIcon from "@mui/icons-material/Star";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import RatingProgressBar from "./RatingProgressBar";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 const image = [
   {
@@ -35,16 +44,97 @@ const image = [
   },
 ];
 
+const feedbakImages = [
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_e5a44e1acc764529ab2df462f7d34419.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/201904/blobio-201904_fm1jn5f9.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
+  },
+];
+
+const userImg = [
+  {
+    image: 'https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90'
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_e5a44e1acc764529ab2df462f7d34419.jpg?q=90",
+  },
+  {
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/201904/blobio-201904_fm1jn5f9.jpg?q=90",
+  },
+]
+
 const ratings = {
-  '5star': 90578,
-  '4star': 39947,
-  '3star': 12807,
-  '2star': 3550,
-  '1star': 4880
+  "5star": 32,
+  "4star": 14,
+  "3star": 5,
+  "2star": 0,
+  "1star": 5,
 };
+
+// Logic For get width of rating bar according to user rate..==>
+let arr = Object.values(ratings)
+let maxV = Math.max(...arr)
+
+const widfor1 = ratings['1star'] / maxV * 100
+const widfor2 = ratings['2star'] / maxV * 100
+const widfor3 = ratings['3star'] / maxV * 100
+const widfor4 = ratings['4star'] / maxV * 100
+const widfor5 = ratings['5star'] / maxV * 100
 
 function SingleProduct() {
   const [imgindex, setImgIndex] = useState(0);
+  const [showAll, setShowAll] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const visibleImg = showAll ? feedbakImages : feedbakImages.slice(0, 8);
+  const remaingImgCount = feedbakImages.length - visibleImg.length;
+  // console.log(remaingImgCount);
 
   function handleimgIndex(i) {
     setImgIndex(i);
@@ -323,41 +413,136 @@ function SingleProduct() {
                     <div className={style.bars}>
                       <ul>
                         <li>
-                          <RatingProgressBar color={'#388e3c'}/>
+                          <RatingProgressBar color={"#388e3c"} width={widfor5} />
                         </li>
                         <li>
-                          <RatingProgressBar color={'#388e3c'}/>
+                          <RatingProgressBar color={"#388e3c"} width={widfor4}/>
                         </li>
                         <li>
-                          <RatingProgressBar color={'#388e3c'}/>
+                          <RatingProgressBar color={"#388e3c"} width={widfor3}/>
                         </li>
                         <li>
-                          <RatingProgressBar color={'#ff9f00'}/>
+                          <RatingProgressBar color={"#ff9f00"} width={widfor2}/>
                         </li>
                         <li>
-                          <RatingProgressBar color={'#ff6161'}/>
+                          <RatingProgressBar color={"#ff6161"} width={widfor1}/>
                         </li>
                       </ul>
                     </div>
                     <div className={style.noOfReview}>
                       <ul>
                         <li>
-                          <span>{ratings['5star']}</span>
+                          <span>{ratings["5star"]}</span>
                         </li>
                         <li>
-                          <span>{ratings['4star']}</span>
+                          <span>{ratings["4star"]}</span>
                         </li>
                         <li>
-                          <span>{ratings['3star']}</span>
+                          <span>{ratings["3star"]}</span>
                         </li>
                         <li>
-                          <span>{ratings['2star']}</span>
+                          <span>{ratings["2star"]}</span>
                         </li>
                         <li>
-                          <span>{ratings['1star']}</span>
+                          <span>{ratings["1star"]}</span>
                         </li>
                       </ul>
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div className={style.feedback}>
+                <div className={style.feedbackImgs}>
+                  {visibleImg.map((img, index) => (
+                    <div className={style.uplaodedimg}>
+                      <img src={img.image} alt="" />
+                      {remaingImgCount > 0 &&
+                        index === visibleImg.length - 1 && (
+                          <div
+                            className={style.remainingCount}
+                            onClick={handleClickOpen}
+                          >
+                            + {remaingImgCount}
+                          </div>
+                        )}
+                    </div>
+                  ))}
+                </div>
+                {/* user images dailog  */}
+                <div>
+                  <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>{`User Images (${feedbakImages.length})`}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText className={style.feedbackAllImgs}>
+                       {
+                        feedbakImages.map((img) => (
+                          <div className={style.uplaodedAllImg}>
+                            <img src={img.image} alt="" />
+                          </div>
+                        ))
+                       }
+                      </DialogContentText>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+              <div className={style.userReview}>
+                <div className={style.row}>
+                  <div>4 <span><StarIcon sx={{fontSize:'1rem'}}/></span></div>
+                  <span>Good Product</span>
+                </div>
+                <div>
+                  <div>170 almonds are there</div>
+                </div>
+                <div className={style.userImgconter}>
+                    {
+                      userImg.map((img) => (
+                        <div className={style.userImg}>
+                          <img src={img.image} alt="" />
+                        </div>
+                      ))
+                    }
+                </div>
+                <div className={style.userDetailsDiv}>
+                  <div className={style.userName}>
+                     <p>Shabbir Laskar</p>
+                     <span><CheckCircleIcon/></span>
+                     <p>Certified Buyer, Dankuni</p>
+                     <p>Jul, 2020</p>
+                  </div>
+                  <div className={style.likeDiv}>
+                     <span><ThumbUpIcon sx={{cursor:'pointer'}}/> 1</span> 
+                     <span><ThumbDownIcon sx={{cursor:'pointer'}}/>2</span> 
+                  </div>
+                </div>
+              </div>
+              <div className={style.userReview}>
+                <div className={style.row}>
+                  <div>4 <span><StarIcon sx={{fontSize:'1rem'}}/></span></div>
+                  <span>Good Product</span>
+                </div>
+                <div>
+                  <div>170 almonds are there</div>
+                </div>
+                <div className={style.userImgconter}>
+                    {
+                      userImg.map((img) => (
+                        <div className={style.userImg}>
+                          <img src={img.image} alt="" />
+                        </div>
+                      ))
+                    }
+                </div>
+                <div className={style.userDetailsDiv}>
+                  <div className={style.userName}>
+                     <p>Shabbir Laskar</p>
+                     <span><CheckCircleIcon/></span>
+                     <p>Certified Buyer, Dankuni</p>
+                     <p>Jul, 2020</p>
+                  </div>
+                  <div className={style.likeDiv}>
+                     <span><ThumbUpIcon/> 1</span> 
+                     <span><ThumbDownIcon/>2</span> 
                   </div>
                 </div>
               </div>

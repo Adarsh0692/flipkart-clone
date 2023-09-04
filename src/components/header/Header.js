@@ -18,9 +18,11 @@ import Fade from "@mui/material/Fade";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate()
 
   return (
     <Box sx={{ flexGrow: 0, mb:'60px' }}>
@@ -44,7 +46,7 @@ function Header() {
               justifyContent: "space-around",
             }}
           >
-            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png" alt="" className={style.logo} />
+            <img onClick={() => navigate('/')} src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png" alt="" className={style.logo} />
             <div className={style.searchDiv}>
               <input
                 className={style.searchInput}
@@ -75,7 +77,7 @@ function Header() {
               />
             </span>
           </Typography>
-          <div className={style.cartdiv}>
+          <div className={style.cartdiv} onClick={() => navigate('/viewCart/1')}>
             <Badge badgeContent={4} color="error">
               <ShoppingCartIcon />
             </Badge>
