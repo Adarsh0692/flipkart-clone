@@ -77,7 +77,7 @@ function Header() {
               />
             </span>
           </Typography>
-          <div className={style.cartdiv} onClick={() => navigate('/viewCart/1')}>
+          <div className={style.cartdiv} onClick={() => navigate('/viewCart')}>
             <Badge badgeContent={4} color="error">
               <ShoppingCartIcon />
             </Badge>

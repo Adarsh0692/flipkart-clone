@@ -1,5 +1,6 @@
 import React from "react";
 import style from "./ViewCart.module.css";
+import { useNavigate } from "react-router-dom";
 
 const image = [
   {
@@ -29,6 +30,7 @@ const image = [
 ];
 
 function ViewCart() {
+  const navigate = useNavigate()
   return (
     <div className={style.mainCartContainer}>
       <div className={style.mainLeft}>
@@ -89,7 +91,7 @@ function ViewCart() {
         ))}
 
         <div className={style.orderBtn}>
-          <button>PLACE ORDER</button>
+          <button onClick={() => navigate('/checkout')}>PLACE ORDER</button>
         </div>
       </div>
 
