@@ -33,3 +33,133 @@
 .cartdiv{
     cursor: pointer;
 }
+
+/* login tippy style from here */
+
+
+.mainLoginTDiv div{
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    /* align-items: center; */
+}
+.mainLoginTDiv div:last-child{
+    border-bottom: none;
+}
+.mainLoginTDiv div img{
+    margin-right: 10px;
+}
+.mainLoginTDiv div button{
+    margin-left: 3rem;
+    border: none;
+    background-color: #ffff;
+    color: #1976D2;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.mainLoginTDiv div:hover{
+    background-color: #fcfafa;
+}
+
+.wishlistItems{
+    margin-left: 8rem;
+    background-color: #f1f1f1;
+    padding: 3px 5px;
+    border-radius: 5px;
+    color: #a7a7a7;
+}
+
+/* end */
+
+/* login page style from here */
+
+.loginMainContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+.loginText{
+    width: 40%;
+    /* border: 1px solid red; */
+    background-color: #2874F0;
+    color: #ffff;
+    padding: 2.5rem ;
+    background-image: url('https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/login_img_c4a81e.png');
+    background-repeat: no-repeat;
+    background-position: bottom;
+
+}
+.loginText h1{
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+.loginText p{
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: #d8d8d8;
+}
+.loginFormDiv{
+    width: 65%;
+    padding: 4rem 3rem;
+   position: relative;
+}
+.loginFormDiv form{
+    /* border: 1px solid red; */
+}
+.loginRequestBtn{
+    width: 100%;
+    margin-top: 20px;
+    height: 8vh;
+    background-color: #FB641B;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+    border-radius: 4px;
+    color: #ffff;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+}
+.existBtn{
+    font-size: 1rem;
+    width: 100%;
+    margin-top: 20px;
+    height: 8vh;
+    color: #2874F0;
+    font-weight: 500;
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+    border: none;
+    border-radius: 5px;
+    transition: box-shadow .2s ease;
+    cursor: pointer;
+}
+.existBtn:hover{
+    box-shadow: 0 4px 6px 0 rgba(0,0,0,.12)
+}
+.terms{
+    margin-top: 30px;
+    color: gray;
+    font-size: .9rem;
+}
+.terms span{
+    color: #2874F0;
+    font-size: .9rem;
+}
+.create{
+ position: absolute;
+ bottom: 2rem;
+ left: 20%;
+ color: #2874F0;
+ font-weight: 500;
+ cursor: pointer;
+}
+.changeBtn{
+    background-color: #fff;
+    color: #2874F0;
+    border: none;
+    margin-top: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+/* end */

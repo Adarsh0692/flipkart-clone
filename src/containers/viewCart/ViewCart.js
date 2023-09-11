@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./ViewCart.module.css";
 import { useNavigate } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const image = [
   {
@@ -29,8 +33,48 @@ const image = [
   },
 ];
 
+const addresses = [
+  {
+    id: 1,
+    name: "Adarsh kushwaha",
+    typeOfAddress: "Home",
+    HouseName: "Vill- kanpatiyapur makrand nagar kannauj",
+    city: "Kannauj",
+    pinCode: 209726,
+    state: "U.P",
+    phone: 2837298987,
+  },
+  {
+    id: 2,
+    name: "adarsh kushwaha",
+    typeOfAddress: "Home",
+    HouseName: "Golden PG, Vithlpur chowkdi",
+    city: "Ahmedabad",
+    pinCode: 111009,
+    state: "Gujarat",
+    phone: 2837298956,
+  },
+];
+
 function ViewCart() {
-  const navigate = useNavigate()
+  const [selectedAddress, setSelectedAddress] = useState(null);
+ 
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  function handleAddressOnChange(address){
+    setSelectedAddress(address)
+    setOpen(false);
+  }
+
   return (
     <div className={style.mainCartContainer}>
       <div className={style.mainLeft}>
@@ -39,11 +83,68 @@ function ViewCart() {
           <div>Grocery</div>
         </div>
         <div className={style.address}>
-          <div>From Saved Addresses</div>
-          <div>
-            <button>Enter Deliver Pincode</button>
-          </div>
+          {selectedAddress !== null ? (
+            <>
+              <div>
+                <div className={style.addInfo}>
+                  
+                  <span>Deliver to: {selectedAddress?.name}</span>
+                  <span> {selectedAddress?.typeOfAddress}</span>
+                </div>
+                <div className={style.mainAddsdiv}>
+                  {selectedAddress?.HouseName}, {selectedAddress?.city},{" "}
+                  {selectedAddress?.state}({selectedAddress?.pinCode})
+                </div>
+              </div>
+              <div>
+                <button onClick={handleClickOpen}>CHANGE</button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div>From Saved Addresses</div>
+              <div>
+                <button onClick={handleClickOpen}>Enter Deliver Pincode</button>
+              </div>
+            </>
+          )}
         </div>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle id="responsive-dialog-title">
+            {"Select Delivery Address"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <div className={style.addressContainer}>
+                <ul>
+                  {addresses.map((address) => (
+                    <li className={style.addrsContainer} key={address.id}>
+                      <input
+                        type="radio"
+                        name="address"
+                        value={address.id}
+                        id={address.id}
+                        checked={selectedAddress?.id === address.id}
+                        onChange={() => handleAddressOnChange(address)}
+                      />
+
+                      <label htmlFor={address.id}>
+                        <div className={style.addInfo}>
+                          <span>{address.name}</span>
+                          <span> {address.typeOfAddress}</span>
+                        </div>
+                        <div className={style.mainAddsdiv}>
+                          {address.HouseName}, {address.city}, {address.state}(
+                          {address.pinCode})
+                        </div>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
         {image.map((item) => (
           <div className={style.cartItems}>
             <div>
@@ -91,7 +192,7 @@ function ViewCart() {
         ))}
 
         <div className={style.orderBtn}>
-          <button onClick={() => navigate('/checkout')}>PLACE ORDER</button>
+          <button onClick={() => navigate("/checkout")}>PLACE ORDER</button>
         </div>
       </div>
 
@@ -116,9 +217,7 @@ function ViewCart() {
             <span>₹246</span>
           </div>
         </div>
-        <div className={style.save}>
-          You will save ₹29 on this order
-        </div>
+        <div className={style.save}>You will save ₹29 on this order</div>
       </div>
     </div>
   );

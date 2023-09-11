@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import style from "./checkout.module.css";
 import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AddIcon from '@mui/icons-material/Add';
 
 const image = [
   {
@@ -50,6 +52,36 @@ const addresses = [
     state: "Gujarat",
     phone: 2837298956,
   },
+  {
+    id: 3,
+    name: "adarsh kushwaha",
+    typeOfAddress: "Home",
+    HouseName: "Golden PG, Vithlpur chowkdi",
+    city: "Ahmedabad",
+    pinCode: 111009,
+    state: "Gujarat",
+    phone: 2837298956,
+  },
+  {
+    id: 4,
+    name: "adarsh kushwaha",
+    typeOfAddress: "Home",
+    HouseName: "Golden PG, Vithlpur chowkdi",
+    city: "Ahmedabad",
+    pinCode: 111009,
+    state: "Gujarat",
+    phone: 2837298956,
+  },
+  {
+    id: 5,
+    name: "adarsh kushwaha",
+    typeOfAddress: "Home",
+    HouseName: "Golden PG, Vithlpur chowkdi",
+    city: "Ahmedabad",
+    pinCode: 111009,
+    state: "Gujarat",
+    phone: 2837298956,
+  },
 ];
 
 function CheckOut() {
@@ -60,7 +92,9 @@ function CheckOut() {
   const [isSetp2Completed, setIsSetp2Completed] = useState(false);
   const [isSetp3Completed, setIsSetp3Completed] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [isConfirmOrder, setIsConfirmOrder] = useState(false)
+  const [isConfirmOrder, setIsConfirmOrder] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [showAllAddress, setShowAllAddress] = useState(false)
   
   function handleStep1st() {
     setIsStepOneDone(false);
@@ -100,8 +134,14 @@ function CheckOut() {
     setIsConfirmOrder(false)
   }
 
-  function handleSelectPaymentOption(){
-     setIsConfirmOrder(true)
+  function handleOnChangePaymentOptions(e){
+  setSelectedPaymentMethod(e.target.value)
+  setIsConfirmOrder(true)
+  }
+
+  function handleOrderConfirm(){
+    
+    alert(`selected Option: ${selectedPaymentMethod}`)
   }
   return (
     <div className={style.mainCartContainer}>
@@ -199,7 +239,7 @@ function CheckOut() {
             </div>
             <div className={style.addressContainer}>
               <ul>
-                {addresses.map((address) => (
+                {addresses.slice(0,showAllAddress ? addresses.length : 3 ).map((address) => (
                   <li className={style.addrsContainer} key={address.id}>
                     <input
                       type="radio"
@@ -236,7 +276,15 @@ function CheckOut() {
                   </li>
                 ))}
               </ul>
+             {!showAllAddress && addresses.length>3 && <div className={style.showAddressDiv} onClick={() => setShowAllAddress(true)}>
+                  <span><ExpandMoreIcon/></span>
+                  <span>View all {addresses.length} addresses</span>
+              </div>}
             </div>
+            <div className={style.showAddressDiv}>
+                  <span><AddIcon/></span>
+                  <span> Add a new address</span>
+              </div>
           </div>
         )}
 
@@ -332,30 +380,30 @@ function CheckOut() {
             </div>
             <div className={style.paymentsOptions}>
               <div>
-              <input type="radio" name="payment" id="UPI" onChange={handleSelectPaymentOption}/>
+              <input type="radio" name="payment" id="UPI" value='UPI' checked={selectedPaymentMethod === 'UPI'} onChange={handleOnChangePaymentOptions}/>
               <label htmlFor="UPI">UPI</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="wallets" onChange={handleSelectPaymentOption}/>
+              <input type="radio" name="payment" id="wallets" value='Wallets' checked={selectedPaymentMethod === 'Wallets'} onChange={handleOnChangePaymentOptions}/>
               <label htmlFor="wallets">Wallets</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="card" onChange={handleSelectPaymentOption}/>
+              <input type="radio" name="payment" id="card" value='Card' checked={selectedPaymentMethod === 'Card'} onChange={handleOnChangePaymentOptions}/>
               <label htmlFor="card">Credit/Debit/ATM Card</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="netBanking" onChange={handleSelectPaymentOption}/>
+              <input type="radio" name="payment" id="netBanking" value='Net-Banking' checked={selectedPaymentMethod === 'Net-Banking'} onChange={handleOnChangePaymentOptions}/>
               <label htmlFor="netBanking">Net Banking</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="cash" onChange={handleSelectPaymentOption}/>
+              <input type="radio" name="payment" id="cash" value='Cash on Delivery' checked={selectedPaymentMethod === 'Cash on Delivery'} onChange={handleOnChangePaymentOptions}/>
               <label htmlFor="cash">Cash on Delivery</label>
               </div>
               
             </div>
            {isConfirmOrder && <div>
               <div className={style.orderBtn}>
-                <button onClick={handleOrderSummryContinue}>CONFIRM ORDER</button>
+                <button onClick={handleOrderConfirm}>CONFIRM ORDER</button>
               </div>
             </div>}
           </div>

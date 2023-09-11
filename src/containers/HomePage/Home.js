@@ -1,7 +1,7 @@
 import React from 'react'
 import CategorySection from '../../components/categorySection/CategorySection'
-import HeroCurusal from '../../components/HeroCarousel'
-import ElectronicsCarousel from '../../components/ElectronicsCarousel'
+import HeroCurusal from '../../components/carousel/HeroCarousel'
+// import ElectronicsCarousel from '../../components/ElectronicsCarousel'
 import Carousel from '../../components/carousel/Carousel'
 import { electronicsData } from '../../assests/electronicData'
 

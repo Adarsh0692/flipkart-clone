@@ -49,3 +49,6 @@ li{
 td{
     color: #aaa;
 }
+button{
+    cursor: pointer;
+}

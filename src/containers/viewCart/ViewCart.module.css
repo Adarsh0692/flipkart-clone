@@ -237,3 +237,48 @@
     color: #388e3c;
     font-weight: 500;
 }
+
+.addressContainer{
+    margin-bottom: 20px;
+ }
+ .address{
+     /* height: 11vh; */
+     margin-bottom: 1rem;
+     background-color: #ffff;
+     border-radius: 5px;
+     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 1rem 1.5rem;
+ }
+ .addrsContainer{
+     display: flex;
+     align-items: baseline;
+     /* padding: 1rem 2rem; */
+     gap: 20px;
+     /* border: 1px solid #e0e0e0; */
+     margin: 20px 0;
+     cursor: pointer;
+     background-color: #ffff;
+ }
+ .addInfo{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.addInfo span:nth-child(1){
+    font-size: 1rem;
+    font-weight: 500;
+}
+.addInfo span:nth-child(2){
+    background-color: #eae7e7;
+    border-radius: 3px;
+    padding: 3px 10px;
+    color: #878787;
+}
+.mainAddsdiv{
+    color: #878787;
+
+}
