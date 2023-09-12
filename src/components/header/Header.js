@@ -30,7 +30,7 @@ const styles = {
 };
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [isSignup, setIsSignup] = useState(false);
   const [isNameInput, setIsNameInput] = useState(false);
   const [toLogin, setToLogin] = useState(false);
@@ -43,6 +43,8 @@ function Header() {
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  
+  
 
   const handleOpen = () => {
     setOpen(true);
@@ -355,7 +357,7 @@ function Header() {
               <Tippy
                 theme="light"
                 content={<LoginTippy handleOpen={handleOpen} />}
-                interactive
+                interactive={true}
               >
                 <Button
                   sx={{

@@ -52,3 +52,6 @@ td{
 button{
     cursor: pointer;
 }
+Link a{
+    text-decoration: none;
+}

@@ -1,14 +1,10 @@
 .mainAccDiv{
-    /* border: 1px solid red; */
-    /* width: 100vw; */
-    /* height: 100vh; */
     padding: 1rem 4.5rem;
     display: flex;
     gap: 20px;
 }
 .mainAccLeft{
-    /* border: 1px solid red; */
-    width: 22%;
+    width: 25%;
 }
 
 .userProfile{
@@ -18,8 +14,6 @@
     background-color: #ffff;
     border-radius: 5px;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
-    /* border: 1px solid red; */
-    /* padding: 1rem; */
 }
 .userProfile div:first-child{
     width: 25%;
@@ -40,7 +34,6 @@
     height: 100%;
 }
 .leftBotmDiv{
-    /* height: 60vh; */
     width: 100%;
     margin-top: 20px;
     background-color: #ffff;
@@ -91,6 +84,7 @@
     background-color: #f5faff;
 }
 
+/* right section style from here */
 
 .mainAccRight{
     background-color: #ffff;
@@ -98,3 +92,186 @@
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
     width: 75%;
 }
+
+/* profile info style from here */
+
+.mainInfoDiv{
+    padding: 1.5rem 2rem;
+}
+.infoContainer{
+    margin-bottom: 2rem;
+}
+.infoContainer div{
+    padding-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.infoContainer span{
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.infoTitle button{
+    background: none;
+    border: none;
+    color: #2874f0;
+    font-size: 1rem;
+    margin-left: 10px;
+}
+.inputDiv{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+.inputDiv input[type='text']{
+    width: 20vw;
+    height: 3vh;
+    padding: 20px 13px 0 16px;
+}
+.inputDiv button{
+    padding: 1rem 2.5rem;
+    background-color: #2874f0;
+    border: none;
+    border-radius: 3px;
+    color: #ffff;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: -20px;
+}
+
+/* profile Info end */
+
+
+/* Manage Address style from here  */
+
+.mainAddressDiv{
+    padding: 1.5rem 2rem;
+}
+.mainAddressDiv div:first-child{
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.assAddresDiv{
+    border: 1px solid #e0e0e0;
+    padding: 1rem;
+    color: #2874f0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 1.5rem 0;
+}
+.mangAddress{
+    border: 1px solid #e0e0e0;
+    padding: 1.5rem;
+}
+.home_more{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.home_more span:first-child{
+    padding: 3px;
+    border-radius: 3px;
+    background-color: #ebeaea;
+    color: #898787;
+}
+.name_num{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.name_num span{
+    font-size: 1rem;
+    font-weight: 500;
+}
+/* addresForm style from here */
+
+.addresFormWraperDiv{
+   background-color: #f5faff;
+   padding: 1rem;
+   border: 1px solid #e0e0e0;
+   margin: 2rem 0;
+}
+.addresFormWraperDiv div:first-child span{
+    color: #2874f0;
+}
+.textFieldDiv{
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+}
+.textFieldDiv div{
+    border: 1px solid #e0e0e0;
+    width: 22vw;
+    height: 9vh;
+    background-color: #ffff;
+    /* background-color: transparent; */
+}
+.textFieldDiv input{
+    border: none;
+    padding-left: 1rem;
+    width: 90%;
+    height: 100%;
+    font-size: 1rem;
+    /* background-color:#ffff; */
+}
+.AreatextFieldDiv textarea{
+    border: 1px solid #e0e0e0;
+    resize: none;
+    padding: 1rem;
+    font-size: 1rem;
+    outline: none;
+}
+.addresTypeDiv span{
+    color: #a3a3a3;
+    font-size: .9rem;
+}
+.addresTypeDiv div{
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.addresTypeDiv label{
+    font-size: 1.1rem;
+    font-weight: 100;
+    cursor: pointer;
+}
+.save_can{
+    margin-top: 2rem;
+}
+.save_can button:first-child{
+    width: 17vw;
+    height: 8vh;
+    border: none;
+    border-radius: 3px;
+    background-color: #2874f0;
+    color: #ffff;
+    font-size: 1rem;
+    margin-right: 3rem;
+}
+.save_can button:last-child{
+    border: none;
+    background: none;
+    color: #2874f0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+/* Manage Address end */
+
+/* my Review style from here */
+
+.myReview{
+    padding: 1.5rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.myReview span{
+    color: #898787;
+    font-size: 1.2rem;
+}
+
+/* my Review end */

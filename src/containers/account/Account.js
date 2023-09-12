@@ -6,9 +6,40 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ProfileInfo from "./ProfileInfo";
+import ManageAddresses from "./ManageAddresses";
+import MyReviews from "./MyReviews";
 
 const Account = () => {
     const [isProfile, setIsProfile] = useState(true)
+    const [isAddress, setIsAddress] = useState(false)
+    const [isReview, setIsReview] = useState(false)
+    const [isWishlist, setIsWishlist] = useState(false)
+
+    function handleIsProfileState(){
+        setIsProfile(true)
+        setIsAddress(false)
+        setIsReview(false)
+        setIsWishlist(false)
+    }
+    function handleIsAddressState(){
+        setIsProfile(false)
+        setIsAddress(true)
+        setIsReview(false)
+        setIsWishlist(false)
+    }
+    function handleIsReviewState(){
+        setIsProfile(false)
+        setIsAddress(false)
+        setIsReview(true)
+        setIsWishlist(false)
+    }
+    function handleIsWishlistState(){
+        setIsProfile(false)
+        setIsAddress(false)
+        setIsReview(false)
+        setIsWishlist(true)
+    }
   return (
     <div className={style.mainAccDiv}>
       <div className={style.mainAccLeft}>
@@ -47,8 +78,8 @@ const Account = () => {
               </span>
               <span>ACCOUNT SETTINGS</span>
             </div>
-            <div className={`${style.underAcc} ${isProfile? style.underAccActive: ''}`} onClick={()=> setIsProfile(true)}>Profile Information</div>
-            <div className={`${style.underAcc} ${isProfile? '' : style.underAccActive}`} onClick={()=> setIsProfile(false)}>Manage Addresses</div>
+            <div className={`${style.underAcc} ${isProfile? style.underAccActive: ''}`} onClick={handleIsProfileState}>Profile Information</div>
+            <div className={`${style.underAcc} ${isAddress? style.underAccActive : ''}`} onClick={handleIsAddressState}>Manage Addresses</div>
           </div>
           <div className={style.mainOrderDiv}>
             <div className={style.acc}>
@@ -72,9 +103,9 @@ const Account = () => {
               <span>MY STUFF</span>
             </div>
             <div className={style.underAcc}>My Coupons</div>
-            <div className={style.underAcc}>My Reviews & Ratings</div>
+            <div className={`${style.underAcc} ${isReview?  style.underAccActive : '' }`} onClick={handleIsReviewState}>My Reviews & Ratings</div>
             <div className={style.underAcc}>All Notifications</div>
-            <div className={style.underAcc}>All WishList</div>
+            <div className={`${style.underAcc} ${isWishlist? style.underAccActive : '' }`} onClick={handleIsWishlistState}>All WishList</div>
           </div>
           <div className={style.myorder}>
           <span>
@@ -86,7 +117,11 @@ const Account = () => {
           </div>
         </div>
       </div>
-      <div className={style.mainAccRight}></div>
+      <div className={style.mainAccRight}>
+        {isProfile && <ProfileInfo/>}
+        {isAddress && <ManageAddresses/>}
+        {isReview && <MyReviews/>}
+      </div>
     </div>
   );
 };

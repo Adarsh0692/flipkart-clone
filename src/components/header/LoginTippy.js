@@ -7,22 +7,25 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
+import { useNavigate } from 'react-router-dom';
 
-function LoginTippy({handleOpen}) {
+function LoginTippy({handleOpen, setVisible}) {
     const [isLogin, setIsLogin] = useState(false);
+
+    const navigate = useNavigate()
 
   return (
     <div className={style.mainLoginTDiv}>
-     {!isLogin && <div>
+     {!isLogin && <div onClick={handleOpen}>
         <span>New customer?</span>
-        <button onClick={handleOpen}>Sign Up</button>
+        <button >Sign Up</button>
       </div>}
 
       <div>
         <span><AccountCircleIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
-        <span>My Profile</span>
+        <span onClick={()=>navigate('/account')}> My Profile</span>
       </div>
       
       {isLogin && <div>
