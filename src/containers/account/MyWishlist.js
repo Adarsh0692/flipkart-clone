@@ -1,6 +1,8 @@
 import React from "react";
 import style from "./Account.module.css";
+import DeleteIcon from "@mui/icons-material/Delete";
 import StarIcon from "@mui/icons-material/Star";
+import Empty from "../../components/empty/Empty";
 
 const image = [
   {
@@ -29,37 +31,55 @@ const image = [
   },
 ];
 
-function MyReviews() {
+function MyWishlist() {
+  function handleProductClick(i) {
+    alert(i);
+  }
+
+  if (image.length === 0) {
+    return <Empty name="Wishlist" />;
+  }
+
   return (
     <div>
       <div className={style.myReview}>
-        My Reviews <span>(3)</span>
+        My Wishlist <span>(5)</span>
       </div>
-      {image.map((product) => (
-        <div className={style.mainProductDiv}>
-          <div className={style.reviewImgDiv}>
+      {image.map((product, i) => (
+        <div
+          key={i}
+          className={style.wishProductDiv}
+          onClick={() => handleProductClick(i)}
+        >
+          <div className={style.wishProdImg}>
             <div>
               <img src={product.image} alt="" />
             </div>
           </div>
-          <div className={style.reviewProDtlsDiv}>
-            <div>HP x1000 Wired Optical Mouse</div>
-            <div className={style.revRate}>
+          <div className={style.wishProdDtls}>
+            <div>
+              <span>OnePlus Nord CE 2 Lite 5G (Blue Tide, 128 GB)</span>
               <span>
-                {" "}
-                3 <StarIcon sx={{ fontSize: "1rem", mb: "-2px", ml: "-2px" }} />
+                <DeleteIcon sx={{ color: "gray", fontSize: "1.2rem" }} />
               </span>
-
-              <span>Decent product</span>
             </div>
-            <div>Good but so small in size</div>
-            <div>
-              Adarsh kushwaha
-              <span>08 jul, 2022</span>
+            <div className={style.wishRate}>
+              <span>
+                4.4{" "}
+                <StarIcon sx={{ fontSize: "1rem", mb: "-2px", ml: "-2px" }} />
+              </span>
+              <span> (12331) </span>
+              <span>
+                <img
+                  src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
+                  alt=""
+                />
+              </span>
             </div>
-            <div>
-              <button>Edit</button>
-              <button>Delete</button>
+            <div className={style.newpriceDiv}>
+              <div>₹17,449</div>
+              <div className={style.oldPrice}>₹1200</div>
+              <span>12% off</span>
             </div>
           </div>
         </div>
@@ -68,4 +88,4 @@ function MyReviews() {
   );
 }
 
-export default MyReviews;
+export default MyWishlist;

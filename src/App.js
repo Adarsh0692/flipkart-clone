@@ -19,7 +19,7 @@ function App() {
       <Route path='/singleProduct/:id' element={<SingleProduct/>}/>
       <Route path='/viewcart' element={<ViewCart/>}/>
       <Route path='/checkout' element={<CheckOut/>}/>
-      <Route path='/account' element={<Account/>}/>
+      <Route path='/account/:id' element={<Account/>}/>
     </Routes> 
     </BrowserRouter>
   );

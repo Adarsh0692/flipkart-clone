@@ -6,6 +6,13 @@
     
 }
 
+
+
+input[type="number"]:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: #aaa; /* Change border color when focused */
+    box-shadow: none; /* Remove any box shadow when focused */
+}
 input[type="text"]:focus {
     outline: none; /* Remove the default focus outline */
     border-color: #aaa; /* Change border color when focused */

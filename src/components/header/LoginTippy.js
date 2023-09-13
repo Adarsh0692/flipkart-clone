@@ -21,11 +21,11 @@ function LoginTippy({handleOpen, setVisible}) {
         <button >Sign Up</button>
       </div>}
 
-      <div>
+      <div onClick={()=>navigate('/account/1')}>
         <span><AccountCircleIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
-        <span onClick={()=>navigate('/account')}> My Profile</span>
+        <span > My Profile</span>
       </div>
       
       {isLogin && <div>
@@ -39,17 +39,17 @@ function LoginTippy({handleOpen, setVisible}) {
         <span><img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png" alt="" width='20px' /></span>
         <span>Flipkart Plus Zone</span>
       </div>
-      <div>
+      <div onClick={()=>navigate('/account/orders')}>
         <span><DriveFileMoveIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
         <span>Orders</span>
       </div>
-      <div>
+      <div onClick={()=>navigate('/account/wishlist')}>
         <span><FavoriteIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
-        <span>Wishlist</span>
+        <span >Wishlist</span>
        {isLogin && <span className={style.wishlistItems}>10</span>}
       </div>
       

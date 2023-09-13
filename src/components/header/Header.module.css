@@ -81,6 +81,7 @@
 }
 .loginText{
     width: 40%;
+    /* height: 85vh; */
     /* border: 1px solid red; */
     background-color: #2874F0;
     color: #ffff;
@@ -101,12 +102,10 @@
 }
 .loginFormDiv{
     width: 65%;
-    padding: 4rem 3rem;
+    padding: 2rem 3rem;
    position: relative;
 }
-.loginFormDiv form{
-    /* border: 1px solid red; */
-}
+
 .loginRequestBtn{
     width: 100%;
     margin-top: 20px;
@@ -138,7 +137,7 @@
     box-shadow: 0 4px 6px 0 rgba(0,0,0,.12)
 }
 .terms{
-    margin-top: 30px;
+    margin-top: 25px;
     color: gray;
     font-size: .9rem;
 }
@@ -161,5 +160,9 @@
     margin-top: 15px;
     font-size: 1rem;
     font-weight: 500;
+}
+.error{
+    color: red;
+    font-size: .8rem;
 }
 /* end */

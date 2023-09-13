@@ -48,16 +48,13 @@
     padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
-    
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
     border-bottom: 1px solid #eeeded;
 }
-.myorder span:nth-child(2){
-    color: gray;
-    font-weight: 500;
-    font-size: 1.1rem;
-    cursor: pointer;
-}
-.myorder span:nth-child(2):hover{
+
+.myorder:hover{
     color: #2874f0; 
 }
 .acc{
@@ -150,6 +147,7 @@
 .mainAddressDiv div:first-child{
     font-size: 1.2rem;
     font-weight: 500;
+    margin-bottom: 20px;
 }
 .assAddresDiv{
     border: 1px solid #e0e0e0;
@@ -191,9 +189,9 @@
 
 .addresFormWraperDiv{
    background-color: #f5faff;
-   padding: 1rem;
+   padding: 1rem 1.5rem;
    border: 1px solid #e0e0e0;
-   margin: 2rem 0;
+   margin-bottom: 1rem;
 }
 .addresFormWraperDiv div:first-child span{
     color: #2874f0;
@@ -201,22 +199,23 @@
 .textFieldDiv{
     display: flex;
     gap: 15px;
-    margin: 15px 0;
+    margin: 20px 0;
 }
 .textFieldDiv div{
     border: 1px solid #e0e0e0;
     width: 22vw;
     height: 9vh;
     background-color: #ffff;
-    /* background-color: transparent; */
 }
 .textFieldDiv input{
     border: none;
     padding-left: 1rem;
-    width: 90%;
+    width: 94%;
     height: 100%;
     font-size: 1rem;
-    /* background-color:#ffff; */
+}
+.AreatextFieldDiv{
+    width: 45.3vw;
 }
 .AreatextFieldDiv textarea{
     border: 1px solid #e0e0e0;
@@ -224,6 +223,7 @@
     padding: 1rem;
     font-size: 1rem;
     outline: none;
+    width: 95%;
 }
 .addresTypeDiv span{
     color: #a3a3a3;
@@ -260,6 +260,12 @@
     font-size: 1rem;
     font-weight: 500;
 }
+.error{
+    color: red;
+    font-size: .8rem;
+    margin-left: 10px;
+    font-weight: 100;
+}
 /* Manage Address end */
 
 /* my Review style from here */
@@ -273,5 +279,192 @@
     color: #898787;
     font-size: 1.2rem;
 }
-
+.mainProductDiv{
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1.5rem 2rem;
+    display: flex;
+}
+.reviewImgDiv{
+    width: 15%;
+}
+.reviewProDtlsDiv{
+    width: 85%;
+    padding: 0 1rem;
+}
+.reviewImgDiv div{
+    width: 90%;
+    height: 13vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.reviewImgDiv img{
+    height: 90%;
+    
+}
+.reviewProDtlsDiv div:first-child{
+    color: #898787;
+}
+.revRate{
+   margin: 1rem 0;
+}
+.revRate span:first-child{
+    background-color: green;
+    color: #fff;
+     padding: 3px 5px;
+     border-radius: 4px;
+     margin-right: 15px;
+}
+.revRate span:last-child{
+    font-weight: 500;
+}
+.reviewProDtlsDiv div:nth-child(4){
+   color: #898787;
+   font-size: .9rem;
+   margin: 1rem 0;
+}
+.reviewProDtlsDiv div:nth-child(4) span{
+    margin-left: 20px;
+}
+.reviewProDtlsDiv button{
+    background: none;
+    border: none;
+    color: #2874f0;
+    font-size: 1rem;
+    margin-right: 2rem;
+}
 /* my Review end */
+
+/* my wishlist style from here */
+
+.wishProductDiv{
+    border-bottom: 1px solid #e0e0e0;
+    border-top: 1px solid #e0e0e0;
+    padding: 1.5rem 2rem;
+    display: flex;
+    cursor: pointer;
+}
+.wishProdImg{
+    width: 20%;
+}
+.wishProdImg div{
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.wishProdImg img{
+    height: 90%;
+}
+.wishProdDtls{
+    width: 80%;
+}
+.wishProdDtls div:first-child{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+.wishProdDtls div:first-child span{
+    font-size: 1rem;
+}
+.wishRate{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0;
+}
+.wishRate span:first-child{
+    background-color: green;
+    color: #fff;
+     padding: 3px 5px;
+     border-radius: 4px;
+}
+.wishRate img{
+    height: 3.5vh;
+}
+.newpriceDiv{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+.newpriceDiv div:first-child{
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+.newpriceDiv span{
+    color: green;
+}
+.oldPrice{
+  text-decoration: line-through;
+  color: gray;
+}
+/* my wishlist end */
+
+
+/* my order style from here */
+
+.orderProdImgDiv{
+    width: 15%;
+    /* border: 1px solid #e0e0e0; */
+}
+.orderProdImgDiv div{
+    height: 15vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.orderProdImgDiv img{
+    height: 100%;
+}
+.orderProdName{
+    width: 40%;
+   
+}
+.orderProdName div:first-child{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.orderProdName div:last-child{
+    color: #a3a3a3;
+    font-size: .9rem;
+    margin-top: 10px;
+}
+.orderProdPrice{
+    width: 15%;
+    /* border: 1px solid #e0e0e0; */
+    text-align: center;
+}
+.orderProdStatus{
+    width: 30%;
+    /* border: 1px solid #e0e0e0; */
+}
+.orderProdStatus div:first-child{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.orderProdStatus div:first-child span{
+    font-weight: 500;
+}
+.orderProdStatus div:last-child{
+ font-size: .9rem;
+ margin: 10px 0;
+}
+.delivered{
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: green;
+}
+.cancelled{
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+/* my order end */

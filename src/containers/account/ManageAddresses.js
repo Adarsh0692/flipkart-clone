@@ -4,6 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressForm from "./AddressForm";
+import { nanoid } from 'nanoid'
 
 const allAddresses = [
   {
@@ -73,8 +74,9 @@ function ManageAddresses() {
   const [isAddAddress, setIsAddAddress] = useState(false);
   const [isEditAddress, setIsEditAddress] = useState(false);
 
+ 
   const initialAddress = {
-    id: null,
+    id: nanoid(5),
     name: "",
     typeOfAddress: "",
     address: "",
@@ -88,6 +90,7 @@ function ManageAddresses() {
 
   function handleHideForm() {
     setIsAddAddress(false);
+    setCurrentAddress(initialAddress)
   }
 
   function HandleOpenEditForm(address) {
@@ -96,10 +99,17 @@ function ManageAddresses() {
   }
   function HandleCloseEditForm() {
     setIsEditAddress(false);
+    setCurrentAddress(initialAddress)
   }
   function HandleDeleteAddres(address){
    const newAddress = addresses.filter((addr) => addr.id !== address.id)
    setAddAddress(newAddress)
+  }
+
+  function handleOpenAddForm(){
+    setIsAddAddress(true)
+    setCurrentAddress(initialAddress)
+    setIsEditAddress(false);
   }
   return (
     <div className={style.mainAddressDiv}>
@@ -107,13 +117,17 @@ function ManageAddresses() {
       {isAddAddress ? (
         <div>
           <AddressForm
-            formType="ADD ANEW ADDRESS"
+            formType="ADD A NEW ADDRESS"
             handleHideForm={handleHideForm}
+            currentaddress={currentaddress}
+            setCurrentAddress={setCurrentAddress}
+            addresses={addresses}
+            setAddAddress={setAddAddress}
           />
         </div>
       ) : (
         <div
-          onClick={() => setIsAddAddress(true)}
+          onClick={handleOpenAddForm}
           className={style.assAddresDiv}
         >
           <AddIcon /> ADD A NEW ADDRESS
@@ -124,6 +138,8 @@ function ManageAddresses() {
           formType="EDIT ADDRESS"
           handleHideForm={HandleCloseEditForm}
           currentaddress={currentaddress}
+          setCurrentAddress={setCurrentAddress}
+          setAddAddress={setAddAddress}
         />
       )}
       {addresses.map((addres) => (

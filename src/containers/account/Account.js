@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Account.module.css";
 import DriveFileMoveIcon from "@mui/icons-material/DriveFileMove";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -9,37 +9,82 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ProfileInfo from "./ProfileInfo";
 import ManageAddresses from "./ManageAddresses";
 import MyReviews from "./MyReviews";
+import MyWishlist from "./MyWishlist";
+import { useNavigate, useParams } from 'react-router-dom';
+import MyOrder from "./MyOrder";
 
 const Account = () => {
-    const [isProfile, setIsProfile] = useState(true)
+    const [isOder, setIsOder] = useState(false)
+    const [isProfile, setIsProfile] = useState(false)
     const [isAddress, setIsAddress] = useState(false)
     const [isReview, setIsReview] = useState(false)
     const [isWishlist, setIsWishlist] = useState(false)
 
+    const navigate = useNavigate()
+    const param = useParams()
+
+    function handleIsOrderState(){
+      setIsOder(true)
+      setIsProfile(false)
+      setIsAddress(false)
+      setIsReview(false)
+      setIsWishlist(false)
+      navigate(`/account/orders`)
+  }
+
     function handleIsProfileState(){
+      setIsOder(false)
         setIsProfile(true)
         setIsAddress(false)
         setIsReview(false)
         setIsWishlist(false)
+        navigate(`/account/1`)
     }
     function handleIsAddressState(){
+      setIsOder(false)
         setIsProfile(false)
         setIsAddress(true)
         setIsReview(false)
         setIsWishlist(false)
+        navigate(`/account/address`)
     }
     function handleIsReviewState(){
+      setIsOder(false)
         setIsProfile(false)
         setIsAddress(false)
         setIsReview(true)
         setIsWishlist(false)
+        navigate(`/account/review`)
     }
     function handleIsWishlistState(){
+      setIsOder(false)
         setIsProfile(false)
         setIsAddress(false)
         setIsReview(false)
         setIsWishlist(true)
+        navigate(`/account/wishlist`)
     }
+
+    useEffect(() => {
+
+      if(param.id == '1'){
+        handleIsProfileState()
+      }
+      if(param.id == 'address'){
+        handleIsAddressState()
+      }
+      if(param.id == 'review'){
+        handleIsReviewState()
+      }
+      if(param.id == 'wishlist'){
+        handleIsWishlistState()
+      }
+      if(param.id == 'orders'){
+        handleIsOrderState()
+      }
+
+    },[param.id])
+
   return (
     <div className={style.mainAccDiv}>
       <div className={style.mainAccLeft}>
@@ -56,13 +101,13 @@ const Account = () => {
           </div>
         </div>
         <div className={style.leftBotmDiv}>
-          <div className={style.myorder}>
+          <div  className={`${style.myorder} ${isOder? style.underAccActive : ''}`} onClick={handleIsOrderState}>
             <span>
               <DriveFileMoveIcon
                 sx={{ fontSize: "30px", mr: "10px", color: "#1976D2" }}
               />
             </span>
-            <span>MY ORDERS</span>
+            MY ORDERS
             <span>
               <NavigateNextIcon
                 sx={{ fontSize: "30px", ml: "60px", color: "gray" }}
@@ -105,7 +150,7 @@ const Account = () => {
             <div className={style.underAcc}>My Coupons</div>
             <div className={`${style.underAcc} ${isReview?  style.underAccActive : '' }`} onClick={handleIsReviewState}>My Reviews & Ratings</div>
             <div className={style.underAcc}>All Notifications</div>
-            <div className={`${style.underAcc} ${isWishlist? style.underAccActive : '' }`} onClick={handleIsWishlistState}>All WishList</div>
+            <div className={`${style.underAcc} ${isWishlist? style.underAccActive : '' }`} onClick={handleIsWishlistState}>All Wishlist</div>
           </div>
           <div className={style.myorder}>
           <span>
@@ -118,9 +163,11 @@ const Account = () => {
         </div>
       </div>
       <div className={style.mainAccRight}>
+        {isOder && <MyOrder/>}
         {isProfile && <ProfileInfo/>}
         {isAddress && <ManageAddresses/>}
         {isReview && <MyReviews/>}
+        {isWishlist && <MyWishlist/>}
       </div>
     </div>
   );

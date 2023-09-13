@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import style from "./checkout.module.css";
 import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AddIcon from '@mui/icons-material/Add';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddIcon from "@mui/icons-material/Add";
+import AddressForm from "../account/AddressForm";
+import { nanoid } from "nanoid";
 
 const image = [
   {
@@ -31,12 +33,12 @@ const image = [
       "https://rukminim2.flixcart.com/image/612/612/xif0q/nut-dry-fruit/i/t/n/250-gold-makhana-1-pouch-farmley-original-imagqdth9nwgkhdu.jpeg?q=70",
   },
 ];
-const addresses = [
+const allAddresses = [
   {
     id: 1,
     name: "Adarsh kushwaha",
     typeOfAddress: "Home",
-    HouseName: "Vill- kanpatiyapur makrand nagar kannauj",
+    address: "Vill- kanpatiyapur makrand nagar kannauj",
     city: "Kannauj",
     pinCode: 209726,
     state: "U.P",
@@ -46,7 +48,7 @@ const addresses = [
     id: 2,
     name: "adarsh kushwaha",
     typeOfAddress: "Home",
-    HouseName: "Golden PG, Vithlpur chowkdi",
+    address: "Golden PG, Vithlpur chowkdi",
     city: "Ahmedabad",
     pinCode: 111009,
     state: "Gujarat",
@@ -56,7 +58,7 @@ const addresses = [
     id: 3,
     name: "adarsh kushwaha",
     typeOfAddress: "Home",
-    HouseName: "Golden PG, Vithlpur chowkdi",
+    address: "Golden PG, Vithlpur chowkdi",
     city: "Ahmedabad",
     pinCode: 111009,
     state: "Gujarat",
@@ -66,7 +68,7 @@ const addresses = [
     id: 4,
     name: "adarsh kushwaha",
     typeOfAddress: "Home",
-    HouseName: "Golden PG, Vithlpur chowkdi",
+    address: "Golden PG, Vithlpur chowkdi",
     city: "Ahmedabad",
     pinCode: 111009,
     state: "Gujarat",
@@ -76,7 +78,7 @@ const addresses = [
     id: 5,
     name: "adarsh kushwaha",
     typeOfAddress: "Home",
-    HouseName: "Golden PG, Vithlpur chowkdi",
+    address: "Golden PG, Vithlpur chowkdi",
     city: "Ahmedabad",
     pinCode: 111009,
     state: "Gujarat",
@@ -94,22 +96,62 @@ function CheckOut() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isConfirmOrder, setIsConfirmOrder] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  const [showAllAddress, setShowAllAddress] = useState(false)
-  
+  const [addresses, setAddAddress] = useState(allAddresses);
+  const [showAllAddress, setShowAllAddress] = useState(false);
+  const [showDeliverBtn, setShowDeliverBtn] = useState(true);
+  const [isEditAddress, setIsEditAddress] = useState(false);
+  const [isAddAddress, setIsAddAddress] = useState(false);
+
   function handleStep1st() {
     setIsStepOneDone(false);
     setIsStepTwoDone(true);
     setIsSetp2Completed(true);
     setIsStepThreeDone(false);
     setIsSetp3Completed(true);
-    setIsStepFourDone(false)
+    setIsStepFourDone(false);
   }
 
   function handleContinueCheckout() {
     setIsStepOneDone(true);
     setIsStepTwoDone(false);
-    setIsConfirmOrder(false)
+    setIsConfirmOrder(false);
   }
+
+  // for Delivery Address step
+
+  const initialAddress = {
+    id: nanoid(5),
+    name: "",
+    typeOfAddress: "",
+    address: "",
+    city: "",
+    pinCode: "",
+    state: "",
+    phone: "",
+  };
+
+  const [currentaddress, setCurrentAddress] = useState(initialAddress);
+
+  function handleHideForm() {
+    setIsEditAddress(false);
+    setShowDeliverBtn(true);
+    setIsAddAddress(false);
+    setCurrentAddress(initialAddress);
+  }
+
+  function handleOpenEditForm(address) {
+    setCurrentAddress(address);
+    setIsEditAddress(true);
+    setShowDeliverBtn(false);
+    setIsAddAddress(false);
+  }
+
+  function handleOpenAddForm() {
+    setIsAddAddress(true);
+    setCurrentAddress(initialAddress);
+    setIsEditAddress(false);
+  }
+
   function handleDeliverHere() {
     setIsStepTwoDone(true);
     setIsSetp2Completed(false);
@@ -120,28 +162,27 @@ function CheckOut() {
     setIsStepTwoDone(false);
     setIsStepThreeDone(false);
     setIsSetp3Completed(true);
-    setIsStepFourDone(false)
-    setIsConfirmOrder(false)
+    setIsStepFourDone(false);
+    setIsConfirmOrder(false);
   }
   function handleOrderSummryContinue() {
     setIsSetp3Completed(false);
     setIsStepThreeDone(false);
-    setIsStepFourDone(true)
+    setIsStepFourDone(true);
   }
   function handleOrderSummaryChange() {
     setIsStepThreeDone(true);
-    setIsStepFourDone(false)
-    setIsConfirmOrder(false)
+    setIsStepFourDone(false);
+    setIsConfirmOrder(false);
   }
 
-  function handleOnChangePaymentOptions(e){
-  setSelectedPaymentMethod(e.target.value)
-  setIsConfirmOrder(true)
+  function handleOnChangePaymentOptions(e) {
+    setSelectedPaymentMethod(e.target.value);
+    setIsConfirmOrder(true);
   }
 
-  function handleOrderConfirm(){
-    
-    alert(`selected Option: ${selectedPaymentMethod}`)
+  function handleOrderConfirm() {
+    alert(`selected Option: ${selectedPaymentMethod}`);
   }
   return (
     <div className={style.mainCartContainer}>
@@ -217,7 +258,7 @@ function CheckOut() {
                   <div>
                     DELIVERY ADDRESS <DoneIcon sx={{ color: "#2874f0" }} />
                     <p>
-                      {selectedAddress?.name} {selectedAddress?.HouseName},{" "}
+                      {selectedAddress?.name} {selectedAddress?.address},{" "}
                       {selectedAddress.city} {selectedAddress.state}(
                       {selectedAddress.pinCode})
                     </p>
@@ -237,54 +278,100 @@ function CheckOut() {
               </div>
               <span className={style.login1}>DELIVERY ADDRESS</span>
             </div>
+            {isEditAddress && (
+              <AddressForm
+                formType="EDIT ADDRESS"
+                handleHideForm={handleHideForm}
+                currentaddress={currentaddress}
+                setCurrentAddress={setCurrentAddress}
+                setAddAddress={setAddAddress}
+              />
+            )}
             <div className={style.addressContainer}>
               <ul>
-                {addresses.slice(0,showAllAddress ? addresses.length : 3 ).map((address) => (
-                  <li className={style.addrsContainer} key={address.id}>
-                    <input
-                      type="radio"
-                      name="address"
-                      value={address.id}
-                      id={address.id}
-                      checked={selectedAddress?.id === address.id}
-                      onChange={() => setSelectedAddress(address)}
-                    />
+                {addresses
+                  .slice(0, showAllAddress ? addresses.length : 3)
+                  .map((address) => (
+                    <li className={style.addrsContainer} key={address.id}>
+                      <input
+                        type="radio"
+                        name="address"
+                        value={address.id}
+                        id={address.id}
+                        checked={selectedAddress?.id === address.id}
+                        onChange={() => setSelectedAddress(address)}
+                      />
 
-                    <label htmlFor={address.id}>
-                      <div className={style.addInfo}>
-                        <span>{address.name}</span>
-                        <span> {address.typeOfAddress}</span>
-                        <span> {address.phone}</span>
-                      </div>
-                      <div>
-                        {address.HouseName}, {address.city}, {address.state}(
-                        {address.pinCode})
-                      </div>
-                      {selectedAddress?.id === address.id && (
-                        <div className={style.deliverHere}>
-                          <button onClick={() => handleDeliverHere(address.id)}>
-                            DELIVER HERE
-                          </button>
+                      <label htmlFor={address.id}>
+                        <div className={style.editBtnDiv}>
+                          <div className={style.addInfo}>
+                            <span>{address.name}</span>
+                            <span> {address.typeOfAddress}</span>
+                            <span> {address.phone}</span>
+                          </div>
+                          <div>
+                          {selectedAddress?.id === address.id &&
+                            showDeliverBtn && (
+                              <div className={style.addEditBtn}>
+                                <button
+                                  onClick={() => handleOpenEditForm(address)}
+                                >
+                                  {" "}
+                                  EDIT
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          
                         </div>
-                      )}
-                    </label>
-                    {selectedAddress?.id === address.id && (
-                      <div className={style.addEditBtn}>
-                        <Button> EDIT</Button>
-                      </div>
-                    )}
-                  </li>
-                ))}
+                        <div>
+                          {address.address}, {address.city}, {address.state}(
+                          {address.pinCode})
+                        </div>
+                        
+                        {selectedAddress?.id === address.id &&
+                          showDeliverBtn && (
+                            <div className={style.deliverHere}>
+                              <button
+                                onClick={() => handleDeliverHere(address.id)}
+                              >
+                                DELIVER HERE
+                              </button>
+                            </div>
+                          )}
+                      </label>
+                    </li>
+                  ))}
               </ul>
-             {!showAllAddress && addresses.length>3 && <div className={style.showAddressDiv} onClick={() => setShowAllAddress(true)}>
-                  <span><ExpandMoreIcon/></span>
+              {!showAllAddress && addresses.length > 3 && (
+                <div
+                  className={style.showAddressDiv}
+                  onClick={() => setShowAllAddress(true)}
+                >
+                  <span>
+                    <ExpandMoreIcon />
+                  </span>
                   <span>View all {addresses.length} addresses</span>
-              </div>}
+                </div>
+              )}
             </div>
-            <div className={style.showAddressDiv}>
-                  <span><AddIcon/></span>
-                  <span> Add a new address</span>
+            {isAddAddress ? (
+              <AddressForm
+                formType="ADD A NEW ADDRESS"
+                handleHideForm={handleHideForm}
+                currentaddress={currentaddress}
+                setCurrentAddress={setCurrentAddress}
+                addresses={addresses}
+                setAddAddress={setAddAddress}
+              />
+            ) : (
+              <div className={style.showAddressDiv} onClick={handleOpenAddForm}>
+                <span>
+                  <AddIcon />
+                </span>
+                <span> Add a new address</span>
               </div>
+            )}
           </div>
         )}
 
@@ -380,32 +467,68 @@ function CheckOut() {
             </div>
             <div className={style.paymentsOptions}>
               <div>
-              <input type="radio" name="payment" id="UPI" value='UPI' checked={selectedPaymentMethod === 'UPI'} onChange={handleOnChangePaymentOptions}/>
-              <label htmlFor="UPI">UPI</label>
+                <input
+                  type="radio"
+                  name="payment"
+                  id="UPI"
+                  value="UPI"
+                  checked={selectedPaymentMethod === "UPI"}
+                  onChange={handleOnChangePaymentOptions}
+                />
+                <label htmlFor="UPI">UPI</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="wallets" value='Wallets' checked={selectedPaymentMethod === 'Wallets'} onChange={handleOnChangePaymentOptions}/>
-              <label htmlFor="wallets">Wallets</label>
+                <input
+                  type="radio"
+                  name="payment"
+                  id="wallets"
+                  value="Wallets"
+                  checked={selectedPaymentMethod === "Wallets"}
+                  onChange={handleOnChangePaymentOptions}
+                />
+                <label htmlFor="wallets">Wallets</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="card" value='Card' checked={selectedPaymentMethod === 'Card'} onChange={handleOnChangePaymentOptions}/>
-              <label htmlFor="card">Credit/Debit/ATM Card</label>
+                <input
+                  type="radio"
+                  name="payment"
+                  id="card"
+                  value="Card"
+                  checked={selectedPaymentMethod === "Card"}
+                  onChange={handleOnChangePaymentOptions}
+                />
+                <label htmlFor="card">Credit/Debit/ATM Card</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="netBanking" value='Net-Banking' checked={selectedPaymentMethod === 'Net-Banking'} onChange={handleOnChangePaymentOptions}/>
-              <label htmlFor="netBanking">Net Banking</label>
+                <input
+                  type="radio"
+                  name="payment"
+                  id="netBanking"
+                  value="Net-Banking"
+                  checked={selectedPaymentMethod === "Net-Banking"}
+                  onChange={handleOnChangePaymentOptions}
+                />
+                <label htmlFor="netBanking">Net Banking</label>
               </div>
               <div>
-              <input type="radio" name="payment" id="cash" value='Cash on Delivery' checked={selectedPaymentMethod === 'Cash on Delivery'} onChange={handleOnChangePaymentOptions}/>
-              <label htmlFor="cash">Cash on Delivery</label>
+                <input
+                  type="radio"
+                  name="payment"
+                  id="cash"
+                  value="Cash on Delivery"
+                  checked={selectedPaymentMethod === "Cash on Delivery"}
+                  onChange={handleOnChangePaymentOptions}
+                />
+                <label htmlFor="cash">Cash on Delivery</label>
               </div>
-              
             </div>
-           {isConfirmOrder && <div>
-              <div className={style.orderBtn}>
-                <button onClick={handleOrderConfirm}>CONFIRM ORDER</button>
+            {isConfirmOrder && (
+              <div>
+                <div className={style.orderBtn}>
+                  <button onClick={handleOrderConfirm}>CONFIRM ORDER</button>
+                </div>
               </div>
-            </div>}
+            )}
           </div>
         ) : (
           <div className={style.address}>
@@ -413,11 +536,8 @@ function CheckOut() {
               <span>4</span>
               <div>PAYMENT OPTIONS</div>
             </div>
-        
           </div>
         )}
-
-      
       </div>
 
       <div className={style.mainRight}>

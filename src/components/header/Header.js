@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
-import { Avatar, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import style from "./Header.module.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -30,21 +30,24 @@ const styles = {
 };
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [isNameInput, setIsNameInput] = useState(false);
   const [toLogin, setToLogin] = useState(false);
 
-  const [signupFullName, setSignupFullName] = useState("");
+  const [signupFirstName, setSignupFirstName] = useState("");
+  const [signupLastName, setSignupLastName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [userInput, setUserInput] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [FNerr, setFNerr] = useState("");
+  const [LNerr, setLNerr] = useState("");
+  const [Eerr, setEerr] = useState("");
+  const [PsErr, setPsErr] = useState("");
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  
-  
 
   const handleOpen = () => {
     setOpen(true);
@@ -52,6 +55,9 @@ function Header() {
 
   const handleClose = () => {
     setOpen(false);
+    setIsSignup(false);
+    setIsNameInput(false);
+    setToLogin(false);
   };
 
   const signupBtnName = isNameInput ? "SignUp" : "CONTINUE";
@@ -64,13 +70,13 @@ function Header() {
   }
 
   const handleInputChange = (e) => {
-    const input = e.target.value;
+    let input = e.target.value;
     if (isSignup) {
-      if (/^\d+$/.test(input)) {
-        setUserInput(input);
-      } else {
-        setUserInput("");
+      input = input.replace(/\D/g, "");
+      if (input.length > 10) {
+        input = input.slice(0, 10);
       }
+      setUserInput(input);
     } else {
       setUserInput(input);
     }
@@ -81,6 +87,49 @@ function Header() {
     (user) => user.phone === userInput || user.email === userInput
   );
   const existUser = loginUserDetails.find((user) => user.phone === userInput);
+
+  function handleFNameOnBlurr(e) {
+    let value = e.target.value;
+    if (isSignup) {
+      if (/^[a-zA-Z][^0-9]{2,30}$/.test(value)) {
+        setFNerr("");
+      } else {
+        setFNerr("First name is invalid!");
+      }
+    }
+  }
+  function handleLNameOnBlurr(e) {
+    let value = e.target.value;
+    if (isSignup) {
+      if (/^[a-zA-Z][^0-9]{2,30}$/.test(value)) {
+        setLNerr("");
+      } else {
+        setLNerr("Last name is invalid!");
+      }
+    }
+  }
+  function handleEmailOnBlurr(e) {
+    let value = e.target.value;
+    if (isSignup) {
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(value)) {
+        setEerr("");
+      } else {
+        setEerr("Email is invalid!");
+      }
+    }
+  }
+  function handlePasswOnBlurr(e) {
+    let value = e.target.value;
+    if (isSignup) {
+      if (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
+        setPsErr("");
+      } else {
+        setPsErr(
+          "Password must be minimum eight characters, at least one letter and one number!"
+        );
+      }
+    }
+  }
 
   function handleSignupBtn(btn) {
     // setIsNameInput(true)
@@ -100,24 +149,32 @@ function Header() {
         }
       }
     } else {
-      if (signupFullName && signupEmail && signupPassword) {
+      if (!FNerr && !LNerr && !Eerr && !PsErr) {
         const existEmail = loginUserDetails.find(
           (user) => user.email === signupEmail
         );
         if (existEmail) {
           alert("email already exist");
         } else {
-          console.log(userInput, signupFullName, signupEmail, signupPassword);
+          console.log(
+            userInput,
+            signupFirstName,
+            signupLastName,
+            signupEmail,
+            signupPassword
+          );
           setOpen(false);
           setIsSignup(false);
           setIsNameInput(false);
           setToLogin(false);
           setUserInput("");
-          setSignupFullName("");
+          setSignupFirstName("");
+          setSignupLastName("");
           setSignupEmail("");
           setSignupPassword("");
           const userDetails = {
-            fullName: signupFullName,
+            firstName: signupFirstName,
+            lastName: signupLastName,
             phone: userInput,
             email: signupEmail,
             password: signupPassword,
@@ -128,20 +185,10 @@ function Header() {
           localStorage.setItem("userData", JSON.stringify(newUserDeatils));
         }
       } else {
-        alert("Fill all fields");
+        alert("Please fill currect value!");
       }
     }
   }
-
-  const handleKeyPress = (e) => {
-    // Allow only numeric characters (0-9)
-    if (isSignup) {
-      const charCode = e.which || e.keyCode;
-      if (charCode < 48 || charCode > 57) {
-        e.preventDefault();
-      }
-    }
-  };
 
   function handleLoginBtn(btn) {
     if (btn === "Request LOGIN") {
@@ -220,7 +267,7 @@ function Header() {
                 sx={{
                   ...styles,
                   width: "50vw",
-                  height: "85vh",
+                  height: "90vh",
                   border: "none",
                   overflowY: "scroll",
                 }}
@@ -264,7 +311,7 @@ function Header() {
                         disabled={isNameInput}
                         value={userInput}
                         onChange={handleInputChange}
-                        onKeyPress={handleKeyPress}
+                        // onKeyPress={handleKeyPress}
                       />
                     )}
                     {isNameInput && (
@@ -280,13 +327,36 @@ function Header() {
                       <>
                         <div className={style.terms}>
                           <TextField
-                            label="Enter Your Full Name"
+                            label="Enter Your First Name"
                             variant="standard"
                             sx={{ width: "100%" }}
                             autoFocus
-                            value={signupFullName}
-                            onChange={(e) => setSignupFullName(e.target.value)}
+                            value={signupFirstName}
+                            onChange={(e) => {
+                              setSignupFirstName(e.target.value);
+                              setFNerr("");
+                            }}
+                            required
+                            error={FNerr ? true : false}
+                            onBlur={handleFNameOnBlurr}
                           />
+                          {FNerr && <p className={style.error}> {FNerr}</p>}
+                        </div>
+                        <div className={style.terms}>
+                          <TextField
+                            label="Enter Your Last Name"
+                            variant="standard"
+                            sx={{ width: "100%" }}
+                            value={signupLastName}
+                            onChange={(e) => {
+                              setSignupLastName(e.target.value);
+                              setLNerr("");
+                            }}
+                            required
+                            error={LNerr ? true : false}
+                            onBlur={handleLNameOnBlurr}
+                          />
+                          {LNerr && <p className={style.error}> {LNerr}</p>}
                         </div>
                         <div className={style.terms}>
                           <TextField
@@ -295,19 +365,32 @@ function Header() {
                             sx={{ width: "100%" }}
                             // autoFocus
                             value={signupEmail}
-                            onChange={(e) => setSignupEmail(e.target.value)}
+                            onChange={(e) => {
+                              setSignupEmail(e.target.value);
+                              setEerr("");
+                            }}
+                            required
+                            error={Eerr ? true : false}
+                            onBlur={handleEmailOnBlurr}
                           />
+                          {Eerr && <p className={style.error}> {Eerr}</p>}
                         </div>
                         <div className={style.terms}>
                           <TextField
-                            type="passsword"
+                            type="password"
                             label="Create Your Password"
                             variant="standard"
                             sx={{ width: "100%" }}
-                            // autoFocus
                             value={signupPassword}
-                            onChange={(e) => setSignupPassword(e.target.value)}
+                            onChange={(e) => {
+                              setSignupPassword(e.target.value);
+                              setPsErr("");
+                            }}
+                            required
+                            error={PsErr ? true : false}
+                            onBlur={handlePasswOnBlurr}
                           />
+                          {PsErr && <p className={style.error}> {PsErr}</p>}
                         </div>
                       </>
                     ) : (
