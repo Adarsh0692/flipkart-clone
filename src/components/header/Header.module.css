@@ -4,14 +4,34 @@
     padding: 0 1rem;
     font-size: 0.9rem;
     border: none;
-    border-radius: 3px 0 0 3px;
+    border-radius: 2px 0 0 2px;
 
 }
 .logo{
     cursor: pointer;
-    width: 70px;
-   
-
+    width: 6vw;
+}
+.imgDiv{
+    display: flex;
+    flex-direction: column;
+}
+.plusDiv{
+    font-size: .7rem;
+   color: #F0F0F0;
+    font-style: italic;
+}
+.plusDiv span{
+    font-size: .7rem;
+    font-style: italic;
+    color: #FFE500;
+}
+.plusDiv img{
+    height: .7rem;
+}
+.logo_search{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 .loginBtn{
     height: 2rem;
@@ -21,7 +41,7 @@
     color: #1976D2;
     font-weight: bold;
     font-size: 1rem;
-    border-radius: 3px;
+    border-radius: 2px;
     cursor: pointer;
 }
 .searchDiv{
@@ -29,9 +49,13 @@
 }
 .cart{
    margin-left: 15px;
+   font-weight: 500;
+   font-size: 1rem;
 }
 .cartdiv{
     cursor: pointer;
+    font-weight: 500;
+   font-size: 1rem;
 }
 
 /* login tippy style from here */

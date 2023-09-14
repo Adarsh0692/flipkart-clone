@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,7 @@ import style from "./Header.module.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Badge from "@mui/material/Badge";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import LoginTippy from "./LoginTippy";
@@ -30,7 +30,7 @@ const styles = {
 };
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [isSignup, setIsSignup] = useState(false);
   const [isNameInput, setIsNameInput] = useState(false);
   const [toLogin, setToLogin] = useState(false);
@@ -47,6 +47,8 @@ function Header() {
   const [PsErr, setPsErr] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -58,6 +60,7 @@ function Header() {
     setIsSignup(false);
     setIsNameInput(false);
     setToLogin(false);
+    setUserInput("");
   };
 
   const signupBtnName = isNameInput ? "SignUp" : "CONTINUE";
@@ -220,7 +223,7 @@ function Header() {
 
   return (
     <Box sx={{ flexGrow: 0, mb: "60px" }}>
-      <AppBar position="fixed" sx={{ padding: "0 5rem" }}>
+      <AppBar position="fixed" sx={{ padding: "0 9rem", backgroundColor:'#2874f0' }}>
         <Toolbar
           sx={{
             display: "flex",
@@ -235,33 +238,41 @@ function Header() {
               flexGrow: 1,
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-around",
+              justifyContent: "space-between",
             }}
           >
-            <img
-              onClick={() => navigate("/")}
-              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
-              alt=""
-              className={style.logo}
-            />
-            <div className={style.searchDiv}>
-              <input
-                className={style.searchInput}
-                type="text"
-                placeholder="Search for products, brand and more"
+            <div className={style.logo_search}>
+            <div className={style.imgDiv}>
+              <img
+                onClick={() => navigate("/")}
+                src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
+                alt=""
+                className={style.logo}
               />
-              <SearchIcon
-                sx={{
-                  backgroundColor: "white",
-                  color: "blue",
-                  height: "2.5rem",
-                  width: "2rem",
-                  borderRadius: "0 3px 3px 0",
-                  cursor: "pointer",
-                }}
-              />
+              <span className={style.plusDiv}>Explore <span>Plus</span>
+              <span><img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png" alt="" /></span>
+              </span>
+              </div>
+              {location.pathname !== "/checkout" && (
+                <div className={style.searchDiv}>
+                  <input
+                    className={style.searchInput}
+                    type="text"
+                    placeholder="Search for products, brand and more"
+                  />
+                  <SearchIcon
+                    sx={{
+                      backgroundColor: "white",
+                      color: "blue",
+                      height: "2.5rem",
+                      width: "2rem",
+                      borderRadius: "0 2px 2px 0",
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
+              )}
             </div>
-
             <Modal open={open} onClose={handleClose}>
               <Box
                 sx={{
@@ -442,16 +453,18 @@ function Header() {
                 content={<LoginTippy handleOpen={handleOpen} />}
                 interactive={true}
               >
-                <Button
-                  sx={{
-                    color: "white",
-                    textTransform: "capitalize",
-                    fontSize: "20px",
-                  }}
-                >
-                  Adarsh
-                  <KeyboardArrowDownIcon sx={{ fontSize: "18px" }} />
-                </Button>
+                {location.pathname !== "/checkout" && (
+                  <Button
+                    sx={{
+                      color: "white",
+                      textTransform: "capitalize",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Adarsh
+                    <KeyboardArrowDownIcon sx={{ fontSize: "18px" }} />
+                  </Button>
+                )}
               </Tippy>
             ) : (
               <Tippy
@@ -464,73 +477,40 @@ function Header() {
                 </button>
               </Tippy>
             )}
-            <span>Become a seller</span>
-            <Tippy theme="light" content={<MoreTippy />} interactive>
-              <span>
-                More
-                <KeyboardArrowDownIcon
-                  sx={{ ml: "-2px", mb: "-2px", fontSize: "15px" }}
-                />
-              </span>
-            </Tippy>
+            {location.pathname !== "/viewCart" &&
+              location.pathname !== "/checkout" && <span className={style.cartdiv}>Become a seller</span>}
+
+            {location.pathname !== "/viewCart" &&
+              location.pathname !== "/checkout" && (
+                <Tippy theme="light" content={<MoreTippy />} interactive>
+                  <span className={style.cartdiv}>
+                    More
+                    <span>
+                      <KeyboardArrowDownIcon
+                        sx={{ ml: "-2px", mb: "-2px", fontSize: "15px" }}
+                      />
+                    </span>
+                  </span>
+                </Tippy>
+              )}
+
+            {location.pathname !== "/viewCart" &&
+              location.pathname !== "/checkout" && (
+                <div
+                  className={style.cartdiv}
+                  onClick={() => navigate("/viewCart")}
+                >
+                  <Badge badgeContent={4} color="error">
+                    <ShoppingCartIcon />
+                  </Badge>
+                  <span className={style.cart}>Cart</span>
+                </div>
+              )}
           </Typography>
-          <div className={style.cartdiv} onClick={() => navigate("/viewCart")}>
-            <Badge badgeContent={4} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-            <span className={style.cart}>Cart</span>
-          </div>
         </Toolbar>
       </AppBar>
     </Box>
   );
 }
-
-// function FadeMenu() {
-//   const [anchorEl, setAnchorEl] = useState(null);
-//   const open = Boolean(anchorEl);
-//   const handleClick = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
-//   const handleClose = () => {
-//     setAnchorEl(null);
-//   };
-
-//   return (
-//     <div>
-//       <Button
-//         sx={{ color: "white", textTransform: "capitalize", fontSize: "20px" }}
-//         onClick={handleClick}
-//       >
-//         Adarsh
-//         <KeyboardArrowDownIcon sx={{ fontSize: "18px" }} />
-//       </Button>
-//       <Menu
-//         anchorEl={anchorEl}
-//         open={open}
-//         onClose={handleClose}
-//         sx={{ mt: "10px" }}
-//       >
-//         <MenuItem onClick={handleClose}>
-//           {" "}
-//           <AccountCircleIcon
-//             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
-//           />{" "}
-//           My Profile
-//         </MenuItem>
-//         <MenuItem onClick={handleClose}>
-//           <DriveFileMoveIcon
-//             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
-//           />{" "}
-//           Oders
-//         </MenuItem>
-//         <MenuItem onClick={handleClose}>
-//           <LogoutIcon sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }} />{" "}
-//           Logout
-//         </MenuItem>
-//       </Menu>
-//     </div>
-//   );
-// }
 
 export default Header;

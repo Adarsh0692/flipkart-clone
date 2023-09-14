@@ -514,3 +514,143 @@ justify-content: center;
     align-items: center;
     gap: 10px;
 }
+
+/* write-review style from here */
+
+.mainwapperReview{
+    padding: 1rem;
+}
+.reviwProd{
+    background-color: #FFFFFF;
+    /* box-shadow: 0 1px 2px 0 rgba(0,0,0,.1); */
+    padding: 0.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.rateRev{
+   font-size: 1.5rem;
+   font-weight: 500;
+}
+.prDiv{
+    display: flex;
+    align-items: center;
+}
+.revImgDiv{
+    width:5vw;
+    height: 12vh;
+}
+.revImgDiv img{
+    width: 100%;
+}
+.revProdTitle{
+    width: 16vw;
+}
+.revProdTitle div:first-child{
+    font-size: 1.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.revRateDiv{
+    margin-top: .2rem;
+    display: flex;
+    padding-left: 30%;
+}
+.revRateDiv div:first-child{
+    background-color: green;
+    color: #fff;
+     padding: 3px 5px;
+     border-radius: 4px;
+     display: flex; 
+     align-items: center;
+     gap: 2px;
+     font-size: .8rem;
+}
+.revRateDiv div:last-child{
+    color: #878787;
+}
+
+.bottomSec{
+    display: flex;
+    gap: .5rem;
+    margin-top: .6rem;
+}
+.whatRev{
+    width: 28%;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+}
+.whatRev div:first-child{
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1.5rem ;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.revFormSec{
+    width: 72%;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+}
+.quesDiv{
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem 1.5rem ;
+}
+.quesDiv span{
+    font-size: 1.2rem;
+}
+.quesDiv p{
+  font-size: .95rem;
+  padding: .5rem 0;
+} 
+
+.starDiv{
+    padding: 1.5rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+.starDiv div:first-child{
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+.selStar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.selStar div{
+    /* border: 1px solid red; */
+    width: 13vw;
+}
+.desDiv{
+    padding: 1.5rem;
+}
+.desDiv div:first-child{
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.revDesc{
+    border: 1px solid #e0e0e0;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+.desErr{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.revDesc textarea{
+    width: 100%;
+    border: none;
+    padding: .2rem 0;
+    resize: none;
+    font-size: 1rem;
+}
+.titleDiv{
+    border: 1px solid #e0e0e0;
+    padding: 1rem;
+}
+
+/* write-review end  */

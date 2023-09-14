@@ -104,9 +104,9 @@ const userImg = [
 const ratings = {
   "5star": 32,
   "4star": 14,
-  "3star": 5,
+  "3star": 500,
   "2star": 0,
-  "1star": 5,
+  "1star": 50,
 };
 
 // Logic For get width of rating bar according to user rate..==>

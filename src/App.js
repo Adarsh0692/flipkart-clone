@@ -7,6 +7,7 @@ import SingleProduct from './containers/singleProduct/SingleProduct';
 import ViewCart from './containers/viewCart/ViewCart';
 import CheckOut from './containers/checkout/CheckOut';
 import Account from './containers/account/Account';
+import WriteReview from './containers/singleProduct/WriteReview';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Route path='/viewcart' element={<ViewCart/>}/>
       <Route path='/checkout' element={<CheckOut/>}/>
       <Route path='/account/:id' element={<Account/>}/>
+      <Route path='/write-review/:id' element={<WriteReview/>}/>
     </Routes> 
     </BrowserRouter>
   );

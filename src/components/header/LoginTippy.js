@@ -10,9 +10,31 @@ import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
 import { useNavigate } from 'react-router-dom';
 
 function LoginTippy({handleOpen, setVisible}) {
-    const [isLogin, setIsLogin] = useState(false);
+    const [isLogin, setIsLogin] = useState(true);
 
     const navigate = useNavigate()
+
+    function handleOrderPage(){
+      if(isLogin){
+        navigate('/account/orders')
+      }else{
+        navigate('/login')
+      }
+    }
+    function handleMyAccountPage(){
+      if(isLogin){
+        navigate('/account/1')
+      }else{
+        navigate('/login')
+      }
+    }
+    function handleWishlistPage(){
+      if(isLogin){
+        navigate('/account/wishlist')
+      }else{
+        navigate('/login')
+      }
+    }
 
   return (
     <div className={style.mainLoginTDiv}>
@@ -21,7 +43,7 @@ function LoginTippy({handleOpen, setVisible}) {
         <button >Sign Up</button>
       </div>}
 
-      <div onClick={()=>navigate('/account/1')}>
+      <div onClick={handleMyAccountPage}>
         <span><AccountCircleIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
@@ -39,13 +61,13 @@ function LoginTippy({handleOpen, setVisible}) {
         <span><img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png" alt="" width='20px' /></span>
         <span>Flipkart Plus Zone</span>
       </div>
-      <div onClick={()=>navigate('/account/orders')}>
+      <div onClick={handleOrderPage}>
         <span><DriveFileMoveIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
         <span>Orders</span>
       </div>
-      <div onClick={()=>navigate('/account/wishlist')}>
+      <div onClick={handleWishlistPage}>
         <span><FavoriteIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
