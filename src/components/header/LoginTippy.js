@@ -8,9 +8,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
 import { useNavigate } from 'react-router-dom';
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase.config";
 
-function LoginTippy({handleOpen, setVisible}) {
-    const [isLogin, setIsLogin] = useState(true);
+function LoginTippy({handleOpen, isLogin}) {
+    
 
     const navigate = useNavigate()
 
@@ -36,11 +38,21 @@ function LoginTippy({handleOpen, setVisible}) {
       }
     }
 
+    function handleLogout(){
+      signOut(auth).then(() => {
+        // alert('Log-out successfuly.')
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      
+    }
+
   return (
     <div className={style.mainLoginTDiv}>
-     {!isLogin && <div onClick={handleOpen}>
+     {!isLogin && <div >
         <span>New customer?</span>
-        <button >Sign Up</button>
+        <button onClick={()=>handleOpen('signup')}>Sign Up</button>
       </div>}
 
       <div onClick={handleMyAccountPage}>
@@ -88,8 +100,8 @@ function LoginTippy({handleOpen, setVisible}) {
           /></span>
         <span>Notifications </span>
       </div>}
-     {isLogin && <div>
-        <span><LogoutIcon
+     {isLogin && <div onClick={handleLogout}>
+        <span ><LogoutIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
         <span>Logout</span>

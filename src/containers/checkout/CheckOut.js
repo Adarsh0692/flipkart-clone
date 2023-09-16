@@ -4,7 +4,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
-import AddressForm from "../account/AddressForm";
+import AddressForm from "../profile/AddressForm";
 import { nanoid } from "nanoid";
 
 const image = [

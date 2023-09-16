@@ -16,6 +16,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { useNavigate } from "react-router-dom";
 
 const image = [
   {
@@ -124,6 +125,7 @@ function SingleProduct() {
   const [showAll, setShowAll] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const navigate = useNavigate()
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -361,7 +363,7 @@ function SingleProduct() {
             <div className={style.reviewSection}>
               <div className={style.rateTopDiv}>
                 <div>Rating & Reviews</div>
-                <button>Rate Product</button>
+                <button onClick={()=>navigate('/write-review/1')}>Rate Product</button>
               </div>
               <div className={style.rateBar}>
                 <div>

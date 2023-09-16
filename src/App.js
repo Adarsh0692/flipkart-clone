@@ -4,9 +4,9 @@ import Header from './components/header/Header';
 import Home from './containers/HomePage/Home';
 import ProductPage from './containers/ProductPage/ProductPage';
 import SingleProduct from './containers/singleProduct/SingleProduct';
-import ViewCart from './containers/viewCart/ViewCart';
+import ViewCart from './containers/cart/ViewCart';
 import CheckOut from './containers/checkout/CheckOut';
-import Account from './containers/account/Account';
+import Account from './containers/profile/Account';
 import WriteReview from './containers/singleProduct/WriteReview';
 
 

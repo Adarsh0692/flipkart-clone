@@ -161,13 +161,13 @@
     box-shadow: 0 4px 6px 0 rgba(0,0,0,.12)
 }
 .terms{
-    margin-top: 25px;
+    margin-top: 2rem;
     color: gray;
-    font-size: .9rem;
+    font-size: .7rem;
 }
 .terms span{
     color: #2874F0;
-    font-size: .9rem;
+    font-size: .7rem;
 }
 .create{
  position: absolute;

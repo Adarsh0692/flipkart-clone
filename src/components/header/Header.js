@@ -17,6 +17,12 @@ import "tippy.js/themes/light.css";
 import MoreTippy from "./MoreTippy";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "../../firebase.config";
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "../../redux/authActions";
+import { setUser } from "../../redux/authSlice";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 
 const styles = {
   position: "absolute",
@@ -30,7 +36,9 @@ const styles = {
 };
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(true);
+  
+  const [isLogin, setIsLogin] = useState(false);
+  const [userName, setUserName] = useState('')
   const [isSignup, setIsSignup] = useState(false);
   const [isNameInput, setIsNameInput] = useState(false);
   const [toLogin, setToLogin] = useState(false);
@@ -41,6 +49,8 @@ function Header() {
   const [userInput, setUserInput] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+
+  const [userPhoneErr, setUserPhoneErr] = useState("");
   const [FNerr, setFNerr] = useState("");
   const [LNerr, setLNerr] = useState("");
   const [Eerr, setEerr] = useState("");
@@ -48,11 +58,21 @@ function Header() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch()
 
+  const isActive = useSelector((state) => state.auth.loginUser)
+// console.log('isAc', isActive);
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpen = (btn) => {
+    if(btn === 'signup'){
+      setOpen(true);
+      handleCreateAcc()
+    }else{
+      setOpen(true);
+    }
+    
+
   };
 
   const handleClose = () => {
@@ -66,10 +86,20 @@ function Header() {
   const signupBtnName = isNameInput ? "SignUp" : "CONTINUE";
   const loginBtnName = toLogin ? "Login" : "Request LOGIN";
 
+  function clearAllSignupInputFields(){
+    setUserInput("");
+    setSignupFirstName("");
+    setSignupLastName("");
+    setSignupEmail("");
+    setSignupPassword("");
+  }
+
   function handleExistingLogin() {
     setIsSignup(false);
     setIsNameInput(false);
     setToLogin(false);
+    setUserInput('')
+    setEerr('')
   }
 
   const handleInputChange = (e) => {
@@ -82,14 +112,11 @@ function Header() {
       setUserInput(input);
     } else {
       setUserInput(input);
+      setEerr("");
     }
   };
 
-  const loginUserDetails = JSON.parse(localStorage.getItem("userData")) || [];
-  const loginUser = loginUserDetails.find(
-    (user) => user.phone === userInput || user.email === userInput
-  );
-  const existUser = loginUserDetails.find((user) => user.phone === userInput);
+  const existUser = false
 
   function handleFNameOnBlurr(e) {
     let value = e.target.value;
@@ -104,7 +131,7 @@ function Header() {
   function handleLNameOnBlurr(e) {
     let value = e.target.value;
     if (isSignup) {
-      if (/^[a-zA-Z][^0-9]{2,30}$/.test(value)) {
+      if (/^[a-zA-Z][^0-9]{1,30}$/.test(value)) {
         setLNerr("");
       } else {
         setLNerr("Last name is invalid!");
@@ -134,10 +161,21 @@ function Header() {
     }
   }
 
-  function handleSignupBtn(btn) {
-    // setIsNameInput(true)
+  function handleLoginEmailOnBlurr(e){
+    let value = e.target.value;
+      if(!isSignup){
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(value)) {
+          setEerr("");
+        } else {
+          setEerr("Please enter valid Email ID");
+        }
+      }
+  }
+
+ async function handleSignupBtn(btn) {
+   
     if (btn === "CONTINUE") {
-      if (userInput) {
+    
         if (userInput.length === 10) {
           if (existUser) {
             alert("user already exist!");
@@ -145,73 +183,73 @@ function Header() {
             setIsNameInput(false);
             setToLogin(false);
           } else {
-            setIsNameInput(true);
+            setIsNameInput(true); // open sign form....
           }
         } else {
           alert("enter valid Mobile number");
         }
-      }
+      
+        // handle signup form submit ===>>
     } else {
-      if (!FNerr && !LNerr && !Eerr && !PsErr) {
-        const existEmail = loginUserDetails.find(
-          (user) => user.email === signupEmail
-        );
-        if (existEmail) {
-          alert("email already exist");
-        } else {
-          console.log(
-            userInput,
-            signupFirstName,
-            signupLastName,
-            signupEmail,
-            signupPassword
-          );
-          setOpen(false);
-          setIsSignup(false);
-          setIsNameInput(false);
-          setToLogin(false);
-          setUserInput("");
-          setSignupFirstName("");
-          setSignupLastName("");
-          setSignupEmail("");
-          setSignupPassword("");
-          const userDetails = {
+      if (!FNerr && !LNerr && !Eerr && !PsErr) {   // check no any errors
+
+        createUserWithEmailAndPassword(auth, signupEmail, signupPassword)
+        .then(async (res) => {
+          const user = res.user
+          await updateProfile(user, {
+            displayName: `${signupFirstName}`
+          })
+          const docRef = await addDoc(collection(db, 'users'), {
             firstName: signupFirstName,
             lastName: signupLastName,
             phone: userInput,
-            email: signupEmail,
-            password: signupPassword,
-            isActive: false,
-          };
+            email: signupEmail
+          })
+          console.log('doc Id', docRef.id)
+          handleExistingLogin()
+          clearAllSignupInputFields()
+        })
+        .catch((error) => {
+          // console.log(error);
+         if(error.message === 'Firebase: Error (auth/email-already-in-use).'){
+            alert('Yoy are already registered. Please log in.')
+            clearAllSignupInputFields()
+            handleExistingLogin()
+            setUserInput(signupEmail)
+           
+         }
+         
+        })
 
-          const newUserDeatils = [...loginUserDetails, userDetails];
-          localStorage.setItem("userData", JSON.stringify(newUserDeatils));
-        }
+        
+        
       } else {
         alert("Please fill currect value!");
       }
     }
   }
 
-  function handleLoginBtn(btn) {
+ 
+  async function handleLoginBtn(btn) {
     if (btn === "Request LOGIN") {
-      if (loginUser) {
+      if (!Eerr) {
         setToLogin(true);
-        // setUserInput('')
-      } else {
-        alert("Please enter valid Email ID/Mobile number");
-      }
+      } 
     } else {
-      //  alert(loginUser?.password)
-      const existUserPass = loginUserDetails.find(
-        (user) => user.password === loginPassword && user.phone === userInput
-      );
-      // console.log(existUserPass.password);
-      if (existUserPass) {
-        alert("login successfully");
-      } else {
-        alert("wrong password!");
-      }
+      
+        
+        signInWithEmailAndPassword(auth, userInput, loginPassword )
+        .then(async (res) => {
+         
+          // alert('Login successfully!')
+          handleClose()
+          setLoginPassword('')
+        })
+        .catch((err) => {
+          alert('Invalid credentials!')
+        })
+
+      
     }
   }
 
@@ -220,6 +258,36 @@ function Header() {
     setToLogin(false);
     setUserInput("");
   }
+
+   async function getDataFromFire(){
+    const docRef = doc(db, 'users')
+    const docSnap = await getDoc(docRef)
+    if(docSnap.exists()){
+      console.log('doc Data', docSnap.data());
+    }else{
+      console.log('no such doc.');
+    }
+  }
+ 
+
+  useEffect(() => {
+      auth.onAuthStateChanged((user) => {
+        if(user){
+          setUserName(user.displayName)
+          setIsLogin(true)
+          // getDataFromFire()
+          localStorage.setItem('isActive', true)
+        }else{
+          setUserName('')
+          setIsLogin(false)
+          localStorage.setItem('isActive', false)
+        }
+      })
+     const active = localStorage.getItem('isActive') || null
+     dispatch(setUser(active))
+    //  console.log(active);
+    // getDataFromFire()
+  },[isLogin])
 
   return (
     <Box sx={{ flexGrow: 0, mb: "60px" }}>
@@ -277,7 +345,7 @@ function Header() {
               <Box
                 sx={{
                   ...styles,
-                  width: "50vw",
+                  width: "55vw",
                   height: "90vh",
                   border: "none",
                   overflowY: "scroll",
@@ -286,7 +354,8 @@ function Header() {
                 <div className={style.loginMainContainer}>
                   {isSignup ? (
                     <div className={style.loginText}>
-                      <h1>Looks like yor're new here!</h1>
+                      <h1>Looks like </h1>
+                      <h1>yor're new here!</h1>
                       <p>Sign up with your mobile number to get started</p>
                     </div>
                   ) : (
@@ -310,11 +379,12 @@ function Header() {
                         onChange={(e) => setLoginPassword(e.target.value)}
                       />
                     ) : (
+                      <>
                       <TextField
                         label={
                           isSignup
                             ? "Enter Your Mobile number"
-                            : "Enter Email/Mobile number"
+                            : "Enter Email Address"
                         }
                         variant="standard"
                         sx={{ width: isNameInput ? "80%" : "100%" }}
@@ -322,8 +392,10 @@ function Header() {
                         disabled={isNameInput}
                         value={userInput}
                         onChange={handleInputChange}
-                        // onKeyPress={handleKeyPress}
+                        onBlur={handleLoginEmailOnBlurr}
                       />
+                      {Eerr && !isSignup && <p className={style.error}> {Eerr}</p>}
+                      </>
                     )}
                     {isNameInput && (
                       <button
@@ -405,11 +477,14 @@ function Header() {
                         </div>
                       </>
                     ) : (
+                      <>
+                     
                       <div className={style.terms}>
                         By continuing, you agree to Flipkart's{" "}
                         <span>Terms of Use</span> and{" "}
                         <span>Privacy Policy.</span>
                       </div>
+                      </>
                     )}
                     {isSignup ? (
                       <>
@@ -450,7 +525,7 @@ function Header() {
             {isLogin ? (
               <Tippy
                 theme="light"
-                content={<LoginTippy handleOpen={handleOpen} />}
+                content={<LoginTippy handleOpen={handleOpen} isLogin={isLogin} />}
                 interactive={true}
               >
                 {location.pathname !== "/checkout" && (
@@ -461,7 +536,7 @@ function Header() {
                       fontSize: "20px",
                     }}
                   >
-                    Adarsh
+                    {isLogin && userName}
                     <KeyboardArrowDownIcon sx={{ fontSize: "18px" }} />
                   </Button>
                 )}
@@ -472,7 +547,7 @@ function Header() {
                 content={<LoginTippy handleOpen={handleOpen} />}
                 interactive
               >
-                <button className={style.loginBtn} onClick={handleOpen}>
+                <button className={style.loginBtn} onClick={()=>handleOpen('login')}>
                   Login
                 </button>
               </Tippy>
