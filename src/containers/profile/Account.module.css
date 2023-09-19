@@ -81,6 +81,12 @@
     background-color: #f5faff;
 }
 
+
+  .navLink {
+    text-decoration: none;
+    color: black;
+  }
+
 /* right section style from here */
 
 .mainAccRight{

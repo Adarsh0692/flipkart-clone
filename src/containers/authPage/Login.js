@@ -159,6 +159,7 @@ function Login() {
               cart: [],
               orders: [],
             })
+            navigate('/')
             dispatch(
               setUser({
                 userName: user.displayName,
@@ -222,7 +223,7 @@ function Login() {
               userID: res.user.uid
             })
           );
-
+           navigate('/')
           if (!toast.isActive(toastId.current)) {
             toastId.current = toast.success("Success! You're logged in.", {
               position: toast.POSITION.TOP_RIGHT,
@@ -252,13 +253,13 @@ function Login() {
     setIsEditEmail(false);
   }
 
+  useEffect(() => {
+    if(userName){
+      navigate('/')
+    }
+  },[])
 
   useEffect(() => {
-
-      if(userName){
-        navigate('/')
-      }
-    
     auth.onAuthStateChanged((user) => {
       setLoader(true)
       if (user) {

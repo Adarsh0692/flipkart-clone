@@ -20,25 +20,19 @@ function LoginTippy({handleOpen, currentUser, toastId,toast}) {
     const dispatch = useDispatch()
 
     function handleOrderPage(){
-      if(currentUser){
+   
         navigate('/account/orders')
-      }else{
-        navigate('/login')
-      }
+      
     }
     function handleMyAccountPage(){
-      if(currentUser){
-        navigate('/account/1')
-      }else{
-        navigate('/login')
-      }
+   
+        navigate('/account/')
+    
     }
     function handleWishlistPage(){
-      if(currentUser){
+    
         navigate('/account/wishlist')
-      }else{
-        navigate('/login')
-      }
+     
     }
 
     function handleLogout(){

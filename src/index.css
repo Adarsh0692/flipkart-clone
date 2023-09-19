@@ -67,3 +67,10 @@ button{
 Link a{
     text-decoration: none;
 }
+.active {
+    color: #2874f0 !important;
+  }
+
+  .active div{
+    background-color: #f5faff !important;
+  }

@@ -9,6 +9,11 @@ import CheckOut from './containers/checkout/CheckOut';
 import Account from './containers/profile/Account';
 import Auth from './containers/authPage/Login';
 import WriteReview from './containers/singleProduct/WriteReview';
+import ManageAddresses from './containers/profile/ManageAddresses';
+import ProfileInfo from './containers/profile/ProfileInfo';
+import MyOrder from './containers/profile/MyOrder';
+import MyReviews from './containers/profile/MyReviews';
+import MyWishlist from './containers/profile/MyWishlist';
 
 
 function App() {
@@ -21,7 +26,14 @@ function App() {
       <Route path='/singleProduct/:id' element={<SingleProduct/>}/>
       <Route path='/viewcart' element={<ViewCart/>}/>
       <Route path='/checkout' element={<CheckOut/>}/>
-      <Route path='/account/:id' element={<Account/>}/>
+      <Route path='/account/' element={<Account/>}>
+        <Route index element={<ProfileInfo/>} />
+        <Route path='address' element={<ManageAddresses/>} />
+        <Route path='orders' element={<MyOrder/>} />
+        <Route path='reviews' element={<MyReviews/>} />
+        <Route path='wishlist' element={<MyWishlist/>} />
+        
+      </Route>
       <Route path='/write-review/:id' element={<WriteReview/>}/>
       <Route path='/login' element={<Auth/>}/>
     </Routes> 
