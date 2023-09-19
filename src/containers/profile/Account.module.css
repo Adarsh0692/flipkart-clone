@@ -135,6 +135,18 @@
     font-weight: 500;
     margin-top: -20px;
 }
+.delAcc{
+  margin-top: 3rem;
+}
+.delAcc button{
+    background: none;
+    border: none;
+    color: #2874f0;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 10px;
+
+}
 
 /* profile Info end */
 

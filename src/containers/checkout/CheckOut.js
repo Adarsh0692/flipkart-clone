@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import style from "./checkout.module.css";
 import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";
@@ -6,6 +6,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import AddressForm from "../profile/AddressForm";
 import { nanoid } from "nanoid";
+import { useDispatch, useSelector } from "react-redux";
+import { TextField } from "@mui/material";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase.config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { setLogoutUser, setUser } from "../../redux/authSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 const image = [
   {
@@ -87,7 +94,9 @@ const allAddresses = [
 ];
 
 function CheckOut() {
-  const [isStepOneDone, setIsStepOneDone] = useState(true);
+  const currentUser = useSelector((state) => state.auth);
+
+  const [isStepOneDone, setIsStepOneDone] = useState(currentUser.userName);
   const [isStepTwoDone, setIsStepTwoDone] = useState(false);
   const [isStepThreeDone, setIsStepThreeDone] = useState(false);
   const [isStepFourDone, setIsStepFourDone] = useState(false);
@@ -101,6 +110,60 @@ function CheckOut() {
   const [showDeliverBtn, setShowDeliverBtn] = useState(true);
   const [isEditAddress, setIsEditAddress] = useState(false);
   const [isAddAddress, setIsAddAddress] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [Eerr, setEerr] = useState("");
+
+  const toastId = useRef(null);
+  const dispatch = useDispatch();
+
+
+
+  function handleEmailOnBlurr(e) {
+    let value = e.target.value;
+
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(value)) {
+      setEerr("");
+    } else {
+      setEerr("Please enter valid Email ID");
+    }
+  }
+
+  function handleLogin() {
+    if (!Eerr) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((res) => {
+          dispatch(
+            setUser({
+              userName: res.user.displayName,
+              userEmail: res.user.email,
+            })
+          );
+          if (!toast.isActive(toastId.current)) {
+            toastId.current = toast.success("Success! You're logged in.");
+          }
+          setEmail("");
+          setPassword("");
+          handleContinueCheckout();
+        })
+        .catch((error) => {
+          if (!toast.isActive(toastId.current)) {
+            toastId.current = toast.error("Invalid credentails!");
+          }
+        });
+    }
+  }
+
+  function handleLogout() {
+    signOut(auth)
+      .then((res) => {
+        dispatch(setLogoutUser());
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   function handleStep1st() {
     setIsStepOneDone(false);
@@ -184,68 +247,127 @@ function CheckOut() {
   function handleOrderConfirm() {
     alert(`selected Option: ${selectedPaymentMethod}`);
   }
+
+  useEffect(() => {
+    if (!currentUser.userName) {
+      handleStep1st();
+    }
+  }, []);
+
   return (
     <div className={style.mainCartContainer}>
       <div className={style.mainLeft}>
-        <div>
-          {isStepOneDone ? (
-            <>
-              <div className={style.cartType}>
-                <div className={style.step1}>
-                  <span>1</span>
-                </div>
-                <div className={style.logintick}>
-                  <div>
-                    LOGIN{" "}
-                    <span>
-                      <DoneIcon sx={{ color: "#2874f0" }} />
-                    </span>
+        {currentUser.userName ? (
+          <div>
+            {isStepOneDone ? (
+              <>
+                <div className={style.cartType}>
+                  <div className={style.step1}>
+                    <span>1</span>
+                  </div>
+                  <div className={style.logintick}>
+                    <div>
+                      LOGIN{" "}
+                      <span>
+                        <DoneIcon sx={{ color: "#2874f0" }} />
+                      </span>
+                    </div>
+                    <div>
+                      <span>{currentUser.userName} - </span>
+                      <span> {currentUser.userEmail}</span>
+                    </div>
                   </div>
                   <div>
-                    <span>Adarsh kushwaha </span>
-                    <span> +917275668234</span>
+                    <button onClick={handleStep1st}>CHANGE</button>
+                  </div>{" "}
+                </div>
+              </>
+            ) : (
+              <div className={style.loginStep}>
+                <div className={style.steps}>
+                  <div className={style.step1}>
+                    <span>1</span>
+                  </div>
+                  <span className={style.login1}>LOGIN</span>
+                </div>
+                <div className={style.loginDetails}>
+                  <div>
+                    <div className={style.loginName}>
+                      <span>Name </span>
+                      <span> {currentUser.userName}</span>
+                    </div>
+                    <div className={style.loginName}>
+                      <span>Email </span>
+                      <span> {currentUser.userEmail}</span>
+                    </div>
+                    <div className={style.loginLogout}>
+                      <span onClick={handleLogout}>
+                        Logout & Sign in to another account{" "}
+                      </span>
+                    </div>
+                    <div className={style.loginConBtn}>
+                      <button onClick={handleContinueCheckout}>
+                        CONTINUE CHECKOUT
+                      </button>
+                    </div>
+                  </div>
+                  <div className={style.plsNote}>
+                    Please note that upon clicking "Logout" you will lose all
+                    items in cart and will be redirected to Flipkart home page.
                   </div>
                 </div>
-                <div>
-                  <button onClick={handleStep1st}>CHANGE</button>
-                </div>{" "}
               </div>
-            </>
-          ) : (
-            <div className={style.loginStep}>
-              <div className={style.steps}>
-                <div className={style.step1}>
-                  <span>1</span>
-                </div>
-                <span className={style.login1}>LOGIN</span>
+            )}
+          </div>
+        ) : (
+          <div className={style.loginStep}>
+            <div className={style.steps}>
+              <div className={style.step1}>
+                <span>1</span>
               </div>
-              <div className={style.loginDetails}>
-                <div>
-                  <div className={style.loginName}>
-                    <span>Name </span>
-                    <span> Adarsh kushwaha</span>
-                  </div>
-                  <div className={style.loginName}>
-                    <span>Phone </span>
-                    <span> +917275668234</span>
-                  </div>
-                  <div className={style.loginLogout}>
-                    <span>Logout & Sign in to another account </span>
-                  </div>
-                  <div className={style.loginConBtn}>
-                    <button onClick={handleContinueCheckout}>
-                      CONTINUE CHECKOUT
-                    </button>
-                  </div>
+              <span className={style.login1}>LOGIN OR SIGNUP</span>
+            </div>
+            <div className={style.loginDetails}>
+              <div className={style.loginForm}>
+                <div className={style.loginName}>
+                  <TextField
+                    label="Enter Your Email Address"
+                    variant="standard"
+                    sx={{ width: "100%" }}
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setEerr("");
+                    }}
+                    onBlur={handleEmailOnBlurr}
+                  />
+                  {Eerr && <p className={style.error}> {Eerr}</p>}
                 </div>
-                <div className={style.plsNote}>
-                  Please note that upon clicking "Logout" you will lose all
-                  items in cart and will be redirected to Flipkart home page.
+                <div className={style.loginName}>
+                  <TextField
+                    type="password"
+                    label="Enter Your Password"
+                    variant="standard"
+                    sx={{ width: "100%" }}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+
+          
+                  <div className={style.terms}>
+                    By continuing, you agree to Flipkart's{" "}
+                    <span>Terms of Use</span> and <span>Privacy Policy.</span>
+                  </div>
+             
+
+                <div className={style.loginConBtn}>
+                  <button onClick={handleLogin}>CONTINUE</button>
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {isStepTwoDone ? (
           <div className={style.address}>
@@ -258,9 +380,9 @@ function CheckOut() {
                   <div>
                     DELIVERY ADDRESS <DoneIcon sx={{ color: "#2874f0" }} />
                     <p>
-                      {selectedAddress?.name} {selectedAddress?.address},{" "}
-                      {selectedAddress.city} {selectedAddress.state}(
-                      {selectedAddress.pinCode})
+                      {selectedAddress?.name} {selectedAddress?.address}{" "}
+                      {selectedAddress?.city} {selectedAddress?.state}
+                      {selectedAddress?.pinCode}
                     </p>
                   </div>
                   <div>
@@ -310,25 +432,24 @@ function CheckOut() {
                             <span> {address.phone}</span>
                           </div>
                           <div>
-                          {selectedAddress?.id === address.id &&
-                            showDeliverBtn && (
-                              <div className={style.addEditBtn}>
-                                <button
-                                  onClick={() => handleOpenEditForm(address)}
-                                >
-                                  {" "}
-                                  EDIT
-                                </button>
-                              </div>
-                            )}
+                            {selectedAddress?.id === address.id &&
+                              showDeliverBtn && (
+                                <div className={style.addEditBtn}>
+                                  <button
+                                    onClick={() => handleOpenEditForm(address)}
+                                  >
+                                    {" "}
+                                    EDIT
+                                  </button>
+                                </div>
+                              )}
                           </div>
-                          
                         </div>
                         <div>
                           {address.address}, {address.city}, {address.state}(
                           {address.pinCode})
                         </div>
-                        
+
                         {selectedAddress?.id === address.id &&
                           showDeliverBtn && (
                             <div className={style.deliverHere}>

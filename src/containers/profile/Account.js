@@ -12,6 +12,8 @@ import MyReviews from "./MyReviews";
 import MyWishlist from "./MyWishlist";
 import { useNavigate, useParams } from 'react-router-dom';
 import MyOrder from "./MyOrder";
+import { useSelector } from "react-redux";
+import {selectUserName} from '../../redux/authSlice'
 
 const Account = () => {
     const [isOder, setIsOder] = useState(false)
@@ -19,6 +21,8 @@ const Account = () => {
     const [isAddress, setIsAddress] = useState(false)
     const [isReview, setIsReview] = useState(false)
     const [isWishlist, setIsWishlist] = useState(false)
+
+    const currentUser = useSelector(selectUserName)
 
     const navigate = useNavigate()
     const param = useParams()
@@ -67,6 +71,10 @@ const Account = () => {
 
     useEffect(() => {
 
+      // if(!currentUser){
+      //    navigate()
+      // }
+
       if(param.id == '1'){
         handleIsProfileState()
       }
@@ -97,7 +105,7 @@ const Account = () => {
           </div>
           <div className={style.userName}>
             <div>Hello,</div>
-            <div>Adarsh kushwaha</div>
+            <div>{currentUser}</div>
           </div>
         </div>
         <div className={style.leftBotmDiv}>

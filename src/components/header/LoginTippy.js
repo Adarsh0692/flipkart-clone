@@ -10,28 +10,31 @@ import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase.config";
+import { useDispatch } from 'react-redux';
+import { setLogoutUser } from '../../redux/authSlice';
 
-function LoginTippy({handleOpen, isLogin}) {
+function LoginTippy({handleOpen, currentUser, toastId,toast}) {
     
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     function handleOrderPage(){
-      if(isLogin){
+      if(currentUser){
         navigate('/account/orders')
       }else{
         navigate('/login')
       }
     }
     function handleMyAccountPage(){
-      if(isLogin){
+      if(currentUser){
         navigate('/account/1')
       }else{
         navigate('/login')
       }
     }
     function handleWishlistPage(){
-      if(isLogin){
+      if(currentUser){
         navigate('/account/wishlist')
       }else{
         navigate('/login')
@@ -40,17 +43,23 @@ function LoginTippy({handleOpen, isLogin}) {
 
     function handleLogout(){
       signOut(auth).then(() => {
-        // alert('Log-out successfuly.')
+
+        dispatch(setLogoutUser())
+
+        if (!toast.isActive(toastId.current)) {
+          toastId.current = toast.success("Logout complete. See you next time!",{
+            position: toast.POSITION.TOP_RIGHT
+          });
+        }
       })
       .catch((error) => {
         console.log(error);
       })
       
     }
-
   return (
     <div className={style.mainLoginTDiv}>
-     {!isLogin && <div >
+     {!currentUser && <div >
         <span>New customer?</span>
         <button onClick={()=>handleOpen('signup')}>Sign Up</button>
       </div>}
@@ -62,7 +71,7 @@ function LoginTippy({handleOpen, isLogin}) {
         <span > My Profile</span>
       </div>
       
-      {isLogin && <div>
+      {currentUser && <div>
         <span><OfflineBoltIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
@@ -84,7 +93,7 @@ function LoginTippy({handleOpen, isLogin}) {
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
         <span >Wishlist</span>
-       {isLogin && <span className={style.wishlistItems}>10</span>}
+       {currentUser && <span className={style.wishlistItems}>10</span>}
       </div>
       
       <div>
@@ -94,13 +103,13 @@ function LoginTippy({handleOpen, isLogin}) {
         <span>Gift Cards</span>
       </div>
 
-     {isLogin && <div>
+     {currentUser && <div>
         <span><NotificationsIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>
         <span>Notifications </span>
       </div>}
-     {isLogin && <div onClick={handleLogout}>
+     {currentUser && <div onClick={handleLogout}>
         <span ><LogoutIcon
             sx={{ fontSize: "20px", mr: "10px", color: "#1976D2" }}
           /></span>

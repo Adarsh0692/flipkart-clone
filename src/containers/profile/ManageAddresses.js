@@ -1,82 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Account.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressForm from "./AddressForm";
-import { nanoid } from 'nanoid'
+import { collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase.config";
+import { useSelector } from "react-redux";
+import { selectUserID } from "../../redux/authSlice";
 
-const allAddresses = [
-  {
-    id: 1,
-    name: "Adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Vill- kanpatiyapur makrand nagar kannauj",
-    city: "Kannauj",
-    pinCode: 209726,
-    state: "U.P",
-    phone: 2837298987,
-  },
-  {
-    id: 2,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-  {
-    id: 3,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-  {
-    id: 4,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-  {
-    id: 5,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Work",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-  {
-    id: 6,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Work",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-];
+
 
 function ManageAddresses() {
-  const [addresses, setAddAddress] = useState(allAddresses);
+  const userID = useSelector(selectUserID)
+
+  const [addresses, setAddAddress] = useState([]);
   const [isAddAddress, setIsAddAddress] = useState(false);
   const [isEditAddress, setIsEditAddress] = useState(false);
 
- 
+
+console.log('userID', userID);
   const initialAddress = {
-    id: nanoid(5),
+    id:'',
     name: "",
     typeOfAddress: "",
     address: "",
@@ -90,7 +35,7 @@ function ManageAddresses() {
 
   function handleHideForm() {
     setIsAddAddress(false);
-    setCurrentAddress(initialAddress)
+    setCurrentAddress(initialAddress);
   }
 
   function HandleOpenEditForm(address) {
@@ -99,18 +44,42 @@ function ManageAddresses() {
   }
   function HandleCloseEditForm() {
     setIsEditAddress(false);
-    setCurrentAddress(initialAddress)
+    setCurrentAddress(initialAddress);
   }
-  function HandleDeleteAddres(address){
-   const newAddress = addresses.filter((addr) => addr.id !== address.id)
-   setAddAddress(newAddress)
+ async function HandleDeleteAddres(address) {
+    try {
+      await deleteDoc(doc(db, 'addresses', address.id ))
+      const newAddress = addresses.filter((addr) => addr.id !== address.id);
+    setAddAddress(newAddress);
+    } catch (error) {
+      
+    }
+    
   }
 
-  function handleOpenAddForm(){
-    setIsAddAddress(true)
-    setCurrentAddress(initialAddress)
+  function handleOpenAddForm() {
+    setIsAddAddress(true);
+    setCurrentAddress(initialAddress);
     setIsEditAddress(false);
   }
+
+  useEffect(() => {
+    const fetchAddresses = onSnapshot(collection(db, 'addresses'),
+    (snapShot) => {
+      let list = []
+      snapShot.docs.forEach((doc) => {
+        list.push({id: doc.id, ...doc.data()})
+      })
+      console.log('docID');
+      setAddAddress(list)
+    }, (error) => {
+      console.log(error);
+    })
+    return () => {
+      fetchAddresses()
+    }
+  }, []);
+
   return (
     <div className={style.mainAddressDiv}>
       <div>Manage Addresses</div>
@@ -126,10 +95,7 @@ function ManageAddresses() {
           />
         </div>
       ) : (
-        <div
-          onClick={handleOpenAddForm}
-          className={style.assAddresDiv}
-        >
+        <div onClick={handleOpenAddForm} className={style.assAddresDiv}>
           <AddIcon /> ADD A NEW ADDRESS
         </div>
       )}
@@ -140,6 +106,7 @@ function ManageAddresses() {
           currentaddress={currentaddress}
           setCurrentAddress={setCurrentAddress}
           setAddAddress={setAddAddress}
+          addresses={addresses}
         />
       )}
       {addresses.map((addres) => (

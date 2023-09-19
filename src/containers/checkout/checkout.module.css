@@ -64,6 +64,19 @@
 .loginDetails{
     padding: 1.5rem 1rem 1rem 3rem;
 }
+.loginForm{
+    /* border: 1px solid red; */
+    width: 40%;
+}
+.terms{
+    font-size: .85rem;
+    color: #878787;
+    margin-top: 20px;
+}
+.terms span{
+    font-size: .85rem;
+    color: #2874f0;
+}
 .loginName{
     margin-bottom: 10px;
 }
@@ -82,7 +95,7 @@
     cursor: pointer;
 }
 .loginConBtn{
-    margin-top: 10px;
+    margin-top: 2rem;
 }
 .loginConBtn button{
     width: 20vw;
@@ -99,6 +112,10 @@
 .plsNote{
     margin-top: 20px;
     color: #878787;
+}
+.error{
+    color: red;
+    font-size: .8rem;
 }
 
 /* step-2 */

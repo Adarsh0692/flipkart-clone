@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Account.module.css";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase.config";
 
 function AddressForm({
   formType,
@@ -12,6 +14,7 @@ function AddressForm({
 
   const [isPhError, setIsPhError] = useState('')
   const [isPinError, setIsPinError] = useState('')
+  const [user, setUser] = useState(null)
 
   function handleOnChange(e) {
     let { name, value } = e.target;
@@ -54,14 +57,24 @@ function AddressForm({
     }
   }
 
-  function handleSubmitForm(e) {
+ async function handleSubmitForm(e) {
     e.preventDefault();
     if (formType === "ADD A NEW ADDRESS") {
       if(isPhError || isPinError){
         alert('fill correct data')
       }else{
-        setAddAddress([currentaddress, ...addresses]);
-        handleHideForm();
+         try {
+          await setDoc(doc(db, "addresses", user.uid), {
+            ...currentaddress
+          });
+  
+          setAddAddress([currentaddress, ...addresses]);
+          handleHideForm();
+          // console.log(currentaddress);
+         } catch (error) {
+          console.log(error);
+         }
+       
       }
      
       
@@ -70,15 +83,34 @@ function AddressForm({
       if(isPhError || isPinError){
         alert('fill correct data')
       }else{
-      setAddAddress((prevAddress) =>
-        prevAddress.map((address) =>
-          address.id === currentaddress.id ? currentaddress : address
-        )
-      );
+        try {
+          await setDoc(doc(db, "addresses", currentaddress.id), {
+            ...currentaddress
+          });
+  
+      // setAddAddress((prevAddress) =>
+      //   prevAddress.map((address) =>
+      //     address.id === currentaddress.id ? currentaddress : address
+      //   )
+      // );
       handleHideForm();
+    } catch (error) {
+      console.log(error);
+     }
       }
     }
   }
+  // console.log('cuId', currentaddress);
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if(user){
+         setUser(user)
+      }else{
+        setUser(null)
+      }
+    })
+  },[])
+
   return (
     <div className={style.addresFormWraperDiv}>
       <div>
