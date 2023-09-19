@@ -6,22 +6,23 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressForm from "./AddressForm";
 import { collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase.config";
-import { useSelector } from "react-redux";
-import { selectUserID } from "../../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserID, setAddress } from "../../redux/authSlice";
+import { toast } from "react-toastify";
 
 
 
 function ManageAddresses() {
   const userID = useSelector(selectUserID)
+  const currentUser = useSelector(state => state.auth)
 
   const [addresses, setAddAddress] = useState([]);
   const [isAddAddress, setIsAddAddress] = useState(false);
   const [isEditAddress, setIsEditAddress] = useState(false);
 
+ const dispatch = useDispatch()
 
-console.log('userID', userID);
   const initialAddress = {
-    id:'',
     name: "",
     typeOfAddress: "",
     address: "",
@@ -49,12 +50,12 @@ console.log('userID', userID);
  async function HandleDeleteAddres(address) {
     try {
       await deleteDoc(doc(db, 'addresses', address.id ))
-      const newAddress = addresses.filter((addr) => addr.id !== address.id);
-    setAddAddress(newAddress);
+     
+      toast.success('Success! Address has been deleted.')
     } catch (error) {
-      
+      console.log(error);
     }
-    
+   
   }
 
   function handleOpenAddForm() {
@@ -68,10 +69,9 @@ console.log('userID', userID);
     (snapShot) => {
       let list = []
       snapShot.docs.forEach((doc) => {
-        list.push({id: doc.id, ...doc.data()})
+        list.push({id: doc.id , ...doc.data()})
       })
-      console.log('docID');
-      setAddAddress(list)
+       setAddAddress(list)
     }, (error) => {
       console.log(error);
     })

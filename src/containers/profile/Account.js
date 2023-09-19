@@ -70,10 +70,16 @@ const Account = () => {
     }
 
     useEffect(() => {
+      
+      if(!currentUser){
+        navigate('/login')
+        console.log('ff');
+     }
+    
+    },[])
 
-      // if(!currentUser){
-      //    navigate()
-      // }
+    useEffect(() => {
+
 
       if(param.id == '1'){
         handleIsProfileState()

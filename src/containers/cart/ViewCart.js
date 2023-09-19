@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./ViewCart.module.css";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase.config";
 
 const image = [
   {
@@ -33,30 +35,10 @@ const image = [
   },
 ];
 
-const addresses = [
-  {
-    id: 1,
-    name: "Adarsh kushwaha",
-    typeOfAddress: "Home",
-    HouseName: "Vill- kanpatiyapur makrand nagar kannauj",
-    city: "Kannauj",
-    pinCode: 209726,
-    state: "U.P",
-    phone: 2837298987,
-  },
-  {
-    id: 2,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    HouseName: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-];
+
 
 function ViewCart() {
+  const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
  
   const navigate = useNavigate();
@@ -75,6 +57,22 @@ function ViewCart() {
     setOpen(false);
   }
 
+  useEffect(() => {
+    const fetchAddresses = onSnapshot(collection(db, 'addresses'),
+    (snapShot) => {
+      let list = []
+      snapShot.docs.forEach((doc) => {
+        list.push({id: doc.id , ...doc.data()})
+      })
+      setAddresses(list)
+    }, (error) => {
+      console.log(error);
+    })
+    return () => {
+      fetchAddresses()
+    }
+  }, []);
+
   return (
     <div className={style.mainCartContainer}>
       <div className={style.mainLeft}>
@@ -88,11 +86,11 @@ function ViewCart() {
               <div>
                 <div className={style.addInfo}>
                   
-                  <span>Deliver to: {selectedAddress?.name}</span>
+                  <span>Deliver to: {selectedAddress?.name} {selectedAddress?.phone}</span>
                   <span> {selectedAddress?.typeOfAddress}</span>
                 </div>
                 <div className={style.mainAddsdiv}>
-                  {selectedAddress?.HouseName}, {selectedAddress?.city},{" "}
+                  {selectedAddress?.address}, {selectedAddress?.city},{" "}
                   {selectedAddress?.state}({selectedAddress?.pinCode})
                 </div>
               </div>
@@ -109,12 +107,12 @@ function ViewCart() {
             </>
           )}
         </div>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle id="responsive-dialog-title">
+        <Dialog  open={open} onClose={handleClose}>
+          <DialogTitle >
             {"Select Delivery Address"}
           </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
+          <DialogContent >
+            <DialogContentText sx={{width:'30vw',}}>
               <div className={style.addressContainer}>
                 <ul>
                   {addresses.map((address) => (
@@ -130,11 +128,11 @@ function ViewCart() {
 
                       <label htmlFor={address.id}>
                         <div className={style.addInfo}>
-                          <span>{address.name}</span>
+                          <span>{address.name} {address.phone}</span>
                           <span> {address.typeOfAddress}</span>
                         </div>
                         <div className={style.mainAddsdiv}>
-                          {address.HouseName}, {address.city}, {address.state}(
+                          {address.address}, {address.city}, {address.state}(
                           {address.pinCode})
                         </div>
                       </label>

@@ -7,7 +7,7 @@ import { createSlice } from "@reduxjs/toolkit";
         userName: null,
         userEmail: null,
         userID: null,
-        addresses: []
+        addresses: null
     },
     reducers: {
        setUser: (state, action) => {
@@ -21,8 +21,9 @@ import { createSlice } from "@reduxjs/toolkit";
         state.userID = null
        },
        setAddress: (state, action) => {
-        state.addresses.unshift(action.payload)
-       }
+        state.addresses= action.payload
+       },
+     
     }
 })
 

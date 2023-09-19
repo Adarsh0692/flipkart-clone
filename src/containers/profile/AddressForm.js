@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import style from "./Account.module.css";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
+import { toast } from "react-toastify";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function AddressForm({
   formType,
@@ -11,15 +13,14 @@ function AddressForm({
   addresses,
   setAddAddress,
 }) {
-
-  const [isPhError, setIsPhError] = useState('')
-  const [isPinError, setIsPinError] = useState('')
-  const [user, setUser] = useState(null)
+  const [isPhError, setIsPhError] = useState("");
+  const [isPinError, setIsPinError] = useState("");
+  const [disable, setDisable] = useState(false);
 
   function handleOnChange(e) {
     let { name, value } = e.target;
     if (name === "phone") {
-      setIsPhError('')
+      setIsPhError("");
       // remove non-numeric characters
       value = value.replace(/\D/g, "");
       // limit to 0-10 digits
@@ -28,7 +29,7 @@ function AddressForm({
       }
     }
     if (name === "pinCode") {
-      setIsPinError('')
+      setIsPinError("");
       value = value.replace(/\D/g, "");
       if (value.length > 6) {
         value = value.slice(0, 6);
@@ -40,76 +41,65 @@ function AddressForm({
     });
   }
 
-  function handlePhOnblurr(e){
-    let value = e.target.value
-    if(value.length<10){
-      setIsPhError('Not a valid phone number.')
-    }else{
-      setIsPhError('')
+  function handlePhOnblurr(e) {
+    let value = e.target.value;
+    if (value.length < 10) {
+      setIsPhError("Not a valid phone number.");
+    } else {
+      setIsPhError("");
     }
   }
-  function handlePinOnblurr(e){
-    let value = e.target.value
-    if(value.length<6){
-      setIsPinError('Not a valid pincode.')
-    }else{
-      setIsPinError('')
+  function handlePinOnblurr(e) {
+    let value = e.target.value;
+    if (value.length < 6) {
+      setIsPinError("Not a valid pincode.");
+    } else {
+      setIsPinError("");
     }
   }
 
- async function handleSubmitForm(e) {
+  async function handleSubmitForm(e) {
     e.preventDefault();
     if (formType === "ADD A NEW ADDRESS") {
-      if(isPhError || isPinError){
-        alert('fill correct data')
-      }else{
-         try {
-          await setDoc(doc(db, "addresses", user.uid), {
-            ...currentaddress
+      if (isPhError || isPinError) {
+        alert("fill correct data");
+      } else {
+        try {
+          setDisable(true);
+          await addDoc(collection(db, "addresses"), {
+            ...currentaddress,
           });
-  
-          setAddAddress([currentaddress, ...addresses]);
+          setDisable(false);
           handleHideForm();
-          // console.log(currentaddress);
-         } catch (error) {
+          toast.success("Success! Your address has been added.");
+        } catch (error) {
           console.log(error);
-         }
-       
+          setDisable(false);
+        }
       }
-     
-      
     }
     if (formType === "EDIT ADDRESS") {
-      if(isPhError || isPinError){
-        alert('fill correct data')
-      }else{
+      if (isPhError || isPinError) {
+        alert("fill correct data");
+      } else {
         try {
-          await setDoc(doc(db, "addresses", currentaddress.id), {
-            ...currentaddress
+          setDisable(true);
+          await updateDoc(doc(db, "addresses", currentaddress.id), {
+            ...currentaddress,
           });
-  
-      // setAddAddress((prevAddress) =>
-      //   prevAddress.map((address) =>
-      //     address.id === currentaddress.id ? currentaddress : address
-      //   )
-      // );
-      handleHideForm();
-    } catch (error) {
-      console.log(error);
-     }
+          setDisable(false);
+          toast.success("Success! Address has been updated.");
+
+          handleHideForm();
+        } catch (error) {
+          toast.success(error.message);
+          setDisable(false);
+        }
       }
     }
   }
-  // console.log('cuId', currentaddress);
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if(user){
-         setUser(user)
-      }else{
-        setUser(null)
-      }
-    })
-  },[])
+
+
 
   return (
     <div className={style.addresFormWraperDiv}>
@@ -139,7 +129,7 @@ function AddressForm({
               placeholder="10-digit mobile number"
               required
             />
-           {isPhError && <p className={style.error}>{isPhError}</p>}
+            {isPhError && <p className={style.error}>{isPhError}</p>}
           </div>
         </div>
         <div className={style.textFieldDiv}>
@@ -216,7 +206,13 @@ function AddressForm({
         </div>
 
         <div className={style.save_can}>
-          <button type="submit">SAVE</button>
+          <button disabled={disable} type="submit">
+            {disable ? (
+              <CircularProgress color="inherit" thickness={5} size={30} />
+            ) : (
+              "SAVE"
+            )}
+          </button>
           <button onClick={handleHideForm}>CANCEL</button>
         </div>
       </form>

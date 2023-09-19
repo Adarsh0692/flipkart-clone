@@ -128,6 +128,7 @@
     width: 65%;
     padding: 2rem 3rem;
    position: relative;
+   
 }
 
 .loginRequestBtn{
@@ -142,6 +143,10 @@
     font-weight: 500;
     border: none;
     cursor: pointer;
+}
+.loginRequestBtn:disabled{
+    cursor: not-allowed;
+    background-color: #fb661b79;
 }
 .existBtn{
     font-size: 1rem;
@@ -194,3 +199,17 @@
 }
 
 /* end */
+
+.mainAuthDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 90vh;
+ }
+ .authContainer{
+     height: 80vh;
+     width: 60vw;
+     background-color: #fff;
+     box-shadow: 0 3px 16px 0 rgba(0,0,0,.11);
+ }

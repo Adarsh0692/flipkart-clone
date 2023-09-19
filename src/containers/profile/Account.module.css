@@ -265,6 +265,10 @@
     font-size: 1rem;
     margin-right: 3rem;
 }
+.save_can button:disabled{
+    background-color: #2875f072;
+    cursor: not-allowed;
+}
 .save_can button:last-child{
     border: none;
     background: none;

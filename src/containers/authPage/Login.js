@@ -1,22 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import SearchIcon from "@mui/icons-material/Search";
+import style from '../../components/header/Header.module.css'
 import { TextField } from "@mui/material";
-import style from "./Header.module.css";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import Badge from "@mui/material/Badge";
-import { useLocation, useNavigate } from "react-router-dom";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
-import LoginTippy from "./LoginTippy";
-import "tippy.js/themes/light.css";
-import MoreTippy from "./MoreTippy";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+import {  useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -24,26 +9,16 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../../firebase.config";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { selectUserID, selectUserName, setLogoutUser, setUser } from "../../redux/authSlice";
+import { selectUserName, setLogoutUser, setUser } from "../../redux/authSlice";
 import CircularProgress from '@mui/material/CircularProgress';
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
-const styles = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-};
 
-function Header() {
-  const currentUser = useSelector(selectUserName);
-  const userId = useSelector(selectUserID)
+function Login() {
+
+  const userName = useSelector(selectUserName)
   
   const [isSignup, setIsSignup] = useState(false);
   const [isNameInput, setIsNameInput] = useState(false);
@@ -64,31 +39,10 @@ function Header() {
 
   const [loader, setLoader] = useState(false)
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const toastId = useRef(null);
 
-
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = (btn) => {
-    if (btn === "signup") {
-      setOpen(true);
-      handleCreateAcc();
-    } else {
-      setOpen(true);
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setIsSignup(false);
-    setIsNameInput(false);
-    setToLogin(false);
-    setUserInput("");
-    clearAllErrors();
-    setIsEditEmail(false);
-  };
+ 
 
   const signupBtnName = isNameInput ? "SignUp" : "CONTINUE";
   const loginBtnName = toLogin ? "Login" : "Request LOGIN";
@@ -221,7 +175,6 @@ function Header() {
                 }
               );
             }
-            handleClose();
             clearAllSignupInputFields();
           })
           .catch((error) => {
@@ -275,7 +228,6 @@ function Header() {
               position: toast.POSITION.TOP_RIGHT,
             });
           }
-          handleClose();
           setLoginPassword("");
         })
         .catch((err) => {
@@ -302,6 +254,10 @@ function Header() {
 
 
   useEffect(() => {
+
+      if(userName){
+        navigate('/')
+      }
     
     auth.onAuthStateChanged((user) => {
       setLoader(true)
@@ -316,7 +272,6 @@ function Header() {
         );
        
       } else {
-       
         setLoader(false)
         dispatch(setLogoutUser());
       }
@@ -326,98 +281,12 @@ function Header() {
 
   
 
+
   return (
-    <Box sx={{ flexGrow: 0, mb: "60px" }}>
-      <AppBar
-        position="fixed"
-        sx={{ padding: "0 9rem", backgroundColor: "#2874f0" }}
-      >
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-           <ToastContainer
-              position="bottom-center"
-              hideProgressBar
-              closeButton={false}
-              pauseOnHover={false}
-              role="alert"
-              autoClose={3000}
-              theme="dark"
-              style={{ width: "25vw", fontSize: "1rem" }}
-            />
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              flexGrow: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-           
-            <div className={style.logo_search}>
-              <div className={style.imgDiv}>
-                <img
-                  onClick={() => navigate("/")}
-                  src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
-                  alt=""
-                  className={style.logo}
-                />
-                <span className={style.plusDiv}>
-                  Explore <span>Plus</span>
-                  <span>
-                    <img
-                      src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png"
-                      alt=""
-                    />
-                  </span>
-                </span>
-              </div>
-              {location.pathname !== "/checkout" && (
-                <div className={style.searchDiv}>
-                  <input
-                    className={style.searchInput}
-                    type="text"
-                    placeholder="Search for products, brand and more"
-                  />
-                  <SearchIcon
-                    sx={{
-                      backgroundColor: "white",
-                      color: "blue",
-                      height: "2.3rem",
-                      width: "2rem",
-                      borderRadius: "0 2px 2px 0",
-                      cursor: "pointer",
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-            <Modal open={open} onClose={handleClose}>
-              <Box
-                sx={{
-                  ...styles,
-                  width: "55vw",
-                  height: "90vh",
-                  border: "none",
-                  overflowY: "scroll",
-                }}
-              >
-                <ToastContainer
-                  position="bottom-center"
-                  hideProgressBar
-                  closeButton={false}
-                  pauseOnHover={false}
-                  role="alert"
-                  autoClose={3000}
-                  theme="dark"
-                />
-                <div className={style.loginMainContainer}>
+    <div className={style.mainAuthDiv}>
+      <div className={style.authContainer}>
+         
+      <div className={style.loginMainContainer}>
                   {isSignup ? (
                     <div className={style.loginText}>
                       <h1>Looks like </h1>
@@ -593,87 +462,9 @@ function Header() {
                     )}
                   </div>
                 </div>
-              </Box>
-            </Modal>
-
-            {currentUser ? (
-              <Tippy
-                theme="light"
-                content={
-                  <LoginTippy
-                    handleOpen={handleOpen}
-                    currentUser={currentUser}
-                    toastId={toastId}
-                    toast={toast}
-                  />
-                }
-                interactive={true}
-              >
-                {location.pathname !== "/checkout" && (
-                  <Button
-                    sx={{
-                      color: "white",
-                      textTransform: "capitalize",
-                      fontSize: "20px",
-                    }}
-                  >
-                    {currentUser.split(' ')[0]}
-                    <KeyboardArrowDownIcon sx={{ fontSize: "18px" }} />
-                  </Button>
-                )}
-              </Tippy>
-            ) : (
-              <Tippy
-                theme="light"
-                content={<LoginTippy handleOpen={handleOpen} />}
-                interactive
-              >
-                 {location.pathname !== "/checkout" && (
-                <button
-                  className={style.loginBtn}
-                  onClick={() => handleOpen("login")}
-                >
-                  Login
-                </button>
-                 )}
-              </Tippy>
-            )}
-            {location.pathname !== "/viewCart" &&
-              location.pathname !== "/checkout" && (
-                <span className={style.cartdiv}>Become a seller</span>
-              )}
-
-            {location.pathname !== "/viewCart" &&
-              location.pathname !== "/checkout" && (
-                <Tippy theme="light" content={<MoreTippy />} interactive>
-                  <span className={style.cartdiv}>
-                    More
-                    <span>
-                      <KeyboardArrowDownIcon
-                        sx={{ ml: "-2px", mb: "-2px", fontSize: "15px" }}
-                      />
-                    </span>
-                  </span>
-                </Tippy>
-              )}
-
-            {location.pathname !== "/viewCart" &&
-              location.pathname !== "/checkout" && (
-                <div
-                  className={style.cartdiv}
-                  onClick={() => navigate("/viewCart")}
-                >
-                  <Badge badgeContent={4} color="error">
-                    <ShoppingCartIcon />
-                  </Badge>
-                  <span className={style.cart}>Cart</span>
-                </div>
-              )}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </Box>
-  );
+      </div>
+    </div>
+  )
 }
 
-export default Header;
+export default Login

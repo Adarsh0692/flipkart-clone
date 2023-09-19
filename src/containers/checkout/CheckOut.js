@@ -9,10 +9,11 @@ import { nanoid } from "nanoid";
 import { useDispatch, useSelector } from "react-redux";
 import { TextField } from "@mui/material";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase.config";
+import { auth, db } from "../../firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { setLogoutUser, setUser } from "../../redux/authSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const image = [
   {
@@ -95,6 +96,7 @@ const allAddresses = [
 
 function CheckOut() {
   const currentUser = useSelector((state) => state.auth);
+  const [addresses, setAddAddress] = useState([])
 
   const [isStepOneDone, setIsStepOneDone] = useState(currentUser.userName);
   const [isStepTwoDone, setIsStepTwoDone] = useState(false);
@@ -105,7 +107,8 @@ function CheckOut() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isConfirmOrder, setIsConfirmOrder] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  const [addresses, setAddAddress] = useState(allAddresses);
+  const [selectedDeliveryAddress, setSelectedDeliveryAddress] = useState(null);
+
   const [showAllAddress, setShowAllAddress] = useState(false);
   const [showDeliverBtn, setShowDeliverBtn] = useState(true);
   const [isEditAddress, setIsEditAddress] = useState(false);
@@ -118,7 +121,7 @@ function CheckOut() {
   const toastId = useRef(null);
   const dispatch = useDispatch();
 
-
+// console.log(selectedDeliveryAddress);
 
   function handleEmailOnBlurr(e) {
     let value = e.target.value;
@@ -183,7 +186,6 @@ function CheckOut() {
   // for Delivery Address step
 
   const initialAddress = {
-    id: nanoid(5),
     name: "",
     typeOfAddress: "",
     address: "",
@@ -215,7 +217,8 @@ function CheckOut() {
     setIsEditAddress(false);
   }
 
-  function handleDeliverHere() {
+  function handleDeliverHere(address) {
+    setSelectedDeliveryAddress(address)
     setIsStepTwoDone(true);
     setIsSetp2Completed(false);
     setIsStepThreeDone(true);
@@ -245,12 +248,30 @@ function CheckOut() {
   }
 
   function handleOrderConfirm() {
-    alert(`selected Option: ${selectedPaymentMethod}`);
+    console.log(`selected Option: ${selectedPaymentMethod}`);
+    // console.log(`selected addres: ${selectedDeliveryAddress}`);
+    console.log(selectedDeliveryAddress);
   }
 
   useEffect(() => {
     if (!currentUser.userName) {
       handleStep1st();
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchAddresses = onSnapshot(collection(db, 'addresses'),
+    (snapShot) => {
+      let list = []
+      snapShot.docs.forEach((doc) => {
+        list.push({id: doc.id , ...doc.data()})
+      })
+      setAddAddress(list)
+    }, (error) => {
+      console.log(error);
+    })
+    return () => {
+      fetchAddresses()
     }
   }, []);
 
@@ -454,7 +475,7 @@ function CheckOut() {
                           showDeliverBtn && (
                             <div className={style.deliverHere}>
                               <button
-                                onClick={() => handleDeliverHere(address.id)}
+                                onClick={() => handleDeliverHere(address)}
                               >
                                 DELIVER HERE
                               </button>
