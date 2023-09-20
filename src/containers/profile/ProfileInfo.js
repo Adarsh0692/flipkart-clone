@@ -221,7 +221,7 @@ function ProfileInfo() {
             <button onClick={handleNameUpdate}>SAVE</button>
           )}
         </div>
-        <div>Your Gender</div>
+        {/* <div>Your Gender</div>
         <div>
           <input
             type="radio"
@@ -243,7 +243,7 @@ function ProfileInfo() {
             onChange={handleGender}
           />
           <label htmlFor="female">Female</label>
-        </div>
+        </div> */}
       </div>
       <div className={style.infoContainer}>
         <div className={style.infoTitle}>

@@ -1,31 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import style from "./Account.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressForm from "./AddressForm";
-import { arrayRemove, collection, deleteDoc, doc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserID, setAddress } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { list } from "firebase/storage";
-
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 function ManageAddresses() {
-  const userID = useSelector(selectUserID)
-  const currentUser = useSelector(state => state.auth)
+  const userID = useSelector(selectUserID);
+  const currentUser = useSelector((state) => state.auth);
 
   // const addresses = currentUser.addresses
   const [addresses, setAddAddress] = useState([]);
   const [isAddAddress, setIsAddAddress] = useState(false);
   const [isEditAddress, setIsEditAddress] = useState(false);
+  const [loading, setLoading] = useState(false);
 
- const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const toastId = useRef(null)
 
- const loginUseraddress = addresses.filter((address) => address.loginUserID === userID)
-//  console.log(loginUseraddress);
+  const loginUseraddress = addresses.filter(
+    (address) => address.loginUserID === userID
+  );
+  //  console.log(loginUseraddress);
 
   const initialAddress = {
     name: "",
@@ -35,7 +46,7 @@ function ManageAddresses() {
     pinCode: "",
     state: "",
     phone: "",
-    loginUserID: userID
+    loginUserID: userID,
   };
 
   const [currentaddress, setCurrentAddress] = useState(initialAddress);
@@ -53,15 +64,16 @@ function ManageAddresses() {
     setIsEditAddress(false);
     setCurrentAddress(initialAddress);
   }
- async function HandleDeleteAddres(address) {
+  async function HandleDeleteAddres(address) {
     try {
-      await deleteDoc(doc(db, 'addresses', address.id))
-     
-      toast.success('Success! Address has been deleted.')
+      await deleteDoc(doc(db, "addresses", address.id));
+
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.success("Success! You're logged in.");
+      }
     } catch (error) {
       console.log(error);
     }
-   
   }
 
   function handleOpenAddForm() {
@@ -71,27 +83,26 @@ function ManageAddresses() {
   }
 
   useEffect(() => {
-   
-    const fetchAddresses = onSnapshot(collection(db, 'addresses'),
-    (snapShot) => {
-      let list = []
-      snapShot.docs.forEach((doc) => {
-        list.unshift({id: doc.id , ...doc.data()})
-      })
-   
-          setAddAddress(list)
-     
-    }, (error) => {
-      console.log(error);
-    })
+    setLoading(true);
+    const fetchAddresses = onSnapshot(
+      collection(db, "addresses"),
+      (snapShot) => {
+        let list = [];
+        snapShot.docs.forEach((doc) => {
+          list.unshift({ id: doc.id, ...doc.data() });
+        });
+        setLoading(false);
+        setAddAddress(list);
+      },
+      (error) => {
+        setLoading(false);
+        console.log(error);
+      }
+    );
     return () => {
-      fetchAddresses()
-    }
+      fetchAddresses();
+    };
   }, []);
-
-  // useEffect(() => {
-  //   dispatch(setAddress(loginUseraddress))
-  // },[addresses])
 
   return (
     <div className={style.mainAddressDiv}>
@@ -120,43 +131,53 @@ function ManageAddresses() {
           setCurrentAddress={setCurrentAddress}
         />
       )}
-      {loginUseraddress?.map((addres) => (
-        <div key={addres.id} className={style.mangAddress}>
-          <div className={style.home_more}>
-            <span>{addres.typeOfAddress}</span>
-            <span>
-              <EditIcon
-                sx={{
-                  cursor: "pointer",
-                  fontSize: "1.2rem",
-                  ":hover": { color: "blue" },
-                  mr: "1rem",
-                }}
-                onClick={() => HandleOpenEditForm(addres)}
-              />
 
-              <DeleteForeverIcon
-                sx={{
-                  cursor: "pointer",
-                  fontSize: "1.2rem",
-                  ":hover": { color: "red" },
-                }}
-                onClick={() => HandleDeleteAddres(addres)}
-              />
-            </span>
-          </div>
-          <div className={style.name_num}>
-            <span>{addres.name}</span>
-            <span>{addres.phone}</span>
-          </div>
-          <div>
-            <span>
-              {addres.address}, {addres.city}, {addres.state} -{" "}
-              <span>{addres.pinCode}</span>{" "}
-            </span>
-          </div>
+      {loading ? (
+        <div style={{ marginTop: "15%", marginLeft: "50%" }}>
+          {" "}
+          <CircularProgress />{" "}
         </div>
-      ))}
+      ) : (
+        <div>
+          {loginUseraddress?.map((addres) => (
+            <div key={addres.id} className={style.mangAddress}>
+              <div className={style.home_more}>
+                <span>{addres.typeOfAddress}</span>
+                <span>
+                  <EditIcon
+                    sx={{
+                      cursor: "pointer",
+                      fontSize: "1.2rem",
+                      ":hover": { color: "blue" },
+                      mr: "1rem",
+                    }}
+                    onClick={() => HandleOpenEditForm(addres)}
+                  />
+
+                  <DeleteForeverIcon
+                    sx={{
+                      cursor: "pointer",
+                      fontSize: "1.2rem",
+                      ":hover": { color: "red" },
+                    }}
+                    onClick={() => HandleDeleteAddres(addres)}
+                  />
+                </span>
+              </div>
+              <div className={style.name_num}>
+                <span>{addres.name}</span>
+                <span>{addres.phone}</span>
+              </div>
+              <div>
+                <span>
+                  {addres.address}, {addres.city}, {addres.state} -{" "}
+                  <span>{addres.pinCode}</span>{" "}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

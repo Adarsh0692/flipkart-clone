@@ -125,7 +125,13 @@ function ViewCart() {
           <DialogContent >
             <DialogContentText sx={{width:'30vw',}}>
               <div className={style.addressContainer}>
-                <ul>
+             { loginUseraddress.length === 0 ? <div className={style.noAdd}>
+              No any Address saved
+              <div>
+              <button onClick={() => navigate('/account/address')}>Add Address</button>
+              </div>
+             
+             </div>   : <ul>
                   {loginUseraddress?.map((address) => (
                     <li className={style.addrsContainer} key={address.id}>
                       <input
@@ -149,7 +155,7 @@ function ViewCart() {
                       </label>
                     </li>
                   ))}
-                </ul>
+                </ul>}
               </div>
             </DialogContentText>
           </DialogContent>

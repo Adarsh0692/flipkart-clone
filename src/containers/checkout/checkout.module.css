@@ -109,6 +109,9 @@
     border: none;
     cursor: pointer;
 }
+.loginConBtn button:disabled{
+    background-color: #fb661b75;
+}
 .plsNote{
     margin-top: 20px;
     color: #878787;
@@ -149,6 +152,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.5rem;
+    
 }
 .addrsContainer{
     display: flex;
@@ -159,6 +163,20 @@
     cursor: pointer;
     background-color: #ffff;
     position: relative;
+    
+}
+.loaderDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+.loaderDiv div {
+  font-size: 1.2rem;
+    width: 10vw;
+    padding: 1rem;
+    background-color: #ffff;
+    box-shadow: 0 5px 5px 5px rgba(0,0,0,.2);
 }
 
 .addInfo{

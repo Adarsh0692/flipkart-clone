@@ -200,7 +200,6 @@ function Header() {
               name: user.displayName,
               email: user.email,
               phone: '',
-              gender: '',
             })
             dispatch(
               setUser({
@@ -311,9 +310,9 @@ function Header() {
             userID: user.uid
           })
         );
-       
+       localStorage.setItem('isActive', true)
       } else {
-       
+        localStorage.setItem('isActive', false)
         setLoader(false)
         dispatch(setLogoutUser());
       }

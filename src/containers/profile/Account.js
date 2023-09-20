@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import style from "./Account.module.css";
 import DriveFileMoveIcon from "@mui/icons-material/DriveFileMove";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -6,25 +6,23 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
-import { useSelector } from "react-redux";
-import { selectUserName } from "../../redux/authSlice";
 
 const Account = () => {
 
-  const currentUser = useSelector(selectUserName);
+  const currentUser = localStorage.getItem('isActive')
 
   const navigate = useNavigate();
  
 
   useEffect(() => {
 
-  if(!currentUser){
+  if(currentUser === 'false'){
      navigate('/login')
   }
 
-  },[currentUser])
+  },[])
 
   return (
     <div className={style.mainAccDiv}>

@@ -237,7 +237,20 @@
     color: #388e3c;
     font-weight: 500;
 }
-
+.noAdd{
+    text-align: center;
+}
+.noAdd div{
+    margin-top: 1rem;
+}
+.noAdd button{
+    border: none;
+    background-color: #2874f0;
+    color: #ffff;
+    padding: .5rem 1rem;
+    border-radius: 10px;
+    font-weight: 500;
+}
 .addressContainer{
     margin-bottom: 20px;
  }

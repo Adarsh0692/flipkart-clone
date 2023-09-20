@@ -14,6 +14,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { selectUserID, setLogoutUser, setUser } from "../../redux/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { collection, onSnapshot } from "firebase/firestore";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const image = [
   {
@@ -42,14 +43,15 @@ const image = [
   },
 ];
 
-
 function CheckOut() {
   const currentUser = useSelector((state) => state.auth);
-  const userID = useSelector(selectUserID)
+  const userID = useSelector(selectUserID);
 
-  const [addresses, setAddAddress] = useState([])
+  const [addresses, setAddAddress] = useState([]);
 
-  const loginUseraddress = addresses.filter((address) => address.loginUserID === userID)
+  const loginUseraddress = addresses.filter(
+    (address) => address.loginUserID === userID
+  );
 
   const [isStepOneDone, setIsStepOneDone] = useState(currentUser.userName);
   const [isStepTwoDone, setIsStepTwoDone] = useState(false);
@@ -66,7 +68,8 @@ function CheckOut() {
   const [showDeliverBtn, setShowDeliverBtn] = useState(true);
   const [isEditAddress, setIsEditAddress] = useState(false);
   const [isAddAddress, setIsAddAddress] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [Eerr, setEerr] = useState("");
@@ -74,7 +77,7 @@ function CheckOut() {
   const toastId = useRef(null);
   const dispatch = useDispatch();
 
-// console.log(selectedDeliveryAddress);
+  // console.log(selectedDeliveryAddress);
 
   function handleEmailOnBlurr(e) {
     let value = e.target.value;
@@ -88,8 +91,10 @@ function CheckOut() {
 
   function handleLogin() {
     if (!Eerr) {
+      setLoading(true)
       signInWithEmailAndPassword(auth, email, password)
         .then((res) => {
+          setLoading(false)
           dispatch(
             setUser({
               userName: res.user.displayName,
@@ -104,6 +109,7 @@ function CheckOut() {
           handleContinueCheckout();
         })
         .catch((error) => {
+          setLoading(false)
           if (!toast.isActive(toastId.current)) {
             toastId.current = toast.error("Invalid credentails!");
           }
@@ -146,7 +152,7 @@ function CheckOut() {
     pinCode: "",
     state: "",
     phone: "",
-    loginUserID: userID 
+    loginUserID: userID,
   };
 
   const [currentaddress, setCurrentAddress] = useState(initialAddress);
@@ -172,7 +178,7 @@ function CheckOut() {
   }
 
   function handleDeliverHere(address) {
-    setSelectedDeliveryAddress(address)
+    setSelectedDeliveryAddress(address);
     setIsStepTwoDone(true);
     setIsSetp2Completed(false);
     setIsStepThreeDone(true);
@@ -214,22 +220,25 @@ function CheckOut() {
   }, []);
 
   useEffect(() => {
-   
-    const fetchAddresses = onSnapshot(collection(db, 'addresses'),
-    (snapShot) => {
-      let list = []
-      snapShot.docs.forEach((doc) => {
-        list.unshift({id: doc.id , ...doc.data()})
-      })
-   
-      setAddAddress(list)
-     
-    }, (error) => {
-      console.log(error);
-    })
+    setLoading(true);
+    const fetchAddresses = onSnapshot(
+      collection(db, "addresses"),
+      (snapShot) => {
+        let list = [];
+        snapShot.docs.forEach((doc) => {
+          list.unshift({ id: doc.id, ...doc.data() });
+        });
+        setLoading(false);
+        setAddAddress(list);
+      },
+      (error) => {
+        setLoading(false);
+        console.log(error);
+      }
+    );
     return () => {
-      fetchAddresses()
-    }
+      fetchAddresses();
+    };
   }, []);
 
   return (
@@ -332,15 +341,13 @@ function CheckOut() {
                   />
                 </div>
 
-          
-                  <div className={style.terms}>
-                    By continuing, you agree to Flipkart's{" "}
-                    <span>Terms of Use</span> and <span>Privacy Policy.</span>
-                  </div>
-             
+                <div className={style.terms}>
+                  By continuing, you agree to Flipkart's{" "}
+                  <span>Terms of Use</span> and <span>Privacy Policy.</span>
+                </div>
 
                 <div className={style.loginConBtn}>
-                  <button onClick={handleLogin}>CONTINUE</button>
+                  <button disabled={loading} onClick={handleLogin}>{ loading? <CircularProgress color="inherit" thickness={5} size={30}/> : "CONTINUE"}</button>
                 </div>
               </div>
             </div>
@@ -387,73 +394,84 @@ function CheckOut() {
                 setAddAddress={setAddAddress}
               />
             )}
-            <div className={style.addressContainer}>
-              <ul>
-                {loginUseraddress
-                  .slice(0, showAllAddress ? loginUseraddress.length : 3)
-                  .map((address) => (
-                    <li className={style.addrsContainer} key={address.id}>
-                      <input
-                        type="radio"
-                        name="address"
-                        value={address.id}
-                        id={address.id}
-                        checked={selectedAddress?.id === address.id}
-                        onChange={() => setSelectedAddress(address)}
-                      />
 
-                      <label htmlFor={address.id}>
-                        <div className={style.editBtnDiv}>
-                          <div className={style.addInfo}>
-                            <span>{address.name}</span>
-                            <span> {address.typeOfAddress}</span>
-                            <span> {address.phone}</span>
+            {loading ? (
+              <div className={style.loaderDiv}>
+                <div>
+                  <CircularProgress size={20} /> Loading...
+                </div>
+              </div>
+            ) : (
+              <div className={style.addressContainer}>
+                <ul>
+                  {loginUseraddress
+                    .slice(0, showAllAddress ? loginUseraddress.length : 3)
+                    .map((address) => (
+                      <li className={style.addrsContainer} key={address.id}>
+                        <input
+                          type="radio"
+                          name="address"
+                          value={address.id}
+                          id={address.id}
+                          checked={selectedAddress?.id === address.id}
+                          onChange={() => setSelectedAddress(address)}
+                        />
+
+                        <label htmlFor={address.id}>
+                          <div className={style.editBtnDiv}>
+                            <div className={style.addInfo}>
+                              <span>{address.name}</span>
+                              <span> {address.typeOfAddress}</span>
+                              <span> {address.phone}</span>
+                            </div>
+                            <div>
+                              {selectedAddress?.id === address.id &&
+                                showDeliverBtn && (
+                                  <div className={style.addEditBtn}>
+                                    <button
+                                      onClick={() =>
+                                        handleOpenEditForm(address)
+                                      }
+                                    >
+                                      {" "}
+                                      EDIT
+                                    </button>
+                                  </div>
+                                )}
+                            </div>
                           </div>
                           <div>
-                            {selectedAddress?.id === address.id &&
-                              showDeliverBtn && (
-                                <div className={style.addEditBtn}>
-                                  <button
-                                    onClick={() => handleOpenEditForm(address)}
-                                  >
-                                    {" "}
-                                    EDIT
-                                  </button>
-                                </div>
-                              )}
+                            {address.address}, {address.city}, {address.state}(
+                            {address.pinCode})
                           </div>
-                        </div>
-                        <div>
-                          {address.address}, {address.city}, {address.state}(
-                          {address.pinCode})
-                        </div>
 
-                        {selectedAddress?.id === address.id &&
-                          showDeliverBtn && (
-                            <div className={style.deliverHere}>
-                              <button
-                                onClick={() => handleDeliverHere(address)}
-                              >
-                                DELIVER HERE
-                              </button>
-                            </div>
-                          )}
-                      </label>
-                    </li>
-                  ))}
-              </ul>
-              {!showAllAddress && loginUseraddress.length > 3 && (
-                <div
-                  className={style.showAddressDiv}
-                  onClick={() => setShowAllAddress(true)}
-                >
-                  <span>
-                    <ExpandMoreIcon />
-                  </span>
-                  <span>View all {loginUseraddress.length} addresses</span>
-                </div>
-              )}
-            </div>
+                          {selectedAddress?.id === address.id &&
+                            showDeliverBtn && (
+                              <div className={style.deliverHere}>
+                                <button
+                                  onClick={() => handleDeliverHere(address)}
+                                >
+                                  DELIVER HERE
+                                </button>
+                              </div>
+                            )}
+                        </label>
+                      </li>
+                    ))}
+                </ul>
+                {!showAllAddress && loginUseraddress.length > 3 && (
+                  <div
+                    className={style.showAddressDiv}
+                    onClick={() => setShowAllAddress(true)}
+                  >
+                    <span>
+                      <ExpandMoreIcon />
+                    </span>
+                    <span>View all {loginUseraddress.length} addresses</span>
+                  </div>
+                )}
+              </div>
+            )}
             {isAddAddress ? (
               <AddressForm
                 formType="ADD A NEW ADDRESS"
