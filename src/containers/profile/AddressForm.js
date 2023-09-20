@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import style from "./Account.module.css";
-import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useSelector } from "react-redux";
+import { selectUserID } from "../../redux/authSlice";
 
 function AddressForm({
   formType,
   handleHideForm,
   currentaddress,
   setCurrentAddress,
-  addresses,
-  setAddAddress,
 }) {
   const [isPhError, setIsPhError] = useState("");
   const [isPinError, setIsPinError] = useState("");
   const [disable, setDisable] = useState(false);
+
+  const userID = useSelector(selectUserID)
 
   function handleOnChange(e) {
     let { name, value } = e.target;
@@ -66,9 +68,9 @@ function AddressForm({
       } else {
         try {
           setDisable(true);
-          await addDoc(collection(db, "addresses"), {
-            ...currentaddress,
-          });
+            const addressRef = collection(db, 'addresses' )
+            await addDoc(addressRef, currentaddress)
+
           setDisable(false);
           handleHideForm();
           toast.success("Success! Your address has been added.");

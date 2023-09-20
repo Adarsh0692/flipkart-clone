@@ -7,6 +7,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase.config";
+import { useSelector } from "react-redux";
+import { selectUserID } from "../../redux/authSlice";
 
 const image = [
   {
@@ -38,8 +40,14 @@ const image = [
 
 
 function ViewCart() {
+
+  const userID = useSelector(selectUserID)
+  
+
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const loginUseraddress = addresses.filter((address) => address.loginUserID === userID)
  
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -58,13 +66,16 @@ function ViewCart() {
   }
 
   useEffect(() => {
+   
     const fetchAddresses = onSnapshot(collection(db, 'addresses'),
     (snapShot) => {
       let list = []
       snapShot.docs.forEach((doc) => {
-        list.push({id: doc.id , ...doc.data()})
+        list.unshift({id: doc.id , ...doc.data()})
       })
+   
       setAddresses(list)
+     
     }, (error) => {
       console.log(error);
     })
@@ -115,7 +126,7 @@ function ViewCart() {
             <DialogContentText sx={{width:'30vw',}}>
               <div className={style.addressContainer}>
                 <ul>
-                  {addresses.map((address) => (
+                  {loginUseraddress?.map((address) => (
                     <li className={style.addrsContainer} key={address.id}>
                       <input
                         type="radio"

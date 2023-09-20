@@ -11,7 +11,7 @@ import { TextField } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../../firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { setLogoutUser, setUser } from "../../redux/authSlice";
+import { selectUserID, setLogoutUser, setUser } from "../../redux/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { collection, onSnapshot } from "firebase/firestore";
 
@@ -41,62 +41,15 @@ const image = [
       "https://rukminim2.flixcart.com/image/612/612/xif0q/nut-dry-fruit/i/t/n/250-gold-makhana-1-pouch-farmley-original-imagqdth9nwgkhdu.jpeg?q=70",
   },
 ];
-const allAddresses = [
-  {
-    id: 1,
-    name: "Adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Vill- kanpatiyapur makrand nagar kannauj",
-    city: "Kannauj",
-    pinCode: 209726,
-    state: "U.P",
-    phone: 2837298987,
-  },
-  {
-    id: 2,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-  {
-    id: 3,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-  {
-    id: 4,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-  {
-    id: 5,
-    name: "adarsh kushwaha",
-    typeOfAddress: "Home",
-    address: "Golden PG, Vithlpur chowkdi",
-    city: "Ahmedabad",
-    pinCode: 111009,
-    state: "Gujarat",
-    phone: 2837298956,
-  },
-];
+
 
 function CheckOut() {
   const currentUser = useSelector((state) => state.auth);
+  const userID = useSelector(selectUserID)
+
   const [addresses, setAddAddress] = useState([])
+
+  const loginUseraddress = addresses.filter((address) => address.loginUserID === userID)
 
   const [isStepOneDone, setIsStepOneDone] = useState(currentUser.userName);
   const [isStepTwoDone, setIsStepTwoDone] = useState(false);
@@ -193,6 +146,7 @@ function CheckOut() {
     pinCode: "",
     state: "",
     phone: "",
+    loginUserID: userID 
   };
 
   const [currentaddress, setCurrentAddress] = useState(initialAddress);
@@ -260,13 +214,16 @@ function CheckOut() {
   }, []);
 
   useEffect(() => {
+   
     const fetchAddresses = onSnapshot(collection(db, 'addresses'),
     (snapShot) => {
       let list = []
       snapShot.docs.forEach((doc) => {
-        list.push({id: doc.id , ...doc.data()})
+        list.unshift({id: doc.id , ...doc.data()})
       })
+   
       setAddAddress(list)
+     
     }, (error) => {
       console.log(error);
     })
@@ -432,8 +389,8 @@ function CheckOut() {
             )}
             <div className={style.addressContainer}>
               <ul>
-                {addresses
-                  .slice(0, showAllAddress ? addresses.length : 3)
+                {loginUseraddress
+                  .slice(0, showAllAddress ? loginUseraddress.length : 3)
                   .map((address) => (
                     <li className={style.addrsContainer} key={address.id}>
                       <input
@@ -485,7 +442,7 @@ function CheckOut() {
                     </li>
                   ))}
               </ul>
-              {!showAllAddress && addresses.length > 3 && (
+              {!showAllAddress && loginUseraddress.length > 3 && (
                 <div
                   className={style.showAddressDiv}
                   onClick={() => setShowAllAddress(true)}
@@ -493,7 +450,7 @@ function CheckOut() {
                   <span>
                     <ExpandMoreIcon />
                   </span>
-                  <span>View all {addresses.length} addresses</span>
+                  <span>View all {loginUseraddress.length} addresses</span>
                 </div>
               )}
             </div>

@@ -223,7 +223,7 @@ function Login() {
               userID: res.user.uid
             })
           );
-           navigate('/')
+           navigate(-1)
           if (!toast.isActive(toastId.current)) {
             toastId.current = toast.success("Success! You're logged in.", {
               position: toast.POSITION.TOP_RIGHT,

@@ -4,11 +4,12 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressForm from "./AddressForm";
-import { collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase.config";
+import { arrayRemove, collection, deleteDoc, doc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase.config";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserID, setAddress } from "../../redux/authSlice";
 import { toast } from "react-toastify";
+import { list } from "firebase/storage";
 
 
 
@@ -16,11 +17,15 @@ function ManageAddresses() {
   const userID = useSelector(selectUserID)
   const currentUser = useSelector(state => state.auth)
 
+  // const addresses = currentUser.addresses
   const [addresses, setAddAddress] = useState([]);
   const [isAddAddress, setIsAddAddress] = useState(false);
   const [isEditAddress, setIsEditAddress] = useState(false);
 
  const dispatch = useDispatch()
+
+ const loginUseraddress = addresses.filter((address) => address.loginUserID === userID)
+//  console.log(loginUseraddress);
 
   const initialAddress = {
     name: "",
@@ -30,6 +35,7 @@ function ManageAddresses() {
     pinCode: "",
     state: "",
     phone: "",
+    loginUserID: userID
   };
 
   const [currentaddress, setCurrentAddress] = useState(initialAddress);
@@ -49,7 +55,7 @@ function ManageAddresses() {
   }
  async function HandleDeleteAddres(address) {
     try {
-      await deleteDoc(doc(db, 'addresses', address.id ))
+      await deleteDoc(doc(db, 'addresses', address.id))
      
       toast.success('Success! Address has been deleted.')
     } catch (error) {
@@ -65,13 +71,16 @@ function ManageAddresses() {
   }
 
   useEffect(() => {
+   
     const fetchAddresses = onSnapshot(collection(db, 'addresses'),
     (snapShot) => {
       let list = []
       snapShot.docs.forEach((doc) => {
-        list.push({id: doc.id , ...doc.data()})
+        list.unshift({id: doc.id , ...doc.data()})
       })
-       setAddAddress(list)
+   
+          setAddAddress(list)
+     
     }, (error) => {
       console.log(error);
     })
@@ -79,6 +88,10 @@ function ManageAddresses() {
       fetchAddresses()
     }
   }, []);
+
+  // useEffect(() => {
+  //   dispatch(setAddress(loginUseraddress))
+  // },[addresses])
 
   return (
     <div className={style.mainAddressDiv}>
@@ -90,8 +103,8 @@ function ManageAddresses() {
             handleHideForm={handleHideForm}
             currentaddress={currentaddress}
             setCurrentAddress={setCurrentAddress}
-            addresses={addresses}
-            setAddAddress={setAddAddress}
+            // addresses={addresses}
+            // setAddAddress={setAddAddress}
           />
         </div>
       ) : (
@@ -105,11 +118,9 @@ function ManageAddresses() {
           handleHideForm={HandleCloseEditForm}
           currentaddress={currentaddress}
           setCurrentAddress={setCurrentAddress}
-          setAddAddress={setAddAddress}
-          addresses={addresses}
         />
       )}
-      {addresses.map((addres) => (
+      {loginUseraddress?.map((addres) => (
         <div key={addres.id} className={style.mangAddress}>
           <div className={style.home_more}>
             <span>{addres.typeOfAddress}</span>

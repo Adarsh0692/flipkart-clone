@@ -24,7 +24,7 @@ const Account = () => {
      navigate('/login')
   }
 
-  },[])
+  },[currentUser])
 
   return (
     <div className={style.mainAccDiv}>

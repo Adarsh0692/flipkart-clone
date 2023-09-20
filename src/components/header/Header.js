@@ -201,9 +201,6 @@ function Header() {
               email: user.email,
               phone: '',
               gender: '',
-              addresses: [],
-              cart: [],
-              orders: [],
             })
             dispatch(
               setUser({
