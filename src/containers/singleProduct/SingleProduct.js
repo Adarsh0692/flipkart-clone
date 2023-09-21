@@ -13,37 +13,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import { useNavigate } from "react-router-dom";
-
-const image = [
-  {
-    image:
-      "https://rukminim2.flixcart.com/image/612/612/xif0q/snack-savourie/d/r/v/-original-imaghfn8j2vrwfcy.jpeg?q=70",
-  },
-  {
-    image:
-      "https://rukminim2.flixcart.com/image/832/832/l3hmwsw0/nut-dry-fruit/i/1/t/500-premium-cashews-kaju-100-natural-tasty-crunchy-immunity-original-imagehsmewfmmygr.jpeg?q=70",
-  },
-  {
-    image:
-      "https://rukminim2.flixcart.com/image/612/612/xif0q/edible-seed/6/h/9/-original-imaggrgrzcmv7pmc.jpeg?q=70",
-  },
-  {
-    image:
-      "https://rukminim2.flixcart.com/image/612/612/xif0q/nut-dry-fruit/j/k/t/-original-imagmkb9jskrcffe.jpeg?q=70",
-  },
-  {
-    image:
-      "https://rukminim2.flixcart.com/image/612/612/kzhbfrk0/nut-dry-fruit/z/b/7/-original-imagbh7hgctxc3zd.jpeg?q=70",
-  },
-  {
-    image:
-      "https://rukminim2.flixcart.com/image/612/612/xif0q/nut-dry-fruit/i/t/n/250-gold-makhana-1-pouch-farmley-original-imagqdth9nwgkhdu.jpeg?q=70",
-  },
-];
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import { useNavigate, useParams } from "react-router-dom";
+import { products } from "../../productData";
+import CalculateAvgRate from "../ProductPage/CalculateAvgRate";
+import CalculateTotalRatings from "../ProductPage/CalculateTotalRatings";
 
 const feedbakImages = [
   {
@@ -90,7 +66,8 @@ const feedbakImages = [
 
 const userImg = [
   {
-    image: 'https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90'
+    image:
+      "https://rukminim1.flixcart.com/blobio/1160/1160/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90",
   },
   {
     image:
@@ -100,32 +77,32 @@ const userImg = [
     image:
       "https://rukminim1.flixcart.com/blobio/1160/1160/201904/blobio-201904_fm1jn5f9.jpg?q=90",
   },
-]
-
-const ratings = {
-  "5star": 32,
-  "4star": 14,
-  "3star": 500,
-  "2star": 0,
-  "1star": 50,
-};
-
-// Logic For get width of rating bar according to user rate..==>
-let arr = Object.values(ratings)
-let maxV = Math.max(...arr)
-
-const widfor1 = ratings['1star'] / maxV * 100
-const widfor2 = ratings['2star'] / maxV * 100
-const widfor3 = ratings['3star'] / maxV * 100
-const widfor4 = ratings['4star'] / maxV * 100
-const widfor5 = ratings['5star'] / maxV * 100
+];
 
 function SingleProduct() {
+  const params = useParams();
+  const product = products.find((prod) => prod.id == params.id);
+
   const [imgindex, setImgIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  let arr = Object.values(product.ratings);
+  let maxV = Math.max(...arr);
+
+  const widfor1 = (product.ratings[1] / maxV) * 100;
+  const widfor2 = (product.ratings[2] / maxV) * 100;
+  const widfor3 = (product.ratings[3] / maxV) * 100;
+  const widfor4 = (product.ratings[4] / maxV) * 100;
+  const widfor5 = (product.ratings[5] / maxV) * 100;
+
+  const reviewImg = product.reviews.map((prod) => prod.images);
+  const allFeedbackImgs = reviewImg.reduce((acc, currentArray) => {
+    return [...acc, ...currentArray];
+  }, []);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -134,9 +111,11 @@ function SingleProduct() {
     setOpen(false);
   };
 
-  const visibleImg = showAll ? feedbakImages : feedbakImages.slice(0, 8);
-  const remaingImgCount = feedbakImages.length - visibleImg.length;
-  // console.log(remaingImgCount);
+  const visibleImg = showAll ? allFeedbackImgs : allFeedbackImgs.slice(0, 8);
+  const remaingImgCount = allFeedbackImgs.length - visibleImg.length;
+
+  const usersReviews = product.reviews.map((rev) => rev)
+
 
   function handleimgIndex(i) {
     setImgIndex(i);
@@ -147,7 +126,7 @@ function SingleProduct() {
         <div className={style.imageContainer}>
           <div className={style.singleProLeftSide}>
             <div className={style.imgMap}>
-              {image.map((img, i) => (
+              {product?.images.map((img, i) => (
                 <div key={i} className={`${style.imgDiv} `}>
                   <img
                     src={img.image}
@@ -159,7 +138,7 @@ function SingleProduct() {
             </div>
 
             <div className={style.showImg}>
-              <img src={image[imgindex].image} alt="" />
+              <img src={product.images[imgindex].image} alt="" />
               <div className={style.fav}>
                 <span>
                   <FavoriteIcon
@@ -182,24 +161,33 @@ function SingleProduct() {
         </div>
         <div className={style.discription}>
           <div className={style.prodDetails}>
-            <span>
-              Saffola Rolled Oats,Creamy 100% Natural, High Protein & Fibre,
-              Healthy Cereal, Pouch (1 kg)
-            </span>
+            <span>{product.title}</span>
             <div className={style.rateDiv}>
               <div>
-                4.4 <StarIcon sx={{ fontSize: "1rem" }} />
+                <CalculateAvgRate ratings={product.ratings} />{" "}
+                <StarIcon sx={{ fontSize: "1rem" }} />
               </div>
-              <span>1234 Rating </span> <span>&</span> <span>1223 Reviews</span>
-              <img
-                src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
-                alt=""
-              />
+              <span>
+                <CalculateTotalRatings ratings={product.ratings} /> Rating{" "}
+              </span>{" "}
+              <span>&</span> <span>{product.reviews.length} Reviews</span>
+              {product.assured && (
+                <img
+                  src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
+                  alt=""
+                />
+              )}
             </div>
             <div className={style.priceDiv}>
-              <div>₹211</div>
-              <span>₹230</span>
-              <div>5% Off</div>
+              <div>
+                ₹
+                {Math.round(
+                  product.actual_price -
+                    (product.discount_percentage / 100) * product.actual_price
+                )}
+              </div>
+              <span>₹{product.actual_price}</span>
+              <div>{product.discount_percentage}% Off</div>
             </div>
             <div className={style.offerDiv}>
               <span>Available offers</span>
@@ -247,7 +235,7 @@ function SingleProduct() {
             <div className={style.deliver}>
               <span>Quantity</span>
               <div>
-                <span>1 Kg</span>
+                <span>{product.quantity}</span>
               </div>
             </div>
             <div className={style.deliver}>
@@ -363,19 +351,24 @@ function SingleProduct() {
             <div className={style.reviewSection}>
               <div className={style.rateTopDiv}>
                 <div>Rating & Reviews</div>
-                <button onClick={()=>navigate('/write-review/1')}>Rate Product</button>
+                <button onClick={() => navigate("/write-review/1")}>
+                  Rate Product
+                </button>
               </div>
               <div className={style.rateBar}>
                 <div>
                   <div className={style.totalRate}>
                     <div>
-                      4.4{" "}
+                      <CalculateAvgRate ratings={product.ratings} />
                       <p>
                         <StarIcon sx={{ fontSize: "2rem" }} />
                       </p>
                     </div>
-                    <span>23132222 Ratings & </span>
-                    <span>2132 Reviews</span>
+                    <span>
+                      <CalculateTotalRatings ratings={product.ratings} />{" "}
+                      Ratings &{" "}
+                    </span>
+                    <span>{product.reviews.length} Reviews</span>
                   </div>
                   <div className={style.Rtbar}>
                     <div className={style.star}>
@@ -415,38 +408,53 @@ function SingleProduct() {
                     <div className={style.bars}>
                       <ul>
                         <li>
-                          <RatingProgressBar color={"#388e3c"} width={widfor5} />
+                          <RatingProgressBar
+                            color={"#388e3c"}
+                            width={widfor5}
+                          />
                         </li>
                         <li>
-                          <RatingProgressBar color={"#388e3c"} width={widfor4}/>
+                          <RatingProgressBar
+                            color={"#388e3c"}
+                            width={widfor4}
+                          />
                         </li>
                         <li>
-                          <RatingProgressBar color={"#388e3c"} width={widfor3}/>
+                          <RatingProgressBar
+                            color={"#388e3c"}
+                            width={widfor3}
+                          />
                         </li>
                         <li>
-                          <RatingProgressBar color={"#ff9f00"} width={widfor2}/>
+                          <RatingProgressBar
+                            color={"#ff9f00"}
+                            width={widfor2}
+                          />
                         </li>
                         <li>
-                          <RatingProgressBar color={"#ff6161"} width={widfor1}/>
+                          <RatingProgressBar
+                            color={"#ff6161"}
+                            width={widfor1}
+                          />
                         </li>
                       </ul>
                     </div>
                     <div className={style.noOfReview}>
                       <ul>
                         <li>
-                          <span>{ratings["5star"]}</span>
+                          <span>{product.ratings[5]}</span>
                         </li>
                         <li>
-                          <span>{ratings["4star"]}</span>
+                          <span>{product.ratings[4]}</span>
                         </li>
                         <li>
-                          <span>{ratings["3star"]}</span>
+                          <span>{product.ratings[3]}</span>
                         </li>
                         <li>
-                          <span>{ratings["2star"]}</span>
+                          <span>{product.ratings[2]}</span>
                         </li>
                         <li>
-                          <span>{ratings["1star"]}</span>
+                          <span>{product.ratings[1]}</span>
                         </li>
                       </ul>
                     </div>
@@ -476,49 +484,66 @@ function SingleProduct() {
                     <DialogTitle>{`User Images (${feedbakImages.length})`}</DialogTitle>
                     <DialogContent>
                       <DialogContentText className={style.feedbackAllImgs}>
-                       {
-                        feedbakImages.map((img) => (
+                        {feedbakImages.map((img) => (
                           <div className={style.uplaodedAllImg}>
                             <img src={img.image} alt="" />
                           </div>
-                        ))
-                       }
+                        ))}
                       </DialogContentText>
                     </DialogContent>
                   </Dialog>
                 </div>
               </div>
-              <div className={style.userReview}>
-                <div className={style.row}>
-                  <div>4 <span><StarIcon sx={{fontSize:'1rem'}}/></span></div>
-                  <span>Good Product</span>
-                </div>
-                <div>
-                  <div>170 almonds are there</div>
-                </div>
-                <div className={style.userImgconter}>
-                    {
-                      userImg.map((img) => (
-                        <div className={style.userImg}>
-                          <img src={img.image} alt="" />
-                        </div>
-                      ))
-                    }
-                </div>
-                <div className={style.userDetailsDiv}>
-                  <div className={style.userName}>
-                     <p>Shabbir Laskar</p>
-                     <span><CheckCircleIcon/></span>
-                     <p>Certified Buyer, Dankuni</p>
-                     <p>Jul, 2020</p>
+             
+             
+              {
+                usersReviews.map((user, i) => (
+                  <div className={style.userReview} key={i}>
+                  <div className={style.row}>
+                    <div>
+                      {user.rate}
+                      <span>
+                        <StarIcon sx={{ fontSize: "1rem" }} />
+                      </span>
+                    </div>
+                    <span>{user.title}</span>
                   </div>
-                  <div className={style.likeDiv}>
-                     <span><ThumbUpIcon sx={{cursor:'pointer'}}/> 1</span> 
-                     <span><ThumbDownIcon sx={{cursor:'pointer'}}/>2</span> 
+                  <div>
+                    <div>{user.description}</div>
                   </div>
-                </div>
-              </div>
-              <div className={style.userReview}>
+                  <div className={style.userImgconter}>
+                    {user.images.map((img) => (
+                      <div className={style.userImg}>
+                        <img src={img.image} alt="" />
+                      </div>
+                    ))}
+                  </div>
+  
+                  <div className={style.userDetailsDiv}>
+                    <div className={style.userName}>
+                      <p>{user.buyerName}</p>
+                      <span>
+                        <CheckCircleIcon />
+                      </span>
+                      <p>Certified Buyer</p>
+                      <p>Jul, 2020</p>
+                    </div>
+                    {/* <div className={style.likeDiv}>
+                      <span>
+                        <ThumbUpIcon sx={{ cursor: "pointer" }} /> 1
+                      </span>
+                      <span>
+                        <ThumbDownIcon sx={{ cursor: "pointer" }} />2
+                      </span>
+                    </div> */}
+                  </div>
+                  </div>
+                ))
+              }
+               
+           
+              
+              {/* <div className={style.userReview}>
                 <div className={style.row}>
                   <div>4 <span><StarIcon sx={{fontSize:'1rem'}}/></span></div>
                   <span>Good Product</span>
@@ -547,7 +572,7 @@ function SingleProduct() {
                      <span><ThumbDownIcon/>2</span> 
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

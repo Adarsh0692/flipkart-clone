@@ -4,6 +4,7 @@ import HeroCurusal from '../../components/carousel/HeroCarousel'
 // import ElectronicsCarousel from '../../components/ElectronicsCarousel'
 import Carousel from '../../components/carousel/Carousel'
 import { electronicsData } from '../../assests/electronicData'
+import {beauty_food} from '../../productCategoryData'
 
 function Home() {
   return (
@@ -11,7 +12,7 @@ function Home() {
       <CategorySection/>
       <HeroCurusal/>
       <Carousel categoryFor='Best of Electronics' data={electronicsData}/>
-      <Carousel categoryFor='Beauty, Food, Toys & more' data={electronicsData}/>
+      <Carousel categoryFor='Beauty, Food, Toys & more' data={beauty_food}/>
       <Carousel categoryFor='Best Quality' data={electronicsData}/>
       <Carousel categoryFor='Top Rated' data={electronicsData}/>
       <Carousel categoryFor='Home & Kitchen Essentials' data={electronicsData}/>

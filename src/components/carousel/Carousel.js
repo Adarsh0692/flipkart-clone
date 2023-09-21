@@ -3,11 +3,14 @@ import style from "./Carousel.module.css";
 import { Button } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useNavigate } from "react-router-dom";
 
 function Carousel(props) {
   const [leftArrowHide, setLeftArrowHide] = useState(false);
   const [rightArrowHide, setRightArrowHide] = useState(true);
   const scrollRef = useRef(null);
+
+  const navigate = useNavigate()
 
   function scrollLeft() {
     scrollRef.current.scrollBy({ left: -scrollRef.current.clientWidth, behavior: 'auto' });
@@ -38,11 +41,14 @@ function Carousel(props) {
         onScroll={handleScroll}
       >
         {props.data.slice(0,8).map((item, i) => (
-          <div key={i} className={style.box}>
+          <div key={i} className={style.box} onClick={()=>navigate(`/product/${item.type}/${item.title}`)}>
+            <div className={style.imgDiv}>
             <img src={item.image} alt=""  />
-            <span className={style.name}>{item.name}</span>
-            <span className={style.shop}>{item.shop}</span>
-            <span className={style.allCat}>{item.category}</span>
+            </div>
+           
+            <span className={style.name}>{item.title}</span>
+            <span className={style.shop}>{item.Off}</span>
+            <span className={style.allCat}>{item.brands}</span>
           </div>
         ))}
       </div>

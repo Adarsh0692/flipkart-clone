@@ -14,7 +14,6 @@ import ProfileInfo from "./containers/profile/ProfileInfo";
 import MyOrder from "./containers/profile/MyOrder";
 import MyReviews from "./containers/profile/MyReviews";
 import MyWishlist from "./containers/profile/MyWishlist";
-import PrivateRoute from "./containers/authPage/PrivateRoute";
 
 function App() {
   return (
@@ -22,8 +21,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductPage />} />
-        <Route path="/singleProduct/:id" element={<SingleProduct />} />
+        <Route path="/product/:name/:id" element={<ProductPage />} />
+        <Route path="/productDetails/:id" element={<SingleProduct />} />
         <Route path="/viewcart" element={<ViewCart />} />
         <Route path="/checkout" element={<CheckOut />} />
 
