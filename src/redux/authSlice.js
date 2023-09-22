@@ -7,7 +7,8 @@ import { createSlice } from "@reduxjs/toolkit";
         userName: null,
         userEmail: null,
         userID: null,
-        addresses: null
+        addresses: null,
+        cart: []
     },
     reducers: {
        setUser: (state, action) => {
@@ -23,11 +24,14 @@ import { createSlice } from "@reduxjs/toolkit";
        setAddress: (state, action) => {
         state.addresses= action.payload
        },
+       addCart: (state, action) => {
+        state.cart.push(action.payload)
+       }
      
     }
 })
 
-export const {setUser, setLogoutUser, setAddress} = authSlice.actions
+export const {setUser, setLogoutUser, setAddress, addCart} = authSlice.actions
 
 export const selectUserName = state => state.auth.userName
 export const selectUserEmail = state => state.auth.userEmail

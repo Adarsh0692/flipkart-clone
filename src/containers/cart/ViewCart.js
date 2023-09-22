@@ -42,7 +42,8 @@ const image = [
 function ViewCart() {
 
   const userID = useSelector(selectUserID)
-  
+  const cartProduct = useSelector(state => state.auth.cart)
+  // console.log(cartProduct);
 
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -51,6 +52,20 @@ function ViewCart() {
  
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const priceArray = cartProduct?.map((product) => Math.floor(
+    (product.actual_price * product.productQuantity )-
+      (product.discount_percentage / 100) * (product.actual_price * product.productQuantity )
+  ) )
+  const actualPriceArray = cartProduct?.map((product) => product.actual_price * product.productQuantity)
+  const deliveryPriceArray = cartProduct?.map((product) => product.deliveryCharge * product.productQuantity)
+ 
+
+const finalPrice = priceArray.reduce((price, total)=> price + total,0 )
+const totalActualPrice = actualPriceArray.reduce((price, total)=> price + total,0 )
+const totalDeliveryCharge = deliveryPriceArray.reduce((price, total)=> price + total,0 )
+//  console.log(totalDeliveryCharge);
+const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDeliveryCharge
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,6 +79,7 @@ function ViewCart() {
     setSelectedAddress(address)
     setOpen(false);
   }
+
 
   useEffect(() => {
    
@@ -87,10 +103,10 @@ function ViewCart() {
   return (
     <div className={style.mainCartContainer}>
       <div className={style.mainLeft}>
-        <div className={style.cartType}>
+        {/* <div className={style.cartType}>
           <div className={style.active_cart}>Flipkart (3)</div>
           <div>Grocery</div>
-        </div>
+        </div> */}
         <div className={style.address}>
           {selectedAddress !== null ? (
             <>
@@ -160,35 +176,44 @@ function ViewCart() {
             </DialogContentText>
           </DialogContent>
         </Dialog>
-        {image.map((item) => (
-          <div className={style.cartItems}>
+        {cartProduct?.map((product) => (
+          <div className={style.cartItems} key={product.id}>
             <div>
               <div className={style.cartImg}>
-                <img src={item.image} alt="" />
+                <img src={product.images[0].image} alt="" />
               </div>
               <div className={style.cartDetails}>
-                <div>Happilo Premium Natural Californian Almonds </div>
-                <div>200g</div>
+                <div>{product.title} </div>
+                <div>{product.quantity}</div>
                 <div>
                   Seller: SuperComNet{" "}
-                  <span>
+                {product.assured &&  <span>
                     <img
                       src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
                       alt=""
                     />
-                  </span>
+                  </span>}
                 </div>
                 <div className={style.cartPrice}>
-                  <span>₹275</span>
-                  <span>₹195</span>
-                  <span>29% Off</span>
+                  <span>₹{product.actual_price * product.productQuantity}</span>
+                  <span>₹{Math.floor(
+    (product.actual_price * product.productQuantity )-
+      (product.discount_percentage / 100) * (product.actual_price * product.productQuantity )
+  )} </span>
+                  <span>{product.discount_percentage}% Off</span>
                 </div>
               </div>
               <div className={style.cartDelivery}>
                 <div>Delivery by 11 PM, Tomorrow |</div>
                 <div className={style.deliveryFee}>
+                {product.deliveryCharge == 0 ?  <>
                   <span>Free</span>
-                  <span>₹70</span>
+                  <span>₹{40 * product.productQuantity}</span>
+                  </> : <>
+                  <span>₹{product.deliveryCharge * product.productQuantity}</span>
+                  <span>Free</span>
+                  </>}
+                
                 </div>
               </div>
             </div>
@@ -216,23 +241,34 @@ function ViewCart() {
         <div className={style.itemsDetails}>
           <div>
             <span>Price (1 item)</span>
-            <span>₹275</span>
+            <span>₹{totalActualPrice}</span>
           </div>
           <div>
             <span>Discount</span>
-            <span className={style.discPrice}>-₹69</span>
+            <span className={style.discPrice}>-₹{totalActualPrice - finalPrice}</span>
           </div>
           <div>
             <span>Delivery Charges</span>
-            <span>₹40</span>
+            <span className={style.finalDeliveryFee}>
+                {totalDeliveryCharge == 0 ?  <>
+                  <span>₹{40 }</span>
+                  <span>Free</span>
+                  
+                  </> : <>
+                  <span></span>
+                  <span>₹{totalDeliveryCharge}</span>
+                 
+                  </>}
+                
+                </span>
           </div>
           <div className={style.border}></div>
           <div>
             <span>Total Amount</span>
-            <span>₹246</span>
+            <span>₹{totalAmount}</span>
           </div>
         </div>
-        <div className={style.save}>You will save ₹29 on this order</div>
+        <div className={style.save}>You will save ₹{totalActualPrice - finalPrice + totalDeliveryCharge} on this order</div>
       </div>
     </div>
   );

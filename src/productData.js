@@ -50,7 +50,7 @@ export const products = [
       1: 50,
     },
     reviews: [
-      { buyerName: "Falguni Naidu", rate: "4", description: "170 almonds r there", title: "Good quality product", images: [
+      { buyerName: "Falguni Naidu", rate: "1", description: "170 almonds r there", title: "Good quality product", images: [
         {image:"https://rukminim1.flixcart.com/blobio/124/124/201904/blobio-201904_fm1jn5f9.jpg?q=90"},
         {image:"https://rukminim1.flixcart.com/blobio/124/124/imr-202007/blobio-imr-202007_e5a44e1acc764529ab2df462f7d34419.jpg?q=90"}
       ] },
@@ -58,6 +58,7 @@ export const products = [
         {image:"https://rukminim1.flixcart.com/blobio/124/124/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90"},
         {image:"https://rukminim1.flixcart.com/blobio/124/124/imr-202007/blobio-imr-202007_5a5b086716e343a58f8d84aa4fb60bba.jpg?q=90"},
         {image:"https://rukminim1.flixcart.com/blobio/124/124/20181025/blobio-20181025_kn33qohl.jpg?q=90"},
+
       ] },
     ],
     general: {
@@ -69,5 +70,6 @@ export const products = [
       Net_Quantity: "200 g",
     },
     assured: true,
+    deliveryCharge: 40,
   },
 ];

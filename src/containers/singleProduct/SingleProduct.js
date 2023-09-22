@@ -7,9 +7,8 @@ import StarIcon from "@mui/icons-material/Star";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import RatingProgressBar from "./RatingProgressBar";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
+import { useTheme } from "@mui/material/styles";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -20,6 +19,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { products } from "../../productData";
 import CalculateAvgRate from "../ProductPage/CalculateAvgRate";
 import CalculateTotalRatings from "../ProductPage/CalculateTotalRatings";
+import { useDispatch } from "react-redux";
+import { addCart } from "../../redux/authSlice";
 
 const feedbakImages = [
   {
@@ -79,6 +80,18 @@ const userImg = [
   },
 ];
 
+const styles = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 44,
+  p: 4,
+};
+
 function SingleProduct() {
   const params = useParams();
   const product = products.find((prod) => prod.id == params.id);
@@ -86,8 +99,17 @@ function SingleProduct() {
   const [imgindex, setImgIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openImg, setOpenImg] = useState(false);
 
-  const navigate = useNavigate();
+  const handleOpenImg = () => {
+    setOpenImg(true);
+  };
+
+  const handleCloseImg = () => {
+    setOpenImg(false);
+  };
+
+
 
   let arr = Object.values(product.ratings);
   let maxV = Math.max(...arr);
@@ -97,6 +119,9 @@ function SingleProduct() {
   const widfor3 = (product.ratings[3] / maxV) * 100;
   const widfor4 = (product.ratings[4] / maxV) * 100;
   const widfor5 = (product.ratings[5] / maxV) * 100;
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const reviewImg = product.reviews.map((prod) => prod.images);
   const allFeedbackImgs = reviewImg.reduce((acc, currentArray) => {
@@ -114,12 +139,17 @@ function SingleProduct() {
   const visibleImg = showAll ? allFeedbackImgs : allFeedbackImgs.slice(0, 8);
   const remaingImgCount = allFeedbackImgs.length - visibleImg.length;
 
-  const usersReviews = product.reviews.map((rev) => rev)
-
+  const usersReviews = product.reviews.map((rev) => rev);
 
   function handleimgIndex(i) {
     setImgIndex(i);
   }
+
+  function handleAddToCart(){
+    dispatch(addCart({productQuantity: 2,  ...product}))
+    navigate('/viewCart')
+  }
+
   return (
     <>
       <div className={style.prodMainContainer}>
@@ -127,7 +157,12 @@ function SingleProduct() {
           <div className={style.singleProLeftSide}>
             <div className={style.imgMap}>
               {product?.images.map((img, i) => (
-                <div key={i} className={`${style.imgDiv} `}>
+                <div
+                  key={i}
+                  className={`${style.imgDiv} ${
+                    i == imgindex ? style.activeShowImg : ""
+                  }`}
+                >
                   <img
                     src={img.image}
                     alt="img"
@@ -141,15 +176,13 @@ function SingleProduct() {
               <img src={product.images[imgindex].image} alt="" />
               <div className={style.fav}>
                 <span>
-                  <FavoriteIcon
-                    sx={{ fontSize: "1.2rem", color: "lightgray" }}
-                  />
+                  <FavoriteIcon sx={{ fontSize: "1rem", color: "lightgray" }} />
                 </span>
               </div>
             </div>
           </div>
           <div className={style.cartBtn}>
-            <button>
+            <button onClick={handleAddToCart}>
               <ShoppingCartIcon />
               ADD TO CART
             </button>
@@ -164,13 +197,19 @@ function SingleProduct() {
             <span>{product.title}</span>
             <div className={style.rateDiv}>
               <div>
-                <CalculateAvgRate ratings={product.ratings} />{" "}
-                <StarIcon sx={{ fontSize: "1rem" }} />
+                <CalculateAvgRate ratings={product.ratings} />
+                <StarIcon sx={{ fontSize: ".8rem" }} />
               </div>
               <span>
                 <CalculateTotalRatings ratings={product.ratings} /> Rating{" "}
               </span>{" "}
-              <span>&</span> <span>{product.reviews.length} Reviews</span>
+              {product.reviews.length > 0 && (
+                <>
+                  {" "}
+                  <span>&</span>
+                  <span> {product.reviews.length} Reviews</span>{" "}
+                </>
+              )}
               {product.assured && (
                 <img
                   src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
@@ -319,7 +358,7 @@ function SingleProduct() {
                   </tbody>
                 </table>
               </div>
-              <div>
+              <div className={style.legalDis}>
                 Legal Disclaimer
                 <table>
                   <tbody>
@@ -361,7 +400,7 @@ function SingleProduct() {
                     <div>
                       <CalculateAvgRate ratings={product.ratings} />
                       <p>
-                        <StarIcon sx={{ fontSize: "2rem" }} />
+                        <StarIcon sx={{ fontSize: "1.5rem" }} />
                       </p>
                     </div>
                     <span>
@@ -376,31 +415,31 @@ function SingleProduct() {
                         <li>
                           5{" "}
                           <span>
-                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                            <StarIcon sx={{ fontSize: ".7rem" }} />
                           </span>
                         </li>
                         <li>
                           4{" "}
                           <span>
-                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                            <StarIcon sx={{ fontSize: ".7rem" }} />
                           </span>
                         </li>
                         <li>
                           3{" "}
                           <span>
-                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                            <StarIcon sx={{ fontSize: ".7rem" }} />
                           </span>
                         </li>
                         <li>
                           2{" "}
                           <span>
-                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                            <StarIcon sx={{ fontSize: ".7rem" }} />
                           </span>
                         </li>
                         <li>
                           1{" "}
                           <span>
-                            <StarIcon sx={{ fontSize: ".8rem" }} />
+                            <StarIcon sx={{ fontSize: ".7rem" }} />
                           </span>
                         </li>
                       </ul>
@@ -461,30 +500,52 @@ function SingleProduct() {
                   </div>
                 </div>
               </div>
+              
               <div className={style.feedback}>
                 <div className={style.feedbackImgs}>
                   {visibleImg.map((img, index) => (
-                    <div className={style.uplaodedimg}>
-                      <img src={img.image} alt="" />
-                      {remaingImgCount > 0 &&
-                        index === visibleImg.length - 1 && (
-                          <div
-                            className={style.remainingCount}
-                            onClick={handleClickOpen}
-                          >
-                            + {remaingImgCount}
-                          </div>
-                        )}
+                    <div key={index}>
+                      <div
+                        className={style.uplaodedimg}
+                        onClick={handleOpenImg}
+                      >
+                        <img src={img.image} alt="" />
+                        {remaingImgCount > 0 &&
+                          index === visibleImg.length - 1 && (
+                            <div
+                              className={style.remainingCount}
+                              onClick={handleClickOpen}
+                            >
+                              + {remaingImgCount}
+                            </div>
+                          )}
+                      </div>
+                      {/* <Dialog
+                        open={openImg}
+                        onClose={handleCloseImg}
+                        aria-labelledby="responsive-dialog-title"
+                      >
+                        <DialogTitle id="responsive-dialog-title">
+                          {"Use Google's location service?"}
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            
+                          </DialogContentText>
+                        </DialogContent>
+                      </Dialog> */}
                     </div>
+                    
                   ))}
+                  
                 </div>
                 {/* user images dailog  */}
                 <div>
                   <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle>{`User Images (${feedbakImages.length})`}</DialogTitle>
+                    <DialogTitle>{`User Images (${allFeedbackImgs.length})`}</DialogTitle>
                     <DialogContent>
                       <DialogContentText className={style.feedbackAllImgs}>
-                        {feedbakImages.map((img) => (
+                        {allFeedbackImgs.map((img) => (
                           <div className={style.uplaodedAllImg}>
                             <img src={img.image} alt="" />
                           </div>
@@ -494,21 +555,28 @@ function SingleProduct() {
                   </Dialog>
                 </div>
               </div>
-             
-             
-              {
-                usersReviews.map((user, i) => (
-                  <div className={style.userReview} key={i}>
+
+              {usersReviews.map((user, i) => (
+                <div className={style.userReview} key={i}>
                   <div className={style.row}>
-                    <div>
+                    <div
+                      style={{
+                        backgroundColor:
+                          user.rate >= 3
+                            ? "green"
+                            : user.rate >= 2
+                            ? "orange"
+                            : "red",
+                      }}
+                    >
                       {user.rate}
                       <span>
-                        <StarIcon sx={{ fontSize: "1rem" }} />
+                        <StarIcon sx={{ fontSize: ".8rem" }} />
                       </span>
                     </div>
                     <span>{user.title}</span>
                   </div>
-                  <div>
+                  <div className={style.userDes}>
                     <div>{user.description}</div>
                   </div>
                   <div className={style.userImgconter}>
@@ -518,12 +586,12 @@ function SingleProduct() {
                       </div>
                     ))}
                   </div>
-  
+
                   <div className={style.userDetailsDiv}>
                     <div className={style.userName}>
                       <p>{user.buyerName}</p>
                       <span>
-                        <CheckCircleIcon />
+                        <CheckCircleIcon sx={{ fontSize: "1rem" }} />
                       </span>
                       <p>Certified Buyer</p>
                       <p>Jul, 2020</p>
@@ -537,12 +605,9 @@ function SingleProduct() {
                       </span>
                     </div> */}
                   </div>
-                  </div>
-                ))
-              }
-               
-           
-              
+                </div>
+              ))}
+
               {/* <div className={style.userReview}>
                 <div className={style.row}>
                   <div>4 <span><StarIcon sx={{fontSize:'1rem'}}/></span></div>

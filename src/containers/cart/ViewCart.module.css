@@ -58,6 +58,7 @@
     border: 1px solid #ecebeb;
    padding: 1.5rem;
 }
+
 .cartItems div:first-child{
     display: flex;
 }
@@ -79,7 +80,7 @@
     justify-content: space-between;
 }
 .cartDetails div:nth-child(1){
-    font-size: 1rem;
+    font-size: .9rem;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -88,9 +89,11 @@
 .cartDetails div:nth-child(2){
    color: #878787;
    margin-top: -1rem;
+   font-size: .9rem;
 }
 .cartDetails div:nth-child(3){
     color: #878787;
+    font-size: .9rem;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -102,6 +105,7 @@
     display: flex;
     align-items: baseline;
     gap: 1rem;
+    /* font-size: .9rem; */
 }
 .cartPrice span:nth-child(1){
     color: #878787;
@@ -114,6 +118,9 @@
 .cartPrice span:nth-child(3){
     color: #388e3c;
     font-weight: 500;
+}
+.cartDelivery{
+    font-size: .9rem;
 }
 .deliveryFee span:first-child{
     color: #388e3c;
@@ -162,7 +169,7 @@
     border: none;
     margin-right: 20px;
     background-color: #ffff;
-    font-size: 1rem;
+    font-size: .9rem;
     font-weight: 500;
     cursor: pointer;
 }
@@ -198,7 +205,7 @@
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
     border-radius: 4px;
     width: 30%;
-    height: 60vh;
+    max-height: 70vh;
     position: sticky;
     top: 70px;
 }
@@ -219,7 +226,7 @@
     margin: 1.7rem 0;
 }
 .itemsDetails div span{
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 .itemsDetails div:last-child span{
     font-size: 1.2rem;
@@ -230,6 +237,15 @@
 }
 .discPrice{
     color: #388e3c;
+}
+.finalDeliveryFee span:last-child{
+    color: #388e3c;
+    margin-left: 10px;
+}
+.finalDeliveryFee span:first-child{
+    color: #878787;
+    text-decoration: line-through;
+    
 }
 .save{
     padding: 1rem 1.5rem;
