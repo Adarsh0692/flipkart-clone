@@ -8,7 +8,7 @@ export const products = [
     actual_price: 275,
     discount_percentage: 25,
     product_type: 'food product',
-    category_type: 'Dry fruits',
+    category_type: 'dry fruits',
     quantity: "200 g",
     images: [
       {
@@ -42,7 +42,8 @@ export const products = [
     ],
     Category: "Beauty, Food, Toys & more",
     brand: "Happilo",
-    ratings: {
+    ratings: 3.8,
+    stars: {
       5: 320,
       4: 140,
       3: 200,

@@ -442,7 +442,7 @@
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
     border-radius: 4px;
     width: 30%;
-    height: 60vh;
+    max-height: 70vh;
     position: sticky;
     top: 70px;
 }
@@ -452,6 +452,7 @@
     font-size: 1rem;
     font-weight: 500;
     border-bottom: 1px solid #e0e0e0;
+    
 }
 .itemsDetails{
   padding: 0 1.5rem;
@@ -463,10 +464,10 @@
     margin: 1.7rem 0;
 }
 .itemsDetails div span{
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 .itemsDetails div:last-child span{
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 550;
 }
 .border{
@@ -475,9 +476,18 @@
 .discPrice{
     color: #388e3c;
 }
+.finalDeliveryFee span:last-child{
+    color: #388e3c;
+    margin-left: 10px;
+}
+.finalDeliveryFee span:first-child{
+    color: #878787;
+    text-decoration: line-through;
+    
+}
 .save{
     padding: 1rem 1.5rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #388e3c;
     font-weight: 500;
-}
+}  

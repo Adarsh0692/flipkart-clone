@@ -20,7 +20,7 @@ import { products } from "../../productData";
 import CalculateAvgRate from "../ProductPage/CalculateAvgRate";
 import CalculateTotalRatings from "../ProductPage/CalculateTotalRatings";
 import { useDispatch } from "react-redux";
-import { addCart } from "../../redux/authSlice";
+import { addToCart } from "../../redux/productSlice";
 
 const feedbakImages = [
   {
@@ -111,14 +111,14 @@ function SingleProduct() {
 
 
 
-  let arr = Object.values(product.ratings);
+  let arr = Object.values(product.stars);
   let maxV = Math.max(...arr);
 
-  const widfor1 = (product.ratings[1] / maxV) * 100;
-  const widfor2 = (product.ratings[2] / maxV) * 100;
-  const widfor3 = (product.ratings[3] / maxV) * 100;
-  const widfor4 = (product.ratings[4] / maxV) * 100;
-  const widfor5 = (product.ratings[5] / maxV) * 100;
+  const widfor1 = (product.stars[1] / maxV) * 100;
+  const widfor2 = (product.stars[2] / maxV) * 100;
+  const widfor3 = (product.stars[3] / maxV) * 100;
+  const widfor4 = (product.stars[4] / maxV) * 100;
+  const widfor5 = (product.stars[5] / maxV) * 100;
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -146,7 +146,7 @@ function SingleProduct() {
   }
 
   function handleAddToCart(){
-    dispatch(addCart({productQuantity: 2,  ...product}))
+    dispatch(addToCart({productQuantity: 1,  ...product}))
     navigate('/viewCart')
   }
 
@@ -196,13 +196,13 @@ function SingleProduct() {
           <div className={style.prodDetails}>
             <span>{product.title}</span>
             <div className={style.rateDiv}>
-              <div>
-                <CalculateAvgRate ratings={product.ratings} />
-                <StarIcon sx={{ fontSize: ".8rem" }} />
-              </div>
-              <span>
-                <CalculateTotalRatings ratings={product.ratings} /> Rating{" "}
-              </span>{" "}
+            {product.ratings>0 && <div style={{backgroundColor: product.ratings>=3 ? 'green' : product.ratings>=2 ? 'orange' : 'red'}}>
+                  {product.ratings}{" "}
+                  <StarIcon sx={{ fontSize: "1rem" }} />
+                </div>}
+                {product.ratings>0 &&   <span>
+                  (<CalculateTotalRatings ratings={product.stars} />)
+                </span>}
               {product.reviews.length > 0 && (
                 <>
                   {" "}
@@ -398,13 +398,13 @@ function SingleProduct() {
                 <div>
                   <div className={style.totalRate}>
                     <div>
-                      <CalculateAvgRate ratings={product.ratings} />
+                     {product.ratings}
                       <p>
                         <StarIcon sx={{ fontSize: "1.5rem" }} />
                       </p>
                     </div>
                     <span>
-                      <CalculateTotalRatings ratings={product.ratings} />{" "}
+                      <CalculateTotalRatings ratings={product.stars} />{" "}
                       Ratings &{" "}
                     </span>
                     <span>{product.reviews.length} Reviews</span>
@@ -481,19 +481,19 @@ function SingleProduct() {
                     <div className={style.noOfReview}>
                       <ul>
                         <li>
-                          <span>{product.ratings[5]}</span>
+                          <span>{product.stars[5]}</span>
                         </li>
                         <li>
-                          <span>{product.ratings[4]}</span>
+                          <span>{product.stars[4]}</span>
                         </li>
                         <li>
-                          <span>{product.ratings[3]}</span>
+                          <span>{product.stars[3]}</span>
                         </li>
                         <li>
-                          <span>{product.ratings[2]}</span>
+                          <span>{product.stars[2]}</span>
                         </li>
                         <li>
-                          <span>{product.ratings[1]}</span>
+                          <span>{product.stars[1]}</span>
                         </li>
                       </ul>
                     </div>
@@ -608,36 +608,7 @@ function SingleProduct() {
                 </div>
               ))}
 
-              {/* <div className={style.userReview}>
-                <div className={style.row}>
-                  <div>4 <span><StarIcon sx={{fontSize:'1rem'}}/></span></div>
-                  <span>Good Product</span>
-                </div>
-                <div>
-                  <div>170 almonds are there</div>
-                </div>
-                <div className={style.userImgconter}>
-                    {
-                      userImg.map((img) => (
-                        <div className={style.userImg}>
-                          <img src={img.image} alt="" />
-                        </div>
-                      ))
-                    }
-                </div>
-                <div className={style.userDetailsDiv}>
-                  <div className={style.userName}>
-                     <p>Shabbir Laskar</p>
-                     <span><CheckCircleIcon/></span>
-                     <p>Certified Buyer, Dankuni</p>
-                     <p>Jul, 2020</p>
-                  </div>
-                  <div className={style.likeDiv}>
-                     <span><ThumbUpIcon/> 1</span> 
-                     <span><ThumbDownIcon/>2</span> 
-                  </div>
-                </div>
-              </div> */}
+            
             </div>
           </div>
         </div>

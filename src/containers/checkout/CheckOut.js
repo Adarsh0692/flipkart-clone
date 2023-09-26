@@ -15,6 +15,7 @@ import { selectUserID, setLogoutUser, setUser } from "../../redux/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { collection, onSnapshot } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
+import { setOder } from "../../redux/productSlice";
 
 const image = [
   {
@@ -46,6 +47,21 @@ const image = [
 function CheckOut() {
   const currentUser = useSelector((state) => state.auth);
   const userID = useSelector(selectUserID);
+  const cartProduct = currentUser.cart
+
+  const priceArray = cartProduct?.map((product) => Math.floor(
+    (product.actual_price * product.productQuantity )-
+      (product.discount_percentage / 100) * (product.actual_price * product.productQuantity )
+  ) )
+  const actualPriceArray = cartProduct?.map((product) => product.actual_price * product.productQuantity)
+  const deliveryPriceArray = cartProduct?.map((product) => product.deliveryCharge * product.productQuantity)
+ 
+
+const finalPrice = priceArray.reduce((price, total)=> price + total,0 )
+const totalActualPrice = actualPriceArray.reduce((price, total)=> price + total,0 )
+const totalDeliveryCharge = deliveryPriceArray.reduce((price, total)=> price + total,0 )
+const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDeliveryCharge
+
 
   const [addresses, setAddAddress] = useState([]);
 
@@ -208,9 +224,12 @@ function CheckOut() {
   }
 
   function handleOrderConfirm() {
-    console.log(`selected Option: ${selectedPaymentMethod}`);
-    // console.log(`selected addres: ${selectedDeliveryAddress}`);
-    console.log(selectedDeliveryAddress);
+    // console.log(`selected Option: ${selectedPaymentMethod}`);
+    // // console.log(`selected addres: ${selectedDeliveryAddress}`);
+    // console.log(selectedDeliveryAddress);
+    const data = [{orderID: Date.now() , status: 'Oredr Confirm', address: selectedDeliveryAddress, payment: selectedPaymentMethod , ...cartProduct }]
+    dispatch(setOder({orderID: Date.now() , status: 'Oredr Confirm', address: selectedDeliveryAddress, payment: selectedPaymentMethod , orderProduct:cartProduct }));
+    // dispatch(setOrders(data))
   }
 
   useEffect(() => {
@@ -501,35 +520,43 @@ function CheckOut() {
               <span className={style.login1}>ORDER SUMMARY</span>
             </div>
             <div>
-              {image.map((item) => (
+              {cartProduct.map((product) => (
                 <div className={style.cartItems}>
                   <div>
                     <div className={style.cartImg}>
-                      <img src={item.image} alt="" />
+                      <img src={product.images[0].image} alt="" />
                     </div>
                     <div className={style.cartDetails}>
-                      <div>Happilo Premium Natural Californian Almonds </div>
-                      <div>200g</div>
+                      <div>{product.title} </div>
+                      <div>{product.quantity}</div>
                       <div>
-                        Seller: SuperComNet{" "}
-                        <span>
+                        Seller: {product.sellerName}{" "}
+                      {product.assured &&  <span>
                           <img
                             src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
                             alt=""
                           />
-                        </span>
+                        </span>}
                       </div>
                       <div className={style.cartPrice}>
-                        <span>₹275</span>
-                        <span>₹195</span>
-                        <span>29% Off</span>
+                        <span>₹{product.actual_price * product.productQuantity}</span>
+                        <span>₹{Math.floor(
+    (product.actual_price * product.productQuantity )-
+      (product.discount_percentage / 100) * (product.actual_price * product.productQuantity )
+  )}</span>
+                        <span>{product.discount_percentage}% Off</span>
                       </div>
                     </div>
                     <div className={style.cartDelivery}>
                       <div>Delivery by 11 PM, Tomorrow |</div>
                       <div className={style.deliveryFee}>
-                        <span>Free</span>
-                        <span>₹70</span>
+                      {product.deliveryCharge == 0 ?  <>
+                  <span>Free</span>
+                  <span>₹{40 * product.productQuantity}</span>
+                  </> : <>
+                  <span>₹{product.deliveryCharge * product.productQuantity}</span>
+                  <span>Free</span>
+                  </>}
                       </div>
                     </div>
                   </div>
@@ -662,23 +689,34 @@ function CheckOut() {
         <div className={style.itemsDetails}>
           <div>
             <span>Price (1 item)</span>
-            <span>₹275</span>
+            <span>₹{totalActualPrice}</span>
           </div>
           <div>
             <span>Discount</span>
-            <span className={style.discPrice}>-₹69</span>
+            <span className={style.discPrice}>- ₹{totalActualPrice - finalPrice}</span>
           </div>
           <div>
             <span>Delivery Charges</span>
-            <span>₹40</span>
+            <span className={style.finalDeliveryFee}>
+                {totalDeliveryCharge == 0 ?  <>
+                  <span>₹{40 }</span>
+                  <span>Free</span>
+                  
+                  </> : <>
+                  <span></span>
+                  <span>₹{totalDeliveryCharge}</span>
+                 
+                  </>}
+                
+                </span>
           </div>
           <div className={style.border}></div>
           <div>
             <span>Total Amount</span>
-            <span>₹246</span>
+            <span>₹{totalAmount}</span>
           </div>
         </div>
-        <div className={style.save}>You will save ₹29 on this order</div>
+        <div className={style.save}>You will save ₹{totalActualPrice - finalPrice + totalDeliveryCharge} on this order</div>
       </div>
     </div>
   );

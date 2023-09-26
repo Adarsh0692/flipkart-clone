@@ -40,8 +40,8 @@ function Carousel(props) {
         ref={scrollRef}
         onScroll={handleScroll}
       >
-        {props.data.slice(0,8).map((item, i) => (
-          <div key={i} className={style.box} onClick={()=>navigate(`/product/${item.type}/${item.title}`)}>
+        {props.data.slice(0,6).map((item, i) => (
+          <div key={i} className={style.box} onClick={()=>navigate(`/product/${item.product}/${item.type}`)}>
             <div className={style.imgDiv}>
             <img src={item.image} alt=""  />
             </div>

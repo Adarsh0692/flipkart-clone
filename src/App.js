@@ -14,6 +14,7 @@ import ProfileInfo from "./containers/profile/ProfileInfo";
 import MyOrder from "./containers/profile/MyOrder";
 import MyReviews from "./containers/profile/MyReviews";
 import MyWishlist from "./containers/profile/MyWishlist";
+import AddProduct from "./containers/sellerPage/AddProduct";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
 
         <Route path="/write-review/:id" element={<WriteReview />} />
         <Route path="/login" element={<Auth />} />
+        <Route path="/seller" element={<AddProduct />} />
       </Routes>
     </BrowserRouter>
   );

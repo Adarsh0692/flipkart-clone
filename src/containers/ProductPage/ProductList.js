@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { products } from "../../productData";
 import CalculateAvgRate from "./CalculateAvgRate";
 import CalculateTotalRatings from "./CalculateTotalRatings";
+import { red } from "@mui/material/colors";
 
 function ProductList() {
   const params = useParams();
@@ -14,7 +15,7 @@ function ProductList() {
   // const productType = params.name
   const categoryType = params.id;
   const viewProdcts = products.filter(
-    (product) => product.category_type === categoryType
+    (product) => product.category_type === categoryType 
   );
 
   const [productsList, setProductsList] = useState(viewProdcts);
@@ -53,13 +54,13 @@ function ProductList() {
               <p className={style.discp}>{product.title}</p>
               <div className={style.gram}>{product.quantity}</div>
               <div className={style.rateDiv}>
-                <div>
-                  <CalculateAvgRate ratings={product.ratings} />{" "}
+               {product.ratings>0 && <div style={{backgroundColor: product.ratings>=3 ? 'green' : product.ratings>=2 ? 'orange' : 'red'}}>
+                  {product.ratings}{" "}
                   <StarIcon sx={{ fontSize: "1rem" }} />
-                </div>
-                <span>
-                  (<CalculateTotalRatings ratings={product.ratings} />)
-                </span>
+                </div>}
+              {product.ratings>0 &&   <span>
+                  (<CalculateTotalRatings ratings={product.stars} />)
+                </span>}
                 {product.assured && (
                   <img
                     src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"

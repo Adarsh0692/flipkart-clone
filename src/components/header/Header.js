@@ -593,19 +593,20 @@ function Header() {
             </Modal>
 
             {currentUser ? (
-              <Tippy
-                theme="light"
-                content={
-                  <LoginTippy
-                    handleOpen={handleOpen}
-                    currentUser={currentUser}
-                    toastId={toastId}
-                    toast={toast}
-                  />
-                }
-                interactive={true}
-              >
+              <>
                 {location.pathname !== "/checkout" && (
+                  <Tippy
+                  theme="light"
+                  content={
+                    <LoginTippy
+                      handleOpen={handleOpen}
+                      currentUser={currentUser}
+                      toastId={toastId}
+                      toast={toast}
+                    />
+                  }
+                  interactive={true}
+                >
                   <Button
                     sx={{
                       color: "white",
@@ -616,8 +617,9 @@ function Header() {
                     {currentUser.split(' ')[0]}
                     <KeyboardArrowDownIcon sx={{ fontSize: "18px" }} />
                   </Button>
+                  </Tippy>
                 )}
-              </Tippy>
+             </>
             ) : (
               <Tippy
                 theme="light"
@@ -636,7 +638,7 @@ function Header() {
             )}
             {location.pathname !== "/viewCart" &&
               location.pathname !== "/checkout" && (
-                <span className={style.cartdiv}>Become a seller</span>
+                <span className={style.cartdiv} onClick={() => navigate('/seller')}>Become a seller</span>
               )}
 
             {location.pathname !== "/viewCart" &&

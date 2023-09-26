@@ -42,7 +42,7 @@ const image = [
 function ViewCart() {
 
   const userID = useSelector(selectUserID)
-  const cartProduct = useSelector(state => state.auth.cart)
+  const cartProduct = useSelector(state => state.products.cart)
   // console.log(cartProduct);
 
   const [addresses, setAddresses] = useState([]);
@@ -64,7 +64,6 @@ function ViewCart() {
 const finalPrice = priceArray.reduce((price, total)=> price + total,0 )
 const totalActualPrice = actualPriceArray.reduce((price, total)=> price + total,0 )
 const totalDeliveryCharge = deliveryPriceArray.reduce((price, total)=> price + total,0 )
-//  console.log(totalDeliveryCharge);
 const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDeliveryCharge
 
   const handleClickOpen = () => {
@@ -186,7 +185,7 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
                 <div>{product.title} </div>
                 <div>{product.quantity}</div>
                 <div>
-                  Seller: SuperComNet{" "}
+                  Seller: {product.sellerName}{" "}
                 {product.assured &&  <span>
                     <img
                       src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"

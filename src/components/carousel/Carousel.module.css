@@ -8,7 +8,8 @@
 }
 .left{
     /* border: 1px solid red; */
-    width: 20%;
+    padding: 2rem ;
+    width: 15%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,10 +17,9 @@
     gap: 2rem;
     text-align: center;
     background-color: white;
-   
 }
 .left span{
-    font-size: 2rem;
+    font-size: 1.8rem;
     word-spacing: 10px;
     font-weight: 300;
 }
@@ -41,33 +41,40 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    padding: 25px 15px;
+    padding: 1rem;
     min-width: 20vw;
+   align-items: center;
+    /* border: 1px solid red; */
 }
 .imgDiv{
-    width: 100%;
-    height: 35vh;
+    /* border: 1px solid red; */
+    width: 15vw;
+    height: 30vh;
     margin-bottom: 1rem;
 }
 .box span{
-    margin: 8px 0;
+    margin: 5px 0;
 }
 .imgDiv img{
     height: 100%;
     width: 100%;
-    transition: transform .2s ease-in-out;
+    transition: transform .1s ease-in-out;
     object-fit: contain;
+    /* margin: 1rem 0; */
+   
 }
 .imgDiv img:hover{
     transform: scale(1.05);
 }
 .name{
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    /* border: 1px solid red; */
 }
 .shop{
     color: green;
-    font-size: 1.3rem;
+    font-size: 1rem;
+    /* border: 1px solid red; */
 }
 .allCat{
     color: rgb(180, 177, 177);
