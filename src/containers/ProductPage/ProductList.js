@@ -1,24 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import style from "./ProductPage.module.css";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Pagination from "./Pagination";
-import { useNavigate, useParams } from "react-router-dom";
-import { products } from "../../productData";
-import CalculateAvgRate from "./CalculateAvgRate";
+import { useNavigate } from "react-router-dom";
 import CalculateTotalRatings from "./CalculateTotalRatings";
-import { red } from "@mui/material/colors";
 
-function ProductList() {
-  const params = useParams();
-  const navigate = useNavigate()
-  // const productType = params.name
-  const categoryType = params.id;
-  const viewProdcts = products.filter(
-    (product) => product.category_type === categoryType 
-  );
-
-  const [productsList, setProductsList] = useState(viewProdcts);
+function ProductList({ viewProdcts }) {
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -41,8 +30,11 @@ function ProductList() {
       </div>
 
       <div className={style.proListDiv}>
-        {productsList.map((product) => (
-          <div className={style.cart} onClick={() => navigate(`/productDetails/${product.id}`)}>
+        {viewProdcts && viewProdcts?.map((product) => (
+          <div
+            className={style.cart}
+            onClick={() => navigate(`/productDetails/${product.id}`)}
+          >
             <div key={product.id} className={style.imgDiv}>
               <img src={product.images[0].image} alt="image" />
               <span className={style.heart}>
@@ -54,14 +46,26 @@ function ProductList() {
               <p className={style.discp}>{product.title}</p>
               <div className={style.gram}>{product.quantity}</div>
               <div className={style.rateDiv}>
-               {product.ratings>0 && <div style={{backgroundColor: product.ratings>=3 ? 'green' : product.ratings>=2 ? 'orange' : 'red'}}>
-                  {product.ratings}{" "}
-                  <StarIcon sx={{ fontSize: "1rem" }} />
-                </div>}
-              {product.ratings>0 &&   <span>
-                  (<CalculateTotalRatings ratings={product.stars} />)
-                </span>}
-                {product.assured && (
+                {product.ratings > 0 && (
+                  <div
+                    style={{
+                      backgroundColor:
+                        product.ratings >= 3
+                          ? "green"
+                          : product.ratings >= 2
+                          ? "orange"
+                          : "red",
+                    }}
+                  >
+                    {product.ratings} <StarIcon sx={{ fontSize: "1rem" }} />
+                  </div>
+                )}
+                {product.ratings > 0 && (
+                  <span>
+                    (<CalculateTotalRatings ratings={product.stars} />)
+                  </span>
+                )}
+                {product.assured === 'true' && (
                   <img
                     src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
                     alt=""

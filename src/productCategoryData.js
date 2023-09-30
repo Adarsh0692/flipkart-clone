@@ -56,15 +56,15 @@ export const bestOfElectronics = [
     product: 'laptop-accessories',
     type: 'keyboards'
   },
-  {
-    image:
-      "https://rukminim2.flixcart.com/image/400/400/l2jcccw0/memory-card/sdxc-uhs-i-card/6/b/c/sdsqua4-256g-gn6mn-sandisk-original-imagdv34rzuhp9f2.jpeg?q=70",
-    title: "Top selling SD Cards",
-    Off: "From 429",
-    brands: "Sumsunf, HP & more...",
-    product: 'SD-card',
-    type: 'memory-card'
-  },
+  // {
+  //   image:
+  //     "https://rukminim2.flixcart.com/image/400/400/l2jcccw0/memory-card/sdxc-uhs-i-card/6/b/c/sdsqua4-256g-gn6mn-sandisk-original-imagdv34rzuhp9f2.jpeg?q=70",
+  //   title: "Top selling SD Cards",
+  //   Off: "From 429",
+  //   brands: "Sumsunf, HP & more...",
+  //   product: 'SD-card',
+  //   type: 'memory-card'
+  // },
   {
     image:
       "https://rukminim2.flixcart.com/flap/400/400/image/20c224cd52ae7a87.jpg?q=70",
@@ -72,7 +72,7 @@ export const bestOfElectronics = [
     Off: "From 399",
     brands: "realme, Mi, Philips & more...",
     product: 'Trimmer',
-    type: 'personal-care'
+    type: 'Health & Personal Care'
   },
   {
     image:
@@ -81,7 +81,7 @@ export const bestOfElectronics = [
     Off: "From 3999",
     brands: "HP & more...",
     product: 'computers-peripherals',
-    type: 'printers'
+    type: 'Printers'
   },
   {
     image:
@@ -90,7 +90,7 @@ export const bestOfElectronics = [
     Off: "Shop Now!",
     brands: "Canon, Sony & more...",
     product: 'cameras',
-    type: 'dslr-mirrorless'
+    type: 'Camara & Accessories'
   },
 ] 
 

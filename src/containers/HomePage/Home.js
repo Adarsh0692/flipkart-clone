@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CategorySection from '../../components/categorySection/CategorySection'
 import HeroCurusal from '../../components/carousel/HeroCarousel'
 import Carousel from '../../components/carousel/Carousel'
 import { electronicsData } from '../../assests/electronicData'
 import {beauty_food, bestOfElectronics, homeAndKitchen, monsoon, pickYorStyle, sportHealth} from '../../productCategoryData'
+import { collection, onSnapshot } from 'firebase/firestore'
+import { db } from '../../firebase.config'
+import { useDispatch } from 'react-redux'
+import { ALLProducts } from '../../redux/productSlice'
 
 function Home() {
+
+  const dispatch = useDispatch()
+
+ 
   return (
     <div>
       <CategorySection/>

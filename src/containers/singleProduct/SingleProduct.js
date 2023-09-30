@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./SingleProduct.module.css";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -16,11 +16,25 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { useNavigate, useParams } from "react-router-dom";
-import { products } from "../../productData";
+// import { products } from "../../productData";
 import CalculateAvgRate from "../ProductPage/CalculateAvgRate";
 import CalculateTotalRatings from "../ProductPage/CalculateTotalRatings";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/productSlice";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { auth, db } from "../../firebase.config";
+import { selectUserID } from "../../redux/authSlice";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const feedbakImages = [
   {
@@ -94,12 +108,18 @@ const styles = {
 
 function SingleProduct() {
   const params = useParams();
-  const product = products.find((prod) => prod.id == params.id);
+  const userID = useSelector(selectUserID);
+
+  const [product, setSProduct] = useState({});
 
   const [imgindex, setImgIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [open, setOpen] = useState(false);
   const [openImg, setOpenImg] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [btnLoading, setBtnLoading] = useState(false);
+  const [buyLoading, setBuyLoading] = useState(false);
+
 
   const handleOpenImg = () => {
     setOpenImg(true);
@@ -109,24 +129,22 @@ function SingleProduct() {
     setOpenImg(false);
   };
 
+  // let arr = Object.values(product?.stars);
+  // let maxV = Math.max(...arr);
 
+  // const widfor1 = (product.stars[1] / maxV) * 100;
+  // const widfor2 = (product.stars[2] / maxV) * 100;
+  // const widfor3 = (product.stars[3] / maxV) * 100;
+  // const widfor4 = (product.stars[4] / maxV) * 100;
+  // const widfor5 = (product.stars[5] / maxV) * 100;
 
-  let arr = Object.values(product.stars);
-  let maxV = Math.max(...arr);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const widfor1 = (product.stars[1] / maxV) * 100;
-  const widfor2 = (product.stars[2] / maxV) * 100;
-  const widfor3 = (product.stars[3] / maxV) * 100;
-  const widfor4 = (product.stars[4] / maxV) * 100;
-  const widfor5 = (product.stars[5] / maxV) * 100;
-
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-
-  const reviewImg = product.reviews.map((prod) => prod.images);
-  const allFeedbackImgs = reviewImg.reduce((acc, currentArray) => {
-    return [...acc, ...currentArray];
-  }, []);
+  // const reviewImg = product.reviews.map((prod) => prod.images);
+  // const allFeedbackImgs = reviewImg.reduce((acc, currentArray) => {
+  //   return [...acc, ...currentArray];
+  // }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -136,67 +154,124 @@ function SingleProduct() {
     setOpen(false);
   };
 
-  const visibleImg = showAll ? allFeedbackImgs : allFeedbackImgs.slice(0, 8);
-  const remaingImgCount = allFeedbackImgs.length - visibleImg.length;
+  // const visibleImg = showAll ? allFeedbackImgs : allFeedbackImgs.slice(0, 8);
+  // const remaingImgCount = allFeedbackImgs.length - visibleImg.length;
 
-  const usersReviews = product.reviews.map((rev) => rev);
+  // const usersReviews = product.reviews.map((rev) => rev);
 
   function handleimgIndex(i) {
     setImgIndex(i);
   }
 
-  function handleAddToCart(){
-    dispatch(addToCart({productQuantity: 1,  ...product}))
-    navigate('/viewCart')
+  async function handleAddToCart() {
+    if (userID) {
+      setBtnLoading(true);
+      await updateDoc(doc(db, "users", userID), {
+        cart: arrayUnion({ productQuantity: 1, id: params.id, ...product }),
+      });
+      setBtnLoading(false);
+      navigate("/viewCart");
+    } else {
+      setBtnLoading(false);
+      navigate("/login");
+    }
   }
+
+  async function handleBuyProduct() {
+    if (userID) {
+      setBuyLoading(true);
+      await updateDoc(doc(db, "users", userID), {
+        cart: arrayUnion({ productQuantity: 1, id: params.id, ...product }),
+      });
+      setBuyLoading(false);
+      navigate("/checkout");
+    } else {
+      setBuyLoading(false);
+      navigate("/login");
+    }
+  }
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      const productDoc = await getDoc(doc(db, "products", params.id));
+      if (productDoc.exists()) {
+        setLoading(false);
+        setSProduct(productDoc.data());
+      }
+    };
+    fetchProduct();
+  }, []);
 
   return (
     <>
-      <div className={style.prodMainContainer}>
-        <div className={style.imageContainer}>
-          <div className={style.singleProLeftSide}>
-            <div className={style.imgMap}>
-              {product?.images.map((img, i) => (
-                <div
-                  key={i}
-                  className={`${style.imgDiv} ${
-                    i == imgindex ? style.activeShowImg : ""
-                  }`}
-                >
-                  <img
-                    src={img.image}
-                    alt="img"
-                    onMouseEnter={() => handleimgIndex(i)}
-                  />
-                </div>
-              ))}
-            </div>
+      {loading ? (
+        <CircularProgress
+          sx={{ ml: "50%", mt: "20%" }}
+          thickness={4}
+          size={40}
+        />
+      ) : (
+        <div className={style.prodMainContainer}>
+          <div className={style.imageContainer}>
+            <div className={style.singleProLeftSide}>
+              <div className={style.imgMap}>
+                {product?.images?.map((img, i) => (
+                  <div
+                    key={i}
+                    className={`${style.imgDiv} ${
+                      i == imgindex ? style.activeShowImg : ""
+                    }`}
+                  >
+                    <img
+                      src={img.image}
+                      alt="img"
+                      onMouseEnter={() => handleimgIndex(i)}
+                    />
+                  </div>
+                ))}
+              </div>
 
-            <div className={style.showImg}>
-              <img src={product.images[imgindex].image} alt="" />
-              <div className={style.fav}>
-                <span>
-                  <FavoriteIcon sx={{ fontSize: "1rem", color: "lightgray" }} />
-                </span>
+              <div className={style.showImg}>
+                <img src={product?.images[imgindex]?.image} alt="" />
+                <div className={style.fav}>
+                  <span>
+                    <FavoriteIcon
+                      sx={{ fontSize: "1rem", color: "lightgray" }}
+                    />
+                  </span>
+                </div>
               </div>
             </div>
+            <div className={style.cartBtn}>
+              <button onClick={handleAddToCart} disabled={btnLoading}>
+                {btnLoading ? (
+                  <>
+                    <CircularProgress color="inherit" thickness={5} size={25} />{" "}
+                    GOING TO CART
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <ShoppingCartIcon />
+                    ADD TO CART
+                  </>
+                )}
+              </button>
+              <button onClick={handleBuyProduct} disabled={buyLoading}>
+            {buyLoading ? <CircularProgress color="inherit" thickness={5} size={25} /> :  <>
+                <FlashOnIcon />
+                BUY NOW
+                </>}
+              
+              </button>
+            </div>
           </div>
-          <div className={style.cartBtn}>
-            <button onClick={handleAddToCart}>
-              <ShoppingCartIcon />
-              ADD TO CART
-            </button>
-            <button>
-              <FlashOnIcon />
-              BUY NOW
-            </button>
-          </div>
-        </div>
-        <div className={style.discription}>
-          <div className={style.prodDetails}>
-            <span>{product.title}</span>
-            <div className={style.rateDiv}>
-            {product.ratings>0 && <div style={{backgroundColor: product.ratings>=3 ? 'green' : product.ratings>=2 ? 'orange' : 'red'}}>
+          <div className={style.discription}>
+            <div className={style.prodDetails}>
+              <span>{product.title}</span>
+              <div className={style.rateDiv}>
+                {/* {product.ratings>0 && <div style={{backgroundColor: product.ratings>=3 ? 'green' : product.ratings>=2 ? 'orange' : 'red'}}>
                   {product.ratings}{" "}
                   <StarIcon sx={{ fontSize: "1rem" }} />
                 </div>}
@@ -209,185 +284,179 @@ function SingleProduct() {
                   <span>&</span>
                   <span> {product.reviews.length} Reviews</span>{" "}
                 </>
-              )}
-              {product.assured && (
-                <img
-                  src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
-                  alt=""
-                />
-              )}
-            </div>
-            <div className={style.priceDiv}>
-              <div>
-                ₹
-                {Math.round(
-                  product.actual_price -
-                    (product.discount_percentage / 100) * product.actual_price
+              )} */}
+                {product.assured && (
+                  <img
+                    src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
+                    alt=""
+                  />
                 )}
               </div>
-              <span>₹{product.actual_price}</span>
-              <div>{product.discount_percentage}% Off</div>
-            </div>
-            <div className={style.offerDiv}>
-              <span>Available offers</span>
-              <div>
-                <span>
-                  <LocalOfferIcon
-                    sx={{ color: "green", fontSize: "1.2rem", mr: "10px" }}
-                  />{" "}
-                  Eligible for Flipkart Pay Later <span> T&C</span>
-                </span>
-                <span>
-                  <LocalOfferIcon
-                    sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
-                  />{" "}
-                  Buy for 100 get ₹100 off your Next Buy <span> T&C</span>
-                </span>
-                <span>
-                  <LocalOfferIcon
-                    sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
-                  />{" "}
-                  Buy this product & get Rs.150 off on your next purchase of
-                  Water Geysers <span> T&C</span>
-                </span>
-                <span>
-                  <LocalOfferIcon
-                    sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
-                  />{" "}
-                  Bank Offer5% Cashback on Flipkart Axis Bank Card{" "}
-                  <span> T&C</span>
-                </span>
+              <div className={style.priceDiv}>
+                <div>
+                  ₹
+                  {Math.round(
+                    product.actual_price -
+                      (product.discount_percentage / 100) * product.actual_price
+                  )}
+                </div>
+                <span>₹{product.actual_price}</span>
+                <div>{product.discount_percentage}% Off</div>
               </div>
-            </div>
-            <div className={style.deliver}>
-              <span>Delivery</span>
-              <div className={style.loc}>
-                <span>
-                  <LocationOnIcon
-                    sx={{ fontSize: "1.2rem", color: "#2874f0" }}
-                  />
-                </span>
-                <input type="text" placeholder="Enter Delivery Pincode" />
-                <button>Check</button>
+              <div className={style.offerDiv}>
+                <span>Available offers</span>
+                <div>
+                  <span>
+                    <LocalOfferIcon
+                      sx={{ color: "green", fontSize: "1.2rem", mr: "10px" }}
+                    />{" "}
+                    Eligible for Flipkart Pay Later <span> T&C</span>
+                  </span>
+                  <span>
+                    <LocalOfferIcon
+                      sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
+                    />{" "}
+                    Buy for 100 get ₹100 off your Next Buy <span> T&C</span>
+                  </span>
+                  <span>
+                    <LocalOfferIcon
+                      sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
+                    />{" "}
+                    Buy this product & get Rs.150 off on your next purchase of
+                    Water Geysers <span> T&C</span>
+                  </span>
+                  <span>
+                    <LocalOfferIcon
+                      sx={{ color: "green", fontSize: "1.3rem", mr: "10px" }}
+                    />{" "}
+                    Bank Offer5% Cashback on Flipkart Axis Bank Card{" "}
+                    <span> T&C</span>
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className={style.deliver}>
-              <span>Quantity</span>
-              <div>
-                <span>{product.quantity}</span>
+              <div className={style.deliver}>
+                <span>Delivery</span>
+                <div className={style.loc}>
+                  <span>
+                    <LocationOnIcon
+                      sx={{ fontSize: "1.2rem", color: "#2874f0" }}
+                    />
+                  </span>
+                  <input type="text" placeholder="Enter Delivery Pincode" />
+                  <button>Check</button>
+                </div>
               </div>
-            </div>
-            <div className={style.deliver}>
-              <span>Services</span>
-              <div className={style.service}>
-                <span>₹</span>
-                <span>Cash on Delivery available</span>
+              <div className={style.deliver}>
+                <span>Quantity</span>
+                <div>
+                  <span>{product.quantity}</span>
+                </div>
               </div>
-            </div>
-            <div className={style.impt}>
-              <div>Important Note</div>
+              <div className={style.deliver}>
+                <span>Services</span>
+                <div className={style.service}>
+                  <span>₹</span>
+                  <span>Cash on Delivery available</span>
+                </div>
+              </div>
+              <div className={style.impt}>
+                <div>Important Note</div>
 
-              <span>
-                The colour and design of the delivered product may slightly vary
-                from what is shown in the image.
-              </span>
-            </div>
-            <div className={style.desc}>
-              <div>Description</div>
+                <span>
+                  The colour and design of the delivered product may slightly
+                  vary from what is shown in the image.
+                </span>
+              </div>
+              <div className={style.desc}>
+                <div>Description</div>
 
-              <div>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                impedit aliquid blanditiis sint eveniet perferendis, omnis
-                aperiam ducimus vel magnam distinctio voluptate corrupti fugit
-                architecto ad sit aliquam. Ab maiores ipsa asperiores voluptatum
-                velit quos perspiciatis similique adipisci doloribus deserunt.
+                <div>{product.description}</div>
               </div>
-            </div>
-            <div className={style.spTable}>
-              <div>Specifications</div>
-              <div className={style.gnTable}>
-                In The Box
-                <table>
-                  <tbody>
-                    <tr className={style.inBox}>
-                      <td>Pack of</td>
-                      <td>
-                        <ul>
-                          <li>1</li>
-                        </ul>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className={style.spTable}>
+                <div>Specifications</div>
+                <div className={style.gnTable}>
+                  In The Box
+                  <table>
+                    <tbody>
+                      <tr className={style.inBox}>
+                        <td>Pack of</td>
+                        <td>
+                          <ul>
+                            <li>1</li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className={style.gnTable}>
+                  General
+                  <table>
+                    <tbody>
+                      <tr className={style.tbody}>
+                        <td>Brand</td>
+                        <td>
+                          <ul>
+                            <li>Saffola</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr className={style.tbody}>
+                        <td>Brand</td>
+                        <td>
+                          <ul>
+                            <li>
+                              Rolled Oats,Creamy 100% Natural, High Protein &
+                              Fibre, Healthy Cereal,
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr className={style.tbody}>
+                        <td>Brand</td>
+                        <td>
+                          <ul>
+                            <li>
+                              Lorem ipsum dolor sit amet consectetur adipisicing
+                              elit. Omnis eum dolores unde vel hic, officia
+                              neque error id nisi placeat?
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className={style.legalDis}>
+                  Legal Disclaimer
+                  <table>
+                    <tbody>
+                      <tr className={style.tbody}>
+                        <td>Important Note</td>
+                        <td>
+                          <ul>
+                            <li>
+                              Flipkart endeavors to ensure the accuracy of the
+                              information about the products. It is pertinent to
+                              note that, actual product packaging and materials
+                              may contain more and/or different information
+                              which may include nutritional information/allergen
+                              declaration/special instruction for intended
+                              use/warning/directions etc. We recommend the
+                              consumers to always read the label carefully
+                              before using or consuming any products. Please do
+                              not solely rely on the information provided on
+                              this website. For additional information, please
+                              contact the manufacturer.
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div className={style.gnTable}>
-                General
-                <table>
-                  <tbody>
-                    <tr className={style.tbody}>
-                      <td>Brand</td>
-                      <td>
-                        <ul>
-                          <li>Saffola</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr className={style.tbody}>
-                      <td>Brand</td>
-                      <td>
-                        <ul>
-                          <li>
-                            Rolled Oats,Creamy 100% Natural, High Protein &
-                            Fibre, Healthy Cereal,
-                          </li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr className={style.tbody}>
-                      <td>Brand</td>
-                      <td>
-                        <ul>
-                          <li>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Omnis eum dolores unde vel hic, officia neque
-                            error id nisi placeat?
-                          </li>
-                        </ul>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className={style.legalDis}>
-                Legal Disclaimer
-                <table>
-                  <tbody>
-                    <tr className={style.tbody}>
-                      <td>Important Note</td>
-                      <td>
-                        <ul>
-                          <li>
-                            Flipkart endeavors to ensure the accuracy of the
-                            information about the products. It is pertinent to
-                            note that, actual product packaging and materials
-                            may contain more and/or different information which
-                            may include nutritional information/allergen
-                            declaration/special instruction for intended
-                            use/warning/directions etc. We recommend the
-                            consumers to always read the label carefully before
-                            using or consuming any products. Please do not
-                            solely rely on the information provided on this
-                            website. For additional information, please contact
-                            the manufacturer.
-                          </li>
-                        </ul>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className={style.reviewSection}>
+              {/* <div className={style.reviewSection}>
               <div className={style.rateTopDiv}>
                 <div>Rating & Reviews</div>
                 <button onClick={() => navigate("/write-review/1")}>
@@ -520,7 +589,7 @@ function SingleProduct() {
                             </div>
                           )}
                       </div>
-                      {/* <Dialog
+                      <Dialog
                         open={openImg}
                         onClose={handleCloseImg}
                         aria-labelledby="responsive-dialog-title"
@@ -533,13 +602,13 @@ function SingleProduct() {
                             
                           </DialogContentText>
                         </DialogContent>
-                      </Dialog> */}
+                      </Dialog>
                     </div>
                     
                   ))}
                   
                 </div>
-                {/* user images dailog  */}
+          
                 <div>
                   <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>{`User Images (${allFeedbackImgs.length})`}</DialogTitle>
@@ -596,23 +665,17 @@ function SingleProduct() {
                       <p>Certified Buyer</p>
                       <p>Jul, 2020</p>
                     </div>
-                    {/* <div className={style.likeDiv}>
-                      <span>
-                        <ThumbUpIcon sx={{ cursor: "pointer" }} /> 1
-                      </span>
-                      <span>
-                        <ThumbDownIcon sx={{ cursor: "pointer" }} />2
-                      </span>
-                    </div> */}
+                   
                   </div>
                 </div>
               ))}
 
             
+            </div> */}
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

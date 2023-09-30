@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import style from "./Account.module.css";
 import DriveFileMoveIcon from "@mui/icons-material/DriveFileMove";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -7,14 +7,40 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserName, setLogoutUser } from "../../redux/authSlice";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase.config";
+import { toast } from "react-toastify";
 
 
 const Account = () => {
 
   const currentUser = localStorage.getItem('isActive')
-
+  const userName = useSelector(selectUserName)
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const toastId = useRef(null)
  
+  function handleLogout() {
+    signOut(auth)
+      .then(() => {
+        dispatch(setLogoutUser());
+
+        if (!toast.isActive(toastId.current)) {
+          toastId.current = toast.success(
+            "Logout complete. See you next time!",
+            {
+              position: toast.POSITION.TOP_RIGHT,
+            }
+          );
+        }
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   useEffect(() => {
 
@@ -36,7 +62,7 @@ const Account = () => {
           </div>
           <div className={style.userName}>
             <div>Hello,</div>
-            <div>{currentUser}</div>
+            <div>{userName}</div>
           </div>
         </div>
         <div className={style.leftBotmDiv}>
@@ -126,7 +152,7 @@ const Account = () => {
                 sx={{ fontSize: "25px", mr: "10px", color: "#1976D2" }}
               />
             </span>
-            <span>Logout</span>
+            <span onClick={handleLogout}>Logout</span>
           </div>
         </div>
       </div>

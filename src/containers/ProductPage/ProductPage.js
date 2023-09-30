@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./ProductPage.module.css";
 import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -8,6 +8,12 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchIcon from "@mui/icons-material/Search";
 import ProductList from "./ProductList";
+import { collection, getCountFromServer, getDoc, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../../firebase.config";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { ALLProducts } from "../../redux/productSlice";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function valuetext(value) {
   return `${value}Rs`;
@@ -55,6 +61,18 @@ function ProductPage() {
   const [showAll, setShowAll] = useState(false);
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [searchQuery, setSearchQuery] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const PRODUCTDS = useSelector(state => state.products.products)
+  const dispatch = useDispatch()
+  const params = useParams();
+  const categoryType = params.id;
+
+  const [allProducts, setAllProducts] = useState([])
+
+
+// console.log(allProducts);
+// consol'p09e.log(allProducts);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -71,7 +89,7 @@ function ProductPage() {
   function handleRemoveFilter(item) {
     const updatedFilters = selectedFilter.filter((filter) => filter !== item);
     setSelectedFilter(updatedFilters);
-    console.log(updatedFilters);
+    // console.log(updatedFilters);
 
     //for remove price filter
     if (item.startsWith("₹")) {
@@ -129,8 +147,10 @@ function ProductPage() {
     if (e.target.checked) {
       setAssuredCheckbox(true);
       setSelectedFilter([...selectedFilter, "Plus(FAssured)"]);
+     
     } else {
       setAssuredCheckbox(false);
+      // setAllProducts(allProducts)
       const updatedAssured = selectedFilter.filter(
         (filter) => filter !== "Plus(FAssured)"
       );
@@ -234,6 +254,42 @@ function ProductPage() {
    
 
   }
+
+  // useEffect(() => {
+ 
+  //   const viewProdcts = PRODUCTDS?.filter(
+  //     (product) => product.type === categoryType 
+  //   );
+  //   setAllProducts(viewProdcts)
+  
+   
+  
+  // },[])
+
+  useEffect(() => {
+
+    const colRef = collection(db, 'products')
+    const q = query(colRef, where('type', '==', categoryType))
+    setLoading(true)
+    const getData =  onSnapshot(q, (snaps) => {
+    let list =[]
+   
+    snaps.docs.forEach((doc) => {
+      list.push({...doc.data(), id: doc.id})
+    })
+    setLoading(false)
+    setAllProducts(list);
+    dispatch(ALLProducts(list))
+   }, (error) => {
+    console.log(error);
+    setLoading(false)
+   })
+
+
+    return () => {
+      getData()
+    }
+  }, []);
 
   return (
     <div className={style.product_main}>
@@ -414,7 +470,10 @@ function ProductPage() {
         </div>
       </div>
       <div className={style.productListDiv}>
-        <ProductList/>
+        {
+          loading? <CircularProgress sx={{ml:'50%',mt:'20%'}} thickness={4} size={40}/> : <ProductList viewProdcts={allProducts}/>
+        }
+        
       </div>
     </div>
   );

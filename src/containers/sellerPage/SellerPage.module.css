@@ -3,13 +3,109 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding-top: 1rem;
+    padding: 2rem;
 }
-.formContainer{
-    width: 60vw;
-    height: 50vh;
+.addFormContainer{
    border-radius: 10px;
     background-color: #ffff;
     box-shadow: 0 10px 16px 0 rgba(1,1,0,.11);
-    padding: 1rem;
+    padding: 1rem 2rem;
+    width: 40vw;
+}
+.sellerWrapper h2{
+    color: #2874f0;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+.addFormContainer select,input {
+    width: 20rem;
+    height: 2rem;
+    padding: 0 .5rem;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+}
+
+.addFormContainer select,input:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: none;
+}
+.formDiv{
+   margin: 1rem 0;
+   display: flex;
+   gap: 2rem;
+   justify-content: space-between;
+}
+.textDiv{
+    margin: 1rem 0;
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+}
+.textDiv textarea{
+    width: 100%;
+    height: 15vh;
+    resize: none;
+    padding: .5rem;
+}
+.imgContainer{
+    /* border: 1px solid #aaa; */
+    padding: .7rem 0;
+    height: 10vh;
+    min-width: 40vw;
+    display: flex;
+    gap: 1rem;
+    overflow-y: hidden;
+    overflow: scroll;
+}
+.imgContainer::-webkit-scrollbar{
+    display: none;
+}
+.imgDiv{
+    min-width: 5vw;
+    height: 10vh;
+    border: 1px solid #e0e0e0;;
+    border-radius: 3px;
+    position: relative;
+}
+.imgDiv img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.clearBtn{
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: black;
+    color: #ffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.addImgBtn{
+    border: none;
+    width: 8vw;
+    background-color: #5795f8;
+    color: #ffff;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+.addPrBtn button{
+    background-color: #FB641B;
+    color: #ffff;
+    font-size: 1rem;
+    font-weight: 550;
+    border: none;
+    width: 20vw;
+    height: 8vh;
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 2rem;
 }

@@ -58,7 +58,7 @@ height: 100vh;
 .showImg img{
     width: 98%;
     height: 90%;
-   
+   object-fit: contain;
 }
 
 .cartBtn{
@@ -87,6 +87,10 @@ height: 100vh;
     background-color: #FF9F00;
     color: #ffff;
     font-weight: 500;
+}
+.cartBtn button:first-child:disabled{
+    background-color: #ff9d008a;
+    cursor: not-allowed;
 }
 .cartBtn button:last-child{
     background-color: #FB641B;

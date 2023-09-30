@@ -13,7 +13,7 @@ import { auth, db } from "../../firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { selectUserID, setLogoutUser, setUser } from "../../redux/authSlice";
 import { ToastContainer, toast } from "react-toastify";
-import { collection, onSnapshot } from "firebase/firestore";
+import { arrayRemove, collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setOder } from "../../redux/productSlice";
 
@@ -47,21 +47,34 @@ const image = [
 function CheckOut() {
   const currentUser = useSelector((state) => state.auth);
   const userID = useSelector(selectUserID);
-  const cartProduct = currentUser.cart
+  // const cartProduct = useSelector((state) => state.products.cart);
+  const [cartProduct, setCartProducts] = useState([])
 
-  const priceArray = cartProduct?.map((product) => Math.floor(
-    (product.actual_price * product.productQuantity )-
-      (product.discount_percentage / 100) * (product.actual_price * product.productQuantity )
-  ) )
-  const actualPriceArray = cartProduct?.map((product) => product.actual_price * product.productQuantity)
-  const deliveryPriceArray = cartProduct?.map((product) => product.deliveryCharge * product.productQuantity)
- 
+  const priceArray = cartProduct?.map((product) =>
+    Math.floor(
+      product.actual_price * product.productQuantity -
+        (product.discount_percentage / 100) *
+          (product.actual_price * product.productQuantity)
+    )
+  );
+  const actualPriceArray = cartProduct?.map(
+    (product) => product.actual_price * product.productQuantity
+  );
+  const deliveryPriceArray = cartProduct?.map(
+    (product) => product.deliveryCharge * product.productQuantity
+  );
 
-const finalPrice = priceArray.reduce((price, total)=> price + total,0 )
-const totalActualPrice = actualPriceArray.reduce((price, total)=> price + total,0 )
-const totalDeliveryCharge = deliveryPriceArray.reduce((price, total)=> price + total,0 )
-const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDeliveryCharge
-
+  const finalPrice = priceArray.reduce((price, total) => price + total, 0);
+  const totalActualPrice = actualPriceArray.reduce(
+    (price, total) => price + total,
+    0
+  );
+  const totalDeliveryCharge = deliveryPriceArray.reduce(
+    (price, total) => price + total,
+    0
+  );
+  const totalAmount =
+    totalActualPrice - (totalActualPrice - finalPrice) + totalDeliveryCharge;
 
   const [addresses, setAddAddress] = useState([]);
 
@@ -85,7 +98,8 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
   const [isEditAddress, setIsEditAddress] = useState(false);
   const [isAddAddress, setIsAddAddress] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+  const [cartLoading, setCartLoading] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [Eerr, setEerr] = useState("");
@@ -107,10 +121,10 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
 
   function handleLogin() {
     if (!Eerr) {
-      setLoading(true)
+      setLoading(true);
       signInWithEmailAndPassword(auth, email, password)
         .then((res) => {
-          setLoading(false)
+          setLoading(false);
           dispatch(
             setUser({
               userName: res.user.displayName,
@@ -125,7 +139,7 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
           handleContinueCheckout();
         })
         .catch((error) => {
-          setLoading(false)
+          setLoading(false);
           if (!toast.isActive(toastId.current)) {
             toastId.current = toast.error("Invalid credentails!");
           }
@@ -227,10 +241,70 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
     // console.log(`selected Option: ${selectedPaymentMethod}`);
     // // console.log(`selected addres: ${selectedDeliveryAddress}`);
     // console.log(selectedDeliveryAddress);
-    const data = [{orderID: Date.now() , status: 'Oredr Confirm', address: selectedDeliveryAddress, payment: selectedPaymentMethod , ...cartProduct }]
-    dispatch(setOder({orderID: Date.now() , status: 'Oredr Confirm', address: selectedDeliveryAddress, payment: selectedPaymentMethod , orderProduct:cartProduct }));
+    const data = [
+      {
+        orderID: Date.now(),
+        status: "Oredr Confirm",
+        address: selectedDeliveryAddress,
+        payment: selectedPaymentMethod,
+        ...cartProduct,
+      },
+    ];
+    dispatch(
+      setOder({
+        orderID: Date.now(),
+        status: "Oredr Confirm",
+        address: selectedDeliveryAddress,
+        payment: selectedPaymentMethod,
+        orderProduct: cartProduct,
+      })
+    );
     // dispatch(setOrders(data))
   }
+
+  async function handleRemove(product){
+    await updateDoc(doc(db, 'users', userID), {
+     cart: arrayRemove(product)
+    })
+    toast.success(`Succssesfully removed ${product.title} from your checkout.`)
+ }
+
+  async function handleQuantity(product, btn){
+
+    const docRef = doc(db, 'users', userID)
+   
+    const docSnap = await getDoc(docRef)
+    const docData = docSnap.data()
+    const updatedCart = docData.cart.map((item) => {
+     if(btn === 'inc'){
+       if(item.id === product.id && item.productQuantity<10 ){
+         return {
+           ...item, productQuantity: item.productQuantity + 1
+         }
+       }
+     }else{
+       if(item.id === product.id && item.productQuantity>1 ){
+         return {
+           ...item, productQuantity: item.productQuantity - 1
+         }
+       }
+     }
+    
+     return item
+    })
+ 
+    const updatedData = {
+     ...docData, cart: updatedCart
+    }
+ 
+    try {
+     await updateDoc(docRef, updatedData)
+     toast.success(`You've chnaged '${product.title}' QUANTITY to '${ btn ==='inc'? product.productQuantity +1 : product.productQuantity -1}' `)
+    } catch (error) {
+     console.log(error);
+    }
+    
+   }
 
   useEffect(() => {
     if (!currentUser.userName) {
@@ -259,6 +333,18 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
       fetchAddresses();
     };
   }, []);
+
+  useEffect(() => {
+    const getCartData = async () => {
+     const cartDoc =  onSnapshot(doc(db, 'users', userID), (doc) => {
+       setCartProducts(doc.data().cart)
+     })
+     }
+     if(userID){
+       getCartData()
+     }
+ 
+   },[userID])
 
   return (
     <div className={style.mainCartContainer}>
@@ -366,7 +452,17 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
                 </div>
 
                 <div className={style.loginConBtn}>
-                  <button disabled={loading} onClick={handleLogin}>{ loading? <CircularProgress color="inherit" thickness={5} size={30}/> : "CONTINUE"}</button>
+                  <button disabled={loading} onClick={handleLogin}>
+                    {loading ? (
+                      <CircularProgress
+                        color="inherit"
+                        thickness={5}
+                        size={30}
+                      />
+                    ) : (
+                      "CONTINUE"
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -531,53 +627,72 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
                       <div>{product.quantity}</div>
                       <div>
                         Seller: {product.sellerName}{" "}
-                      {product.assured &&  <span>
-                          <img
-                            src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
-                            alt=""
-                          />
-                        </span>}
+                        {product.assured && (
+                          <span>
+                            <img
+                              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
+                              alt=""
+                            />
+                          </span>
+                        )}
                       </div>
                       <div className={style.cartPrice}>
-                        <span>₹{product.actual_price * product.productQuantity}</span>
-                        <span>₹{Math.floor(
-    (product.actual_price * product.productQuantity )-
-      (product.discount_percentage / 100) * (product.actual_price * product.productQuantity )
-  )}</span>
+                        <span>
+                          ₹{product.actual_price * product.productQuantity}
+                        </span>
+                        <span>
+                          ₹
+                          {Math.floor(
+                            product.actual_price * product.productQuantity -
+                              (product.discount_percentage / 100) *
+                                (product.actual_price * product.productQuantity)
+                          )}
+                        </span>
                         <span>{product.discount_percentage}% Off</span>
                       </div>
                     </div>
                     <div className={style.cartDelivery}>
                       <div>Delivery by 11 PM, Tomorrow |</div>
                       <div className={style.deliveryFee}>
-                      {product.deliveryCharge == 0 ?  <>
-                  <span>Free</span>
-                  <span>₹{40 * product.productQuantity}</span>
-                  </> : <>
-                  <span>₹{product.deliveryCharge * product.productQuantity}</span>
-                  <span>Free</span>
-                  </>}
+                        {product.deliveryCharge == 0 ? (
+                          <>
+                            <span>Free</span>
+                            <span>₹{40 * product.productQuantity}</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>
+                              ₹
+                              {product.deliveryCharge * product.productQuantity}
+                            </span>
+                            <span>Free</span>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
                   <div className={style.cartItemQnty}>
                     <div className={style.qtybtn}>
-                      <button>-</button>
-                      <div> 1 </div>
-                      <button>+</button>
+                      <button onClick={() =>handleQuantity(product, 'dec')}>-</button>
+                      <div> {product.productQuantity} </div>
+                      <button onClick={() =>handleQuantity(product, 'inc')}>+</button>
                     </div>
                     <div className={style.removeDiv}>
                       <button>SAVE FOR LETER</button>
-                      <button>REMOVE</button>
+                      <button onClick={() => handleRemove(product)}>REMOVE</button>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             <div>
-              <div className={style.orderBtn}>
+           { cartProduct.length>0?  <div className={style.orderBtn}>
                 <button onClick={handleOrderSummryContinue}>CONTINUE</button>
               </div>
+              :
+              <div className={style.noCheckout}>
+                <span>Your checkout has no items.</span>
+              </div>}
             </div>
           </div>
         ) : (
@@ -684,7 +799,7 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
         )}
       </div>
 
-      <div className={style.mainRight}>
+    {cartProduct.length>0 &&  <div className={style.mainRight}>
         <div className={style.priceDetails}>PRICE DETAILS</div>
         <div className={style.itemsDetails}>
           <div>
@@ -693,22 +808,25 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
           </div>
           <div>
             <span>Discount</span>
-            <span className={style.discPrice}>- ₹{totalActualPrice - finalPrice}</span>
+            <span className={style.discPrice}>
+              - ₹{totalActualPrice - finalPrice}
+            </span>
           </div>
           <div>
             <span>Delivery Charges</span>
             <span className={style.finalDeliveryFee}>
-                {totalDeliveryCharge == 0 ?  <>
-                  <span>₹{40 }</span>
+              {totalDeliveryCharge == 0 ? (
+                <>
+                  <span>₹{40}</span>
                   <span>Free</span>
-                  
-                  </> : <>
+                </>
+              ) : (
+                <>
                   <span></span>
                   <span>₹{totalDeliveryCharge}</span>
-                 
-                  </>}
-                
-                </span>
+                </>
+              )}
+            </span>
           </div>
           <div className={style.border}></div>
           <div>
@@ -716,8 +834,11 @@ const totalAmount = totalActualPrice - (totalActualPrice - finalPrice) + totalDe
             <span>₹{totalAmount}</span>
           </div>
         </div>
-        <div className={style.save}>You will save ₹{totalActualPrice - finalPrice + totalDeliveryCharge} on this order</div>
-      </div>
+        <div className={style.save}>
+          You will save ₹{totalActualPrice - finalPrice + +totalDeliveryCharge}{" "}
+          on this order
+        </div>
+      </div>}
     </div>
   );
 }

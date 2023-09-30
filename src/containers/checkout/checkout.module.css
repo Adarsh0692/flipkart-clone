@@ -491,3 +491,9 @@
     color: #388e3c;
     font-weight: 500;
 }  
+
+.noCheckout{
+    padding: 1rem;
+    background-color: #ffffe6;
+    font-size: .8rem;
+}

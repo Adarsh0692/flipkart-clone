@@ -5,9 +5,19 @@
     justify-content: center;
     gap: 20px;
     text-align: center;
-    height: 100vh;
+    height: 80vh;
+    width: 100vw;
 }
 .name{
     font-size: 1.5rem;
     font-weight: 500;
+}
+.shopBtn{
+    border: none;
+    background-color: #196cf1;
+    color: #fff;
+    width: 10rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    border-radius: 3px;
 }

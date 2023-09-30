@@ -28,7 +28,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { selectUserID, selectUserName, setLogoutUser, setUser } from "../../redux/authSlice";
 import CircularProgress from '@mui/material/CircularProgress';
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import { ALLProducts, addToCart } from "../../redux/productSlice";
 
 const styles = {
   position: "absolute",
@@ -67,7 +68,7 @@ function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
   const toastId = useRef(null);
-
+  const [cartLength, setCartLength] = useState(0)
 
   const [open, setOpen] = useState(false);
 
@@ -200,6 +201,8 @@ function Header() {
               name: user.displayName,
               email: user.email,
               phone: '',
+              cart: [],
+              orders: []
             })
             dispatch(
               setUser({
@@ -310,6 +313,14 @@ function Header() {
             userID: user.uid
           })
         );
+        const getCartData = async () => {
+          const cartDoc =  onSnapshot(doc(db, 'users', user.uid), (doc) => {
+            setCartLength(doc.data().cart.length)
+          })
+        
+           
+          }
+          getCartData()
        localStorage.setItem('isActive', true)
       } else {
         localStorage.setItem('isActive', false)
@@ -318,8 +329,10 @@ function Header() {
       }
     });
     
-  }, []);
+  }, [auth]);
 
+
+ 
   
 
   return (
@@ -343,7 +356,7 @@ function Header() {
               role="alert"
               autoClose={3000}
               theme="dark"
-              style={{ width: "25vw", fontSize: "1rem" }}
+              style={{ minWidth: "40vw", height: "25vh" , fontSize: "1rem" }}
             />
           <Typography
             variant="h6"
@@ -661,7 +674,7 @@ function Header() {
                   className={style.cartdiv}
                   onClick={() => navigate("/viewCart")}
                 >
-                  <Badge badgeContent={4} color="error">
+                  <Badge badgeContent={cartLength>0 && userId && cartLength} color={cartLength>0 ? "error" : "default"} >
                     <ShoppingCartIcon />
                   </Badge>
                   <span className={style.cart}>Cart</span>

@@ -152,7 +152,7 @@
 .cart{
     /* border: 1px solid red; */
     padding: 1rem;
-    width: 17vw;
+    width: 16vw;
     height: 65vh;
     transition: box-shadow .2s ease-in-out;
     cursor: pointer;
@@ -171,17 +171,19 @@
     text-align: center;
     height: 40vh;
     position: relative;
+    padding: .5rem;
 }
 .heart{
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: .3rem;
+    right: .5rem;
 }
 .discp{
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    font-size: .8rem;
 }
 .gram{
     color: gray;
