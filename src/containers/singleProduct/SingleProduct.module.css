@@ -557,7 +557,7 @@ cursor: pointer;
     justify-content: space-between;
 }
 .rateRev{
-   font-size: 1.5rem;
+   font-size: 1.3rem;
    font-weight: 500;
 }
 .prDiv{
@@ -570,12 +570,14 @@ cursor: pointer;
 }
 .revImgDiv img{
     width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 .revProdTitle{
     width: 16vw;
 }
 .revProdTitle div:first-child{
-    font-size: 1.1rem;
+    font-size: 1rem;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -587,9 +589,9 @@ cursor: pointer;
     padding-left: 30%;
 }
 .revRateDiv div:first-child{
-    background-color: green;
+    /* background-color: green; */
     color: #fff;
-     padding: 3px 5px;
+     padding: 2px 5px;
      border-radius: 4px;
      display: flex; 
      align-items: center;
@@ -598,6 +600,7 @@ cursor: pointer;
 }
 .revRateDiv div:last-child{
     color: #878787;
+    margin-left: .5rem;
 }
 
 .bottomSec{
@@ -614,25 +617,27 @@ cursor: pointer;
 .whatRev div:first-child{
     border-bottom: 1px solid #e0e0e0;
     padding: 1.5rem ;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 500;
 }
 .revFormSec{
     width: 72%;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #FFFFFF;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    /* border: 1px solid red; */
 }
 .quesDiv{
     border-bottom: 1px solid #e0e0e0;
     padding: 1rem 1.5rem ;
 }
 .quesDiv span{
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 .quesDiv p{
-  font-size: .95rem;
+  font-size: .9rem;
   padding: .5rem 0;
+  color: #1d1c1c;
 } 
 
 .starDiv{
@@ -640,7 +645,7 @@ cursor: pointer;
     border-bottom: 2px solid #e0e0e0;
 }
 .starDiv div:first-child{
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 1rem;
 }
@@ -674,9 +679,11 @@ cursor: pointer;
 
 .desDiv{
     padding: 1.5rem;
+   
+    position: relative;
 }
 .desDiv div:first-child{
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 500;
 }
 .revDesc{
@@ -691,7 +698,7 @@ cursor: pointer;
     justify-content: space-between;
 }
 .isDesc{
-    font-size: .9rem;
+    font-size: .8rem;
     font-weight: 100;
     color: #FF6161;
 }
@@ -700,7 +707,7 @@ cursor: pointer;
     border: none;
     padding: .2rem 0;
     resize: none;
-    font-size: 1rem;
+    font-size: .9rem;
 }
 .titleDiv{
     border: 1px solid #e0e0e0;
@@ -755,21 +762,26 @@ cursor: pointer;
     cursor: pointer;
 }
 .submitBtn{
-    margin-top: 1rem;
-    position: relative;
+    margin-top: 3.5rem;
 }
 .submitBtn button{
-    width: 20vw;
-    height: 10vh;
+    width: 18vw;
+    height: 8vh;
     background-color: #FB641B;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
     border-radius: 4px;
     color: #ffff;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     border: none;
     cursor: pointer;
     position: absolute;
-    right: 0;
+    right: 1rem;
+    bottom: 1rem;
+    
+}
+.submitBtn button:disabled{
+    background-color: #fb661b7c;
+    cursor: not-allowed;
 }
 /* write-review end  */
