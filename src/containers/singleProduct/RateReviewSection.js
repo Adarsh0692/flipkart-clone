@@ -8,7 +8,9 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
+import UserReviewsData from "./UserReviewsData";
+
 
 function RateReviewSection({ product }) {
   const [showAll, setShowAll] = useState(false);
@@ -203,7 +205,7 @@ function RateReviewSection({ product }) {
         </div>
       </div>
 
-      {usersReviews.map((user, i) => (
+      {/* {usersReviews.reverse().map((user, i) => (
         <div className={style.userReview} key={i}>
           <div className={style.row}>
             <div
@@ -237,11 +239,12 @@ function RateReviewSection({ product }) {
                 <CheckCircleIcon sx={{ fontSize: "1rem" }} />
               </span>
               <p>Certified Buyer</p>
-              <p>Jul, 2020</p>
+              <p>{user.time}</p>
             </div>
           </div>
         </div>
-      ))}
+      ))} */}
+      <UserReviewsData usersReviews={usersReviews}/>
     </div>
   );
 }

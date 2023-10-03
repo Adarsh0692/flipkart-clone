@@ -6,40 +6,18 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import CloseIcon from "@mui/icons-material/Close";
 import { nanoid } from "nanoid";
 import CircularProgress from "@mui/material/CircularProgress";
-import { doc, getDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../firebase.config";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CalculateTotalRatings from "../ProductPage/CalculateTotalRatings";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUserName } from "../../redux/authSlice";
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import LinearProgress from '@mui/material/LinearProgress';
+import { formatDistanceToNow } from 'date-fns';
 import { Box, Typography } from "@mui/material";
 
-function CircularProgressWithLabel(props) {
-  return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-      <CircularProgress variant="determinate" {...props} />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Typography variant="caption" component="div" color="text.secondary">
-          {`${Math.round(props.value)}%`}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
+
 
 function WriteReview() {
   const [product, setSProduct] = useState({});
@@ -51,10 +29,10 @@ function WriteReview() {
   const [isDesc, setIsDesc] = useState(false);
   const [loading, setLoading] = useState(true);
   const [disable, setDisable] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const picRef = useRef(null);
   const params = useParams()
+  const navigate = useNavigate()
   const currentUser = useSelector(selectUserName)
 
   const labels = {
@@ -94,23 +72,39 @@ function WriteReview() {
   }
 
   function handleRemovePic(img) {
-    deleteObject(img.ref).then((res) => {
+    const imgRef = ref(storage, `review/${img.id}`)
+    deleteObject(imgRef).then((res) => {
       setUploadedPic(uploadedPic.filter((pic) => pic.image !== img.image))
     })
     setImage('')
   }
 
-  function formatCurrentMonthAndYear() {
-    const currentDate = new Date();
-    const month = currentDate.toLocaleString('en-US', { month: 'short' });
-    const year = currentDate.getFullYear();
-  
-    return `${month}, ${year}`;
+ // Function to update the stars object in Firestore
+ const productRef = doc(db, 'products', params.id)
+ const updateStarsInFirestore = async (updatedstars) => {
+  try {
+    await updateDoc(productRef, {
+      stars: updatedstars
+    })
+  } catch (error) {
+    console.log(error);
   }
+ }
+
+ // Function to handle user rating and update stars object
+ const handleRating = async (rating) => {
+  const docSnap = await getDoc(productRef)
+  if(docSnap.exists()){
+    const currentStars = docSnap.data().stars
+    const updatedStars = {...currentStars}
+    updatedStars[rating]++
+    await updateStarsInFirestore(updatedStars)
+  }
+ }
 
 useEffect(() => {
   const uploadFile = () => {
-    const name = nanoid(6) + image.name
+    const name = nanoid(6)
     const storageRef = ref(storage, `review/${name}`)
     const uploadImg = uploadBytesResumable(storageRef, image)
 
@@ -126,7 +120,7 @@ useEffect(() => {
     () => {
       setDisable(false)
       getDownloadURL(uploadImg.snapshot.ref).then((downloadURL) => {
-             setUploadedPic([{ id: nanoid(5), image: downloadURL, ref:uploadImg.snapshot.ref }, ...uploadedPic]);
+             setUploadedPic([{ id: name, image: downloadURL }, ...uploadedPic]);
       });
     }
   );
@@ -145,7 +139,7 @@ useEffect(() => {
       return;
     }
     if (value && description) {
-      const formattedDate = formatCurrentMonthAndYear();
+      const formattedDate = Date.now();
     
       const reviewData = {
         rate: value,
@@ -155,7 +149,14 @@ useEffect(() => {
         buyerName: currentUser,
         time: formattedDate
       };
-      console.log(reviewData);
+     const revRef = doc(db, "products", params.id)
+     setDisable(true)
+    await updateDoc(revRef, {
+      reviews: arrayUnion(reviewData)
+    })
+     setDisable(false)
+    console.log(reviewData);
+     toast.success("Thank you for your feedback.")
     }
   }
 
@@ -171,6 +172,8 @@ useEffect(() => {
     fetchProduct();
   }, []);
 
+
+
   return (
     <>
       {loading ? (
@@ -185,7 +188,7 @@ useEffect(() => {
         <div className={style.mainwapperReview}>
           <div className={style.reviwProd}>
             <div className={style.rateRev}>Rating & Reviews</div>
-            <div className={style.prDiv}>
+            <div className={style.prDiv} onClick={()=> navigate(`/productDetails/${params.id}`)}>
               <div className={style.revProdTitle}>
                 <div>{product.title}</div>
                 <div className={style.revRateDiv}>
@@ -239,14 +242,15 @@ useEffect(() => {
                         value={value}
                         onChange={(event, newValue) => {
                           setValue(newValue);
+                          handleRating(event.target.value)
                         }}
                       />
                     </span>
                   </div>
-                  <span className={style.starLable}>{labels[value]}</span>
+                  <span className={style.starLable} style={{color: value>=3? "green" : value>=2? "orange" : "red" }} >{labels[value]}</span>
                   {value && (
                     <span className={style.rtSave}>
-                      Your rating has been saved
+                      Your rating has been saved.
                     </span>
                   )}
                 </div>
@@ -274,7 +278,7 @@ useEffect(() => {
                 <div className={style.titleDiv}>
                   <div>
                     {" "}
-                    <span>Title (optional)</span>
+                    <span>Title</span>
                   </div>
                   <input
                     type="text"

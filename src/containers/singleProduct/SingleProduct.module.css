@@ -563,6 +563,7 @@ cursor: pointer;
 .prDiv{
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 .revImgDiv{
     width:5vw;
@@ -575,6 +576,7 @@ cursor: pointer;
 }
 .revProdTitle{
     width: 16vw;
+   
 }
 .revProdTitle div:first-child{
     font-size: 1rem;
@@ -657,7 +659,7 @@ cursor: pointer;
     position: absolute;
     right: 0;
     top: 15px;
-    font-size: .9rem;
+    font-size: .8rem;
     color: #878787;
 }
 .starSpan{
@@ -683,7 +685,7 @@ cursor: pointer;
     position: relative;
 }
 .desDiv div:first-child{
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
 }
 .revDesc{
@@ -696,6 +698,9 @@ cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.desErr span{
+    font-size: .8rem;
 }
 .isDesc{
     font-size: .8rem;
@@ -714,7 +719,7 @@ cursor: pointer;
     padding: 1rem;
 }
 .titleDiv span{
-    font-size: .9rem;
+    font-size: .8rem;
 }
 .titleDiv input{
     border: none;
