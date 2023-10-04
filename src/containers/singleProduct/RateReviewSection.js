@@ -10,6 +10,11 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import UserReviewsData from "./UserReviewsData";
+import { collection, getDoc, getDocs } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import { selectUserID } from "../../redux/authSlice";
+import { db } from "../../firebase.config";
+import { toast } from "react-toastify";
 
 
 function RateReviewSection({ product }) {
@@ -19,6 +24,7 @@ function RateReviewSection({ product }) {
 
   const navigate = useNavigate();
   const params = useParams()
+  const userID = useSelector(selectUserID)
 
   let arr = Object.values(product?.stars);
   let maxV = Math.max(...arr);
@@ -55,14 +61,10 @@ function RateReviewSection({ product }) {
     setOpen(false);
   };
 
+
   return (
     <div>
-      <div className={style.rateTopDiv}>
-        <div>Rating & Reviews</div>
-        <button onClick={() => navigate(`/write-review/${params.id}`)}>
-          Rate Product
-        </button>
-      </div>
+     
       <div className={style.rateBar}>
         <div>
           <div className={style.totalRate}>
@@ -204,46 +206,7 @@ function RateReviewSection({ product }) {
           </Dialog>
         </div>
       </div>
-
-      {/* {usersReviews.reverse().map((user, i) => (
-        <div className={style.userReview} key={i}>
-          <div className={style.row}>
-            <div
-              style={{
-                backgroundColor:
-                  user.rate >= 3 ? "green" : user.rate >= 2 ? "orange" : "red",
-              }}
-            >
-              {user.rate}
-              <span>
-                <StarIcon sx={{ fontSize: ".8rem" }} />
-              </span>
-            </div>
-            <span>{user.title}</span>
-          </div>
-          <div className={style.userDes}>
-            <div>{user.description}</div>
-          </div>
-          <div className={style.userImgconter}>
-            {user.images.map((img) => (
-              <div className={style.userImg}>
-                <img src={img.image} alt="" />
-              </div>
-            ))}
-          </div>
-
-          <div className={style.userDetailsDiv}>
-            <div className={style.userName}>
-              <p>{user.buyerName}</p>
-              <span>
-                <CheckCircleIcon sx={{ fontSize: "1rem" }} />
-              </span>
-              <p>Certified Buyer</p>
-              <p>{user.time}</p>
-            </div>
-          </div>
-        </div>
-      ))} */}
+      
       <UserReviewsData usersReviews={usersReviews}/>
     </div>
   );

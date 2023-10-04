@@ -13,9 +13,10 @@ import { auth, db } from "../../firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { selectUserID, setLogoutUser, setUser } from "../../redux/authSlice";
 import { ToastContainer, toast } from "react-toastify";
-import { arrayRemove, collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, collection, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
-import { setOder } from "../../redux/productSlice";
+import { useNavigate } from "react-router-dom";
+import { format, addDays } from "date-fns";
 
 const image = [
   {
@@ -106,6 +107,7 @@ function CheckOut() {
 
   const toastId = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   // console.log(selectedDeliveryAddress);
 
@@ -237,29 +239,28 @@ function CheckOut() {
     setIsConfirmOrder(true);
   }
 
-  function handleOrderConfirm() {
-    // console.log(`selected Option: ${selectedPaymentMethod}`);
-    // // console.log(`selected addres: ${selectedDeliveryAddress}`);
-    // console.log(selectedDeliveryAddress);
-    const data = [
+ async function handleOrderConfirm() {
+    const orderProduct = 
       {
         orderID: Date.now(),
-        status: "Oredr Confirm",
+        status: "Confirmed",
         address: selectedDeliveryAddress,
         payment: selectedPaymentMethod,
-        ...cartProduct,
-      },
-    ];
-    dispatch(
-      setOder({
-        orderID: Date.now(),
-        status: "Oredr Confirm",
-        address: selectedDeliveryAddress,
-        payment: selectedPaymentMethod,
-        orderProduct: cartProduct,
+        buyerID: userID,
+      }
+    //  console.log(...cartProduct);
+    setLoading(true)
+    for(let snap of cartProduct){
+      let data = snap
+      await addDoc(collection(db, "orders " + userID), {orderTime: Date.now(), status: "Confirmed",  address: selectedDeliveryAddress, payment: selectedPaymentMethod, ...data})
+      const cartRef = doc(db, 'users', userID)
+      await updateDoc(cartRef, {
+        cart: []
       })
-    );
-    // dispatch(setOrders(data))
+    }
+   navigate('/')
+    setLoading(false)
+    toast.success("Succssesfully your Order confirm")
   }
 
   async function handleRemove(product){
@@ -653,7 +654,7 @@ function CheckOut() {
                       </div>
                     </div>
                     <div className={style.cartDelivery}>
-                      <div>Delivery by 11 PM, Tomorrow |</div>
+                      <div className={style.delivTime}>Delivery by 11 PM, {format(addDays(Date.now(), 2), "eee do MMM")} |</div>
                       <div className={style.deliveryFee}>
                         {product.deliveryCharge == 0 ? (
                           <>
@@ -785,7 +786,7 @@ function CheckOut() {
             {isConfirmOrder && (
               <div>
                 <div className={style.orderBtn}>
-                  <button onClick={handleOrderConfirm}>CONFIRM ORDER</button>
+                  <button onClick={handleOrderConfirm}>{loading? <CircularProgress color="inherit" thickness={5} size={25} /> : "CONFIRM ORDER"}</button>
                 </div>
               </div>
             )}

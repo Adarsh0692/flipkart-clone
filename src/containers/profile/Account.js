@@ -43,12 +43,14 @@ const Account = () => {
   }
 
   useEffect(() => {
-
+    
   if(currentUser === 'false'){
      navigate('/login')
   }
 
   },[])
+
+
 
   return (
     <div className={style.mainAccDiv}>
@@ -156,6 +158,8 @@ const Account = () => {
           </div>
         </div>
       </div>
+
+
       <div className={style.mainAccRight}>
         <Outlet />
       </div>

@@ -26,6 +26,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   query,
   setDoc,
@@ -112,7 +113,7 @@ function SingleProduct() {
   const userID = useSelector(selectUserID);
 
   const [product, setSProduct] = useState({});
-
+  const [isWishList, setIsWishList] = useState(false);
   const [imgindex, setImgIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [open, setOpen] = useState(false);
@@ -120,43 +121,20 @@ function SingleProduct() {
   const [loading, setLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
   const [buyLoading, setBuyLoading] = useState(false);
-
-
-  const handleOpenImg = () => {
-    setOpenImg(true);
-  };
-
-  const handleCloseImg = () => {
-    setOpenImg(false);
-  };
-
-
+  const [isReviewAllowed, setIsReviewAllowed] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const reviewImg = product?.reviews?.map((prod) => prod.images);
-  // const allFeedbackImgs = reviewImg?.reduce((acc, currentArray) => {
-  //   return [...acc, ...currentArray];
-  // }, []);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  // const visibleImg = showAll ? allFeedbackImgs : allFeedbackImgs.slice(0, 8);
-  // const remaingImgCount = allFeedbackImgs.length - visibleImg.length;
-
-  // const usersReviews = product?.reviews?.map((rev) => rev);
-
+  // Function to handle change product image onMousehover
   function handleimgIndex(i) {
     setImgIndex(i);
   }
 
+  // Function to add product to wishList
+  function handleWishList(product) {}
+
+  // Function to add to cart product
   async function handleAddToCart() {
     if (userID) {
       setBtnLoading(true);
@@ -171,6 +149,7 @@ function SingleProduct() {
     }
   }
 
+  // Function to buy product
   async function handleBuyProduct() {
     if (userID) {
       setBuyLoading(true);
@@ -195,6 +174,32 @@ function SingleProduct() {
       }
     };
     fetchProduct();
+  }, []);
+
+  useEffect(() => {
+    const isAuth = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const userID = user.uid;
+        const getDetails = async () => {
+          const list = [];
+          const docSnap = await getDocs(collection(db, "orders " + userID));
+          docSnap.forEach((doc) => {
+            list.push(doc.data());
+          });
+          const isorder = list.filter((pd) => pd.id === params.id);
+          const isAllow = isorder.find((pr) => pr.status === "Delivered");
+
+          if (isAllow) {
+            setIsReviewAllowed(true);
+          } else {
+            setIsReviewAllowed(false);
+          }
+        };
+        getDetails();
+      }
+    });
+
+    return () => isAuth();
   }, []);
 
   return (
@@ -231,7 +236,11 @@ function SingleProduct() {
                 <div className={style.fav}>
                   <span>
                     <FavoriteIcon
-                      sx={{ fontSize: "1rem", color: "lightgray" }}
+                      sx={{
+                        fontSize: "1rem",
+                        color: isWishList ? "red" : "lightgray",
+                      }}
+                      onClick={() => handleWishList(product)}
                     />
                   </span>
                 </div>
@@ -253,11 +262,14 @@ function SingleProduct() {
                 )}
               </button>
               <button onClick={handleBuyProduct} disabled={buyLoading}>
-            {buyLoading ? <CircularProgress color="inherit" thickness={5} size={25} /> :  <>
-                <FlashOnIcon />
-                BUY NOW
-                </>}
-              
+                {buyLoading ? (
+                  <CircularProgress color="inherit" thickness={5} size={25} />
+                ) : (
+                  <>
+                    <FlashOnIcon />
+                    BUY NOW
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -265,20 +277,32 @@ function SingleProduct() {
             <div className={style.prodDetails}>
               <span>{product.title}</span>
               <div className={style.rateDiv}>
-                {product.ratings>0 && <div style={{backgroundColor: product.ratings>=3 ? 'green' : product.ratings>=2 ? 'orange' : 'red'}}>
-                  {product.ratings}{" "}
-                  <StarIcon sx={{ fontSize: "1rem" }} />
-                </div>}
-                {product.ratings>0 &&   <span>
-                  (<CalculateTotalRatings ratings={product.stars} />)
-                </span>}
-              {product.reviews.length > 0 && (
-                <>
-                  {" "}
-                  <span>&</span>
-                  <span> {product.reviews.length} Reviews</span>{" "}
-                </>
-              )}
+                {product.ratings > 0 && (
+                  <div
+                    style={{
+                      backgroundColor:
+                        product.ratings >= 3
+                          ? "green"
+                          : product.ratings >= 2
+                          ? "orange"
+                          : "red",
+                    }}
+                  >
+                    {product.ratings} <StarIcon sx={{ fontSize: "1rem" }} />
+                  </div>
+                )}
+                {product.ratings > 0 && (
+                  <span>
+                    (<CalculateTotalRatings ratings={product.stars} />)
+                  </span>
+                )}
+                {product.reviews.length > 0 && (
+                  <>
+                    {" "}
+                    <span>&</span>
+                    <span> {product.reviews.length} Reviews</span>{" "}
+                  </>
+                )}
                 {product.assured && (
                   <img
                     src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
@@ -450,11 +474,32 @@ function SingleProduct() {
                   </table>
                 </div>
               </div>
-              <div className={style.reviewSection}>
-             
-             {product.ratings>0 &&  <RateReviewSection product={product}/>}
-            
-            </div>
+
+              {isReviewAllowed || product.ratings > 0 ? 
+                  <>
+                   
+                    
+                    <div className={style.rateTopDiv}>
+                      <div>Rating & Reviews</div>
+                      <button
+                        onClick={() => navigate(`/write-review/${params.id}`)}
+                      >
+                        Rate Product
+                      </button>
+                    </div>
+                  {product.ratings == 0 && <div className={style.firstRev}>
+                      Have you used this product? Be the first to rate & review!
+                    </div>}
+                    
+                  </> :
+                  null
+                }
+
+              {product.ratings > 0 && (
+                <div className={style.reviewSection}>
+                  <RateReviewSection product={product} />
+                </div>
+              )  }
             </div>
           </div>
         </div>

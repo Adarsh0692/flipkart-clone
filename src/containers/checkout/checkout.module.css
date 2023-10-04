@@ -342,6 +342,9 @@
 .cartDetails div:nth-child(3) img{
     width: 4.5vw;
 }
+.delivTime{
+    font-size: .85rem;
+}
 .cartPrice{
     display: flex;
     align-items: baseline;

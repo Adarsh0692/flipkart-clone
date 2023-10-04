@@ -229,7 +229,7 @@ justify-content: center;
     margin-right: 10px;
 }
 .service span:last-child{
-    font-size: .9rem;
+    font-size: .8rem;
     font-weight: 400;
     color: black;
 }
@@ -246,7 +246,7 @@ justify-content: center;
 
 }
 .impt span{
-    font-size: .9rem;
+    font-size: .85rem;
 }
 .desc{
     display: flex;
@@ -257,6 +257,9 @@ justify-content: center;
     color: gray;
     font-weight: 500;
     font-size: .9rem;
+}
+.desc div:last-child{
+    font-size: .85rem;
 }
 .spTable{
     border: 1px solid #e0e0e0;
@@ -302,7 +305,7 @@ justify-content: center;
     gap: 11rem;
 }
 .legalDis{
-    font-size: .9rem;
+    font-size: .85rem;
 }
 
 /* review section style from here */
@@ -788,5 +791,21 @@ cursor: pointer;
 .submitBtn button:disabled{
     background-color: #fb661b7c;
     cursor: not-allowed;
+}
+.reviewError{
+    text-align: center;
+    margin-top: 15%;
+}
+.reviewError h2{
+   font-size: 2rem;
+   margin-bottom: 1rem;
+}
+.reviewError span{
+    font-size: 1rem;
+    color: #878787;
+}
+.firstRev{
+ padding: 0 2rem;
+ font-size: .9rem;
 }
 /* write-review end  */

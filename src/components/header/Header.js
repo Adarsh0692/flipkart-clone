@@ -305,6 +305,7 @@ function Header() {
     auth.onAuthStateChanged((user) => {
       setLoader(true)
       if (user) {
+        let list =[]
         setLoader(false)
         dispatch(
           setUser({
@@ -339,7 +340,7 @@ function Header() {
     <Box sx={{ flexGrow: 0, mb: "60px" }}>
       <AppBar
         position="fixed"
-        sx={{ padding: "0 9rem", backgroundColor: "#2874f0" }}
+        sx={{ padding: "0 9rem", backgroundColor: "#2874f0",height:'10vh' }}
       >
         <Toolbar
           sx={{
@@ -354,7 +355,7 @@ function Header() {
               closeButton={false}
               pauseOnHover={false}
               role="alert"
-              autoClose={3000}
+              autoClose={2000}
               theme="dark"
               style={{ minWidth: "40vw", height: "25vh" , fontSize: "1rem" }}
             />
@@ -398,7 +399,7 @@ function Header() {
                     sx={{
                       backgroundColor: "white",
                       color: "blue",
-                      height: "2.3rem",
+                      height: "2.1rem",
                       width: "2rem",
                       borderRadius: "0 2px 2px 0",
                       cursor: "pointer",
@@ -624,7 +625,7 @@ function Header() {
                     sx={{
                       color: "white",
                       textTransform: "capitalize",
-                      fontSize: "20px",
+                      fontSize: "1rem",
                     }}
                   >
                     {currentUser.split(' ')[0]}

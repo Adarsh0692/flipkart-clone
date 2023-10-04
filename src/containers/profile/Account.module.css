@@ -1,7 +1,7 @@
 .mainAccDiv{
-    padding: 1rem 4.5rem;
+    padding: 1rem 2rem;
     display: flex;
-    gap: 20px;
+    gap: 1rem;
 }
 .mainAccLeft{
     width: 25%;
@@ -35,7 +35,7 @@
 }
 .leftBotmDiv{
     width: 100%;
-    margin-top: 20px;
+    margin-top: .5rem;
     background-color: #ffff;
     border-radius: 5px;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
@@ -48,7 +48,7 @@
     padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
-    font-size: 1.1rem;
+    font-size: .9rem;
     font-weight: 500;
     cursor: pointer;
     border-bottom: 1px solid #eeeded;
@@ -66,10 +66,11 @@
 .acc span:last-child{
     color: gray;
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 .underAcc{
     padding: 1rem 0 1rem 4rem;
+    font-size: .9rem;
 }
 .underAcc:hover{
    color: #2874f0;
@@ -299,11 +300,11 @@
 }
 .myReview span{
     color: #898787;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 .mainProductDiv{
     border-bottom: 1px solid #e0e0e0;
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem;
     display: flex;
 }
 .reviewImgDiv{
@@ -326,34 +327,49 @@
 }
 .reviewProDtlsDiv div:first-child{
     color: #898787;
+    font-size: .9rem;
 }
 .revRate{
-   margin: 1rem 0;
+   margin: .7rem 0;
 }
 .revRate span:first-child{
-    background-color: green;
+    /* background-color: green; */
     color: #fff;
-     padding: 3px 5px;
+     padding: 2px 4px;
      border-radius: 4px;
      margin-right: 15px;
+     font-size: .8rem;
 }
 .revRate span:last-child{
     font-weight: 500;
+    font-size: .9rem;
 }
 .reviewProDtlsDiv div:nth-child(4){
    color: #898787;
    font-size: .9rem;
-   margin: 1rem 0;
+   margin: .8rem 0;
 }
-.reviewProDtlsDiv div:nth-child(4) span{
-    margin-left: 20px;
-}
+
 .reviewProDtlsDiv button{
     background: none;
     border: none;
     color: #2874f0;
     font-size: 1rem;
     margin-right: 2rem;
+}
+.name_time{
+    display: flex;
+    gap: 5px;
+    font-size: .8rem;
+}
+.name_time span{
+    font-size: .8rem;
+}
+.name_time span:first-child{
+    margin-left: 10px;
+}
+.name_time span:last-child{
+    margin-left: 10px;
 }
 /* my Review end */
 
@@ -425,11 +441,10 @@
 /* my wishlist end */
 
 
-/* my order style from here */
+/* my order style from here  ==> */
 
 .orderProdImgDiv{
     width: 15%;
-    /* border: 1px solid #e0e0e0; */
 }
 .orderProdImgDiv div{
     height: 15vh;
@@ -449,20 +464,20 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    font-size: .9rem;
 }
 .orderProdName div:last-child{
     color: #a3a3a3;
-    font-size: .9rem;
+    font-size: .8rem;
     margin-top: 10px;
 }
 .orderProdPrice{
     width: 15%;
-    /* border: 1px solid #e0e0e0; */
     text-align: center;
+    font-size: 1rem;
 }
 .orderProdStatus{
     width: 30%;
-    /* border: 1px solid #e0e0e0; */
 }
 .orderProdStatus div:first-child{
     display: flex;
@@ -471,16 +486,17 @@
 }
 .orderProdStatus div:first-child span{
     font-weight: 500;
+    font-size: .9rem;
 }
 .orderProdStatus div:last-child{
- font-size: .9rem;
+ font-size: .8rem;
  margin: 10px 0;
 }
 .delivered{
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background-color: green;
+    /* background-color: green; */
 }
 .cancelled{
     width: 12px;
@@ -490,3 +506,150 @@
 }
 
 /* my order end */
+
+/* order details style from here ===> */
+
+.addressDiv{
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+.addressDiv div:first-child {
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.addressDiv div:nth-child(2) {
+    margin-bottom: .5rem;
+    font-size: .9rem;
+    font-weight: 500;
+}
+.addressDiv p, span{
+    font-size: .85rem;
+}
+.addressDiv div:last-child {
+    font-size: .9rem;
+    font-weight: 500;
+    margin-top: .5rem;
+}
+.orCart{
+    display: flex;
+  margin-top: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid #e0e0e0;
+  padding: 0 1rem;
+}
+
+.odImgDiv{
+width: 10%;
+padding: 1rem;
+}
+.odTitleDiv{
+width: 30%;
+padding: 1rem 0;
+}
+.odStatusDiv{
+width: 60%;
+padding: 1rem;
+}
+.odimg{
+    width: 7vw;
+    height: 18vh;
+    padding: 0;
+}
+.odimg img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.odTitleDiv div:first-child{
+  font-size: .9rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+}
+.odTitleDiv div:nth-child(2){
+    color: #898787;
+    font-size: .8rem;
+    margin: .5rem 0;
+}
+.odTitleDiv div:nth-child(3){
+    color: #898787;
+    font-size: .8rem;
+}
+.odTitleDiv div:last-child{
+  font-size: 1rem;
+  margin-top: .5rem;
+  font-weight: 500;
+}
+.odStatus{
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+.odStatus span:first-child{
+    color: green;
+    
+}
+.odBar{
+    padding: 1rem;
+}
+.odTime{
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+.odTime span:first-child{
+    color: #898787;
+}
+.odTime span:last-child{
+    font-weight: 600;
+    font-size: .8rem;
+}
+.cancelBtn{
+    margin-top: 1rem;
+}
+.cancelBtn button{
+    background: none;
+    border: none;
+    color: #2874f0;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+/* tracking style here */
+.prbar{
+    display: flex;
+    align-items: center;
+}
+.initalDot{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+    margin-right: -3px;
+    z-index: 22;
+}
+.Prgssbar{
+    width: 95%;
+    height: 5px;
+    background-color: #e6e6e6;
+}
+.Prgssbar_fill{
+    height: 100%;
+    /* width: 50%; */
+    background-color: green;
+    border-radius: 10px;
+}
+.lastDot{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    /* background-color: #e6e6e6; */
+    margin-left: -3px;
+}
+
+/* order details end */

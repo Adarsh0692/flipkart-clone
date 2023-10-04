@@ -15,6 +15,7 @@ import MyOrder from "./containers/profile/MyOrder";
 import MyReviews from "./containers/profile/MyReviews";
 import MyWishlist from "./containers/profile/MyWishlist";
 import AddProduct from "./containers/sellerPage/AddProduct";
+import OrderDetails from "./containers/profile/OrderDetails";
 
 function App() {
   return (
@@ -31,10 +32,11 @@ function App() {
           <Route index element={<ProfileInfo />} />
           <Route path="address" element={<ManageAddresses />} />
           <Route path="orders" element={<MyOrder />} />
+          <Route path="orderDetails/:id" element={<OrderDetails />} />
           <Route path="reviews" element={<MyReviews />} />
           <Route path="wishlist" element={<MyWishlist />} />
         </Route>
-
+      
         <Route path="/write-review/:id" element={<WriteReview />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/seller" element={<AddProduct />} />
