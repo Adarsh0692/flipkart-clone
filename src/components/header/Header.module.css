@@ -63,9 +63,10 @@
 
 .mainLoginTDiv div{
     border-bottom: 1px solid #e0e0e0;
-    padding: 1rem;
+    padding: .8rem 1rem;
     cursor: pointer;
     display: flex;
+    width: 15vw;
     /* align-items: center; */
 }
 .mainLoginTDiv div:last-child{
@@ -87,9 +88,9 @@
 }
 
 .wishlistItems{
-    margin-left: 8rem;
+    margin-left: 6rem;
     background-color: #f1f1f1;
-    padding: 3px 5px;
+    padding: 2px 8px;
     border-radius: 5px;
     color: #a7a7a7;
 }

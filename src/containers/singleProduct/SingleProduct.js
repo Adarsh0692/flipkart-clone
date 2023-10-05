@@ -24,6 +24,7 @@ import { addToCart } from "../../redux/productSlice";
 import {
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -37,6 +38,7 @@ import { auth, db } from "../../firebase.config";
 import { selectUserID } from "../../redux/authSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import RateReviewSection from "./RateReviewSection";
+import { toast } from "react-toastify";
 
 const feedbakImages = [
   {
@@ -122,6 +124,7 @@ function SingleProduct() {
   const [btnLoading, setBtnLoading] = useState(false);
   const [buyLoading, setBuyLoading] = useState(false);
   const [isReviewAllowed, setIsReviewAllowed] = useState(false);
+  const [userWishlist, setUserWishlist] = useState([])
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -164,6 +167,26 @@ function SingleProduct() {
     }
   }
 
+  // Function for wishlist items handle
+  async function handleWishlist() {
+    const docRef = doc(db, "wishlist " + userID, params.id);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data()
+   if(docSnap.exists()){
+       if(data.id === params.id){
+        await deleteDoc(docRef)
+        toast.success("Remove from your wishlist.")
+       }else{
+        await setDoc(docRef, {id: params.id , ...product});
+        toast.success("Added to your wishlist.")
+       }
+   }else{
+    await setDoc(docRef, {id: params.id , ...product});
+    toast.success("Added to your wishlist.")
+   }
+    
+  }
+
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
@@ -196,11 +219,21 @@ function SingleProduct() {
           }
         };
         getDetails();
+
+        const getWishlist = onSnapshot(collection(db, "wishlist " + userID), (querySnap) => {
+          const wishlist = []
+          querySnap.forEach((doc) => {
+            wishlist.push(doc.data().id)
+          })
+          setUserWishlist(wishlist)
+          
+        })
       }
     });
 
     return () => isAuth();
   }, []);
+
 
   return (
     <>
@@ -234,11 +267,11 @@ function SingleProduct() {
               <div className={style.showImg}>
                 <img src={product?.images[imgindex]?.image} alt="" />
                 <div className={style.fav}>
-                  <span>
+                  <span onClick={handleWishlist}>
                     <FavoriteIcon
                       sx={{
                         fontSize: "1rem",
-                        color: isWishList ? "red" : "lightgray",
+                        color: userWishlist.includes(params.id) ? "red" : "lightgray",
                       }}
                       onClick={() => handleWishList(product)}
                     />

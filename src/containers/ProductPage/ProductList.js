@@ -1,37 +1,56 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./ProductPage.module.css";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Pagination from "./Pagination";
 import { useNavigate } from "react-router-dom";
 import CalculateTotalRatings from "./CalculateTotalRatings";
-import { useState } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase.config";
+import { collection, deleteDoc, doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase.config";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { selectUserID } from "../../redux/authSlice";
 
 function ProductList({ viewProdcts }) {
   const navigate = useNavigate();
+  const userID = useSelector(selectUserID)
+  const [userWishlist, setUserWishlist] = useState([])
 
   async function handleWishlist(product) {
-    const docRef = doc(db, "products", product.id);
+    const docRef = doc(db, "wishlist " + userID, product.id);
     const docSnap = await getDoc(docRef);
-    const isTrue = docSnap.data().isWishlist;
-    if (isTrue) {
-      await updateDoc(docRef, {
-        isWishlist: false,
-      });
-      toast.success("Removed from your wishlist.")
-    } else {
-      await updateDoc(docRef, {
-        isWishlist: true,
-      });
-      toast.success("Added to your wishlist.")
-    }
+    const data = docSnap.data()
+   if(docSnap.exists()){
+       if(data.id === product.id){
+        await deleteDoc(docRef)
+        toast.success("Remove from your wishlist.")
+       }else{
+        await setDoc(docRef, product);
+        toast.success("Added to your wishlist.")
+       }
+   }else{
+    await setDoc(docRef, product);
+    toast.success("Added to your wishlist.")
+   }
+    
   }
 
   useEffect(() => {
     window.scroll(0, 0);
+    const isAuth = auth.onAuthStateChanged((user) => {
+      if(user){
+        const userId = user.uid
+        const getWishlist = onSnapshot(collection(db, "wishlist " + userId), (querySnap) => {
+          const list = []
+          querySnap.forEach((doc) => {
+            list.push(doc.data().id)
+          })
+          setUserWishlist(list)
+          
+        })
+      }
+    })
+    return () => isAuth()
   }, []);
 
   return (
@@ -60,7 +79,7 @@ function ProductList({ viewProdcts }) {
               >
                 <FavoriteIcon
                   sx={{
-                    color: product.isWishlist ? "red" : "lightgray",
+                    color: userWishlist.includes(product.id) ? "red" : "lightgray",
                     fontSize: ".9rem",
                   }}
                 />

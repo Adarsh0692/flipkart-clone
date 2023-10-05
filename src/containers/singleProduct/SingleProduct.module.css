@@ -377,13 +377,12 @@ justify-content: center;
     background-color: #e0dfdf;
     /* border: 1px solid red; */
     margin:  18px 0 ;
-    
+    overflow: hidden;
 }
 .progress_fill{
     height: 100%;
-    /* width: 100%; */
     border-radius: 10px;
-    /* background-color: #2874f0; */
+    /* border: 1px solid red; */
 }
 
 /* // */

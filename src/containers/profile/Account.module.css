@@ -378,7 +378,7 @@
 .wishProductDiv{
     border-bottom: 1px solid #e0e0e0;
     border-top: 1px solid #e0e0e0;
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem;
     display: flex;
     cursor: pointer;
 }
@@ -413,7 +413,6 @@
     margin: 5px 0;
 }
 .wishRate span:first-child{
-    background-color: green;
     color: #fff;
      padding: 3px 5px;
      border-radius: 4px;
@@ -428,7 +427,7 @@
     margin: 1.5rem 0;
 }
 .newpriceDiv div:first-child{
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 500;
 }
 .newpriceDiv span{

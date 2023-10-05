@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import style from "./Account.module.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import StarIcon from "@mui/icons-material/Star";
 import Empty from "../../components/empty/Empty";
+import { auth, db } from "../../firebase.config";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { useState } from "react";
+import CalculateTotalRatings from "../ProductPage/CalculateTotalRatings";
+import CircularProgress from "@mui/material/CircularProgress";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const image = [
   {
@@ -32,59 +39,131 @@ const image = [
 ];
 
 function MyWishlist() {
-  function handleProductClick(i) {
-    alert(i);
+  const [userWishlist, setUserWishlist] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [userID, setUserID] = useState(null)
+
+  const navigate = useNavigate()
+
+  function handleProductClick(id) {
+    navigate(`/productDetails/${id}`)
   }
 
-  if (image.length === 0) {
-    return <Empty name="Wishlist" />;
+ async function handleRemoveItem(Id){
+    const docRef = doc(db, "wishlist " + userID, Id);
+    await deleteDoc(docRef)
+    toast.success("Remove from your wishlist.")
+  }
+
+  useEffect(() => {
+    window.scroll(0, 0);
+    const isAuth = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserID(user.uid);
+        const uId = user.uid
+        setLoading(true);
+        const getWishlist = onSnapshot(
+          collection(db, "wishlist " + uId),
+          (querySnap) => {
+            const list = [];
+            querySnap.forEach((doc) => {
+              list.push(doc.data());
+            });
+            setUserWishlist(list);
+            setLoading(false);
+          }
+        );
+      }
+    });
+    return () => isAuth();
+  }, []);
+
+
+  if (loading) {
+    return (
+      <div>
+        <CircularProgress
+          sx={{ ml: "50%", mt: "20%" }}
+          thickness={4}
+          size={40}
+        />
+      </div>
+    );
   }
 
   return (
-    <div>
-      <div className={style.myReview}>
-        My Wishlist <span>(5)</span>
-      </div>
-      {image.map((product, i) => (
-        <div
-          key={i}
-          className={style.wishProductDiv}
-          onClick={() => handleProductClick(i)}
-        >
-          <div className={style.wishProdImg}>
-            <div>
-              <img src={product.image} alt="" />
-            </div>
-          </div>
-          <div className={style.wishProdDtls}>
-            <div>
-              <span>OnePlus Nord CE 2 Lite 5G (Blue Tide, 128 GB)</span>
-              <span>
-                <DeleteIcon sx={{ color: "gray", fontSize: "1.2rem" }} />
-              </span>
-            </div>
-            <div className={style.wishRate}>
-              <span>
-                4.4{" "}
-                <StarIcon sx={{ fontSize: "1rem", mb: "-2px", ml: "-2px" }} />
-              </span>
-              <span> (12331) </span>
-              <span>
-                <img
-                  src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
-                  alt=""
-                />
-              </span>
-            </div>
-            <div className={style.newpriceDiv}>
-              <div>₹17,449</div>
-              <div className={style.oldPrice}>₹1200</div>
-              <span>12% off</span>
-            </div>
-          </div>
+    <>
+      {userWishlist.length === 0 ? (
+        <div style={{ width: "70vw" }}>
+          <Empty name={"Order list"} />
         </div>
-      ))}
-    </div>
+      ) : (
+        <div>
+          <div className={style.myReview}>
+            My Wishlist <span>({userWishlist.length})</span>
+          </div>
+          {userWishlist.map((product) => (
+            <div
+              key={product.id}
+              className={style.wishProductDiv}
+              
+            >
+              <div className={style.wishProdImg} onClick={() => handleProductClick(product.id)}>
+                <div>
+                  <img src={product.images[0].image} alt="image" />
+                </div>
+              </div>
+              <div className={style.wishProdDtls}>
+                <div>
+                  <span>{product.title}</span>
+                  <span>
+                    <DeleteIcon onClick={() => handleRemoveItem(product.id)} sx={{ color: "gray", fontSize: "1.1rem" }} />
+                  </span>
+                </div>
+                <div className={style.wishRate}>
+                  {product.ratings > 0 && (
+                    <span  style={{
+                      backgroundColor:
+                        product.ratings >= 3
+                          ? "green"
+                          : product.ratings >= 2
+                          ? "orange"
+                          : "red",
+                    }}>
+                      {product.ratings}
+                      <StarIcon sx={{ fontSize: ".8rem", mb: "-1px" }} />
+                    </span>
+                  )}
+                  {product.ratings > 0 && (
+                    <span>
+                      (<CalculateTotalRatings ratings={product.stars} />)
+                    </span>
+                  )}
+                  <span>
+                    <img
+                      src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png"
+                      alt=""
+                    />
+                  </span>
+                </div>
+                <div className={style.newpriceDiv}>
+                  <div>
+                    ₹
+                    {Math.round(
+                      product.actual_price -
+                        (product.discount_percentage / 100) *
+                          product.actual_price
+                    )}
+                  </div>
+                  <div className={style.oldPrice}>₹{product.actual_price}</div>
+                  <span>{product.discount_percentage}% off</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 

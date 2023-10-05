@@ -9,13 +9,16 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import OfflineBoltIcon from "@mui/icons-material/OfflineBolt";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase.config";
+import { auth, db } from "../../firebase.config";
 import { useDispatch } from "react-redux";
 import { setLogoutUser } from "../../redux/authSlice";
+import { useEffect } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
 
 function LoginTippy({ handleOpen, currentUser, toastId, toast }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [userWishlist, setUserWishlist] = useState([]);
 
   function handleOrderPage() {
     navigate("/account/orders");
@@ -46,6 +49,27 @@ function LoginTippy({ handleOpen, currentUser, toastId, toast }) {
         console.log(error);
       });
   }
+
+  useEffect(() => {
+    window.scroll(0, 0);
+    const isAuth = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const uId = user.uid
+        const getWishlist = onSnapshot(
+          collection(db, "wishlist " + uId),
+          (querySnap) => {
+            const list = [];
+            querySnap.forEach((doc) => {
+              list.push(doc.data());
+            });
+            setUserWishlist(list);
+          }
+        );
+      }
+    });
+    return () => isAuth();
+  }, []);
+
   return (
     <div className={style.mainLoginTDiv}>
       {!currentUser && (
@@ -100,7 +124,7 @@ function LoginTippy({ handleOpen, currentUser, toastId, toast }) {
           />
         </span>
         <span>Wishlist</span>
-        {currentUser && <span className={style.wishlistItems}>10</span>}
+        {currentUser && userWishlist.length>0 && <span className={style.wishlistItems}>{userWishlist.length}</span>}
       </div>
 
       <div>
