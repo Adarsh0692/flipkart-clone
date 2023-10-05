@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import style from "./Account.module.css";
 import OrderTrackingProgressBar from "./OrderTrackingProgressBar";
 import CloseIcon from "@mui/icons-material/Close";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 
 function OrderDetails() {
   const params = useParams();
+  const navigate = useNavigate()
+
   const [userID, setUserID] = useState(null)
   const [product, setOrderProduct] = useState({});
   const [loading, setLoading] = useState(false);
@@ -77,7 +79,8 @@ function OrderDetails() {
             </div>
           </div>
           <div className={style.orCart}>
-            <div className={style.odImgDiv}>
+            
+            <div className={style.odImgDiv} onClick={() => navigate(`/productDetails/${product.id}`)}>
               <div className={style.odimg}>
               {product?.images?.length>0 &&  <img src={product?.images[0]?.image} alt="Image" />}
               </div>

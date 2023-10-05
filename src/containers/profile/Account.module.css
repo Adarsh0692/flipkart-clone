@@ -542,6 +542,7 @@
 .odImgDiv{
 width: 10%;
 padding: 1rem;
+cursor: pointer;
 }
 .odTitleDiv{
 width: 30%;

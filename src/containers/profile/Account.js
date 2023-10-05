@@ -50,7 +50,9 @@ const Account = () => {
 
   },[])
 
-
+  useEffect(() => {
+    window.scrollTo(0,0)
+  },[navigate])
 
   return (
     <div className={style.mainAccDiv}>

@@ -357,7 +357,7 @@ function Header() {
               role="alert"
               autoClose={2000}
               theme="dark"
-              style={{ minWidth: "40vw", height: "25vh" , fontSize: "1rem" }}
+              style={{ width: "auto" , fontSize: "1rem" }}
             />
           <Typography
             variant="h6"

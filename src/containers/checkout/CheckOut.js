@@ -258,9 +258,9 @@ function CheckOut() {
         cart: []
       })
     }
-   navigate('/')
+   navigate('/order-success')
     setLoading(false)
-    toast.success("Succssesfully your Order confirm")
+    
   }
 
   async function handleRemove(product){

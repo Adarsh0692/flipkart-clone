@@ -16,6 +16,7 @@ import MyReviews from "./containers/profile/MyReviews";
 import MyWishlist from "./containers/profile/MyWishlist";
 import AddProduct from "./containers/sellerPage/AddProduct";
 import OrderDetails from "./containers/profile/OrderDetails";
+import OrderSuccess from "./components/success/OrderSuccess";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="wishlist" element={<MyWishlist />} />
         </Route>
       
+        <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/write-review/:id" element={<WriteReview />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/seller" element={<AddProduct />} />

@@ -156,6 +156,7 @@
     height: 65vh;
     transition: box-shadow .2s ease-in-out;
     cursor: pointer;
+    position: relative;
 }
 .cart:hover{
     box-shadow: 0 10px 16px 0 rgba(0,0,0,.11)
@@ -164,7 +165,7 @@
    height: 100%;
    width: 100%;
    object-fit: contain;
-  
+   /* border: 1px solid red; */
 }
 .imgDiv{
     /* border: 1px solid red; */
@@ -175,8 +176,9 @@
 }
 .heart{
     position: absolute;
-    top: .3rem;
-    right: .5rem;
+    top: 0.5rem;
+    right: 0.5rem;
+    /* border: 1px solid red; */
 }
 .discp{
     display: -webkit-box;
@@ -202,11 +204,12 @@
 .rateDiv div{
     /* background-color: green; */
     color: #fff;
-     padding: 3px 5px;
+     padding: 2px 4px;
      border-radius: 4px;
      display: flex;
      align-items: center;
      gap: 2px;
+     font-size: .8rem;
      
 }
 
