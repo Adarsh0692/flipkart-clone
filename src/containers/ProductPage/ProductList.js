@@ -3,7 +3,7 @@ import style from "./ProductPage.module.css";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Pagination from "./Pagination";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CalculateTotalRatings from "./CalculateTotalRatings";
 import { collection, deleteDoc, doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
@@ -11,8 +11,9 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUserID } from "../../redux/authSlice";
 
-function ProductList({ viewProdcts }) {
+function ProductList({ viewProdcts,handleDescendingOrder, handleAscendingOrder,handleNewestOrder,handlePopularity }) {
   const navigate = useNavigate();
+  const params = useParams()
   const userID = useSelector(selectUserID)
   const [userWishlist, setUserWishlist] = useState([])
 
@@ -53,19 +54,29 @@ function ProductList({ viewProdcts }) {
     return () => isAuth()
   }, []);
 
+  useEffect(() => {
+    if(params.name === 'sort=price_desc'){
+      handleDescendingOrder()
+    } else if(params.name === 'sort=price_asc'){
+      handleAscendingOrder()
+    }else if(params.name === 'sort=newest'){
+      handleNewestOrder()
+    }
+  },[])
+
   return (
     <div className={style.mainList}>
       <div className={style.upperDiv}>
         <div className={style.productType}>
-          <h1>Dry Fruit, Nut & seed</h1>
+          <h1>{params.id}</h1>
           <span>{`(Showing 1 - 20 products of 1000 products)`}</span>
         </div>
         <div className={style.sortBy}>
           <span>Sort By</span>
-          <div className={style.active}>Popularity</div>
-          <div>Price -- Low to High</div>
-          <div>Price -- High to Low</div>
-          <div>Newest First</div>
+          <div className={params.name === 'sort=popular'? style.active : ''} onClick={handlePopularity}>Popularity</div>
+          <div className={params.name === 'sort=price_asc'? style.active : ''} onClick={handleAscendingOrder}>Price -- Low to High</div>
+          <div className={params.name === 'sort=price_desc'? style.active : ''} onClick={handleDescendingOrder}>Price -- High to Low</div>
+          <div className={params.name === 'sort=newest'? style.active : ''} onClick={handleNewestOrder}>Newest First</div>
         </div>
       </div>
 

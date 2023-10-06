@@ -8,12 +8,21 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SearchIcon from "@mui/icons-material/Search";
 import ProductList from "./ProductList";
-import { collection, getCountFromServer, getDoc, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  getCountFromServer,
+  getDoc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../firebase.config";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ALLProducts } from "../../redux/productSlice";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
+import NoResult from "../../components/empty/NoResult";
 
 function valuetext(value) {
   return `${value}Rs`;
@@ -52,27 +61,26 @@ function ProductPage() {
   const [brands, setBrands] = useState(allBrands);
   const [rating, setRating] = useState(allRating);
   const [discount, setDiscount] = useState(allDiscount);
-  const [selectedFilter, setSelectedFilter] = useState([]);
-  const [value, setValue] = useState([100, 10000]);
-  const [assuredCheckbox, setAssuredCheckbox] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(["Plus(FAssured)"]);
+  const [value, setValue] = useState([100, 100000]);
+  const [assuredCheckbox, setAssuredCheckbox] = useState(true);
   const [isBrandShow, setIsBrandShow] = useState(false);
   const [isRatingShow, setIsRatingShow] = useState(true);
   const [isDiscountShow, setIsDiscountShow] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const [showAllBrands, setShowAllBrands] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const PRODUCTDS = useSelector(state => state.products.products)
-  const dispatch = useDispatch()
+
+  const navigate = useNavigate();
   const params = useParams();
   const categoryType = params.id;
 
-  const [allProducts, setAllProducts] = useState([])
+  const [allProducts, setAllProducts] = useState([]);
 
-
-// console.log(allProducts);
-// consol'p09e.log(allProducts);
+  // console.log(allProducts);
+  // consol'p09e.log(allProducts);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -134,7 +142,7 @@ function ProductPage() {
 
   //Price reset from clear btn
   function handlePriceRemove() {
-    setValue([100, 10000]);
+    setValue([100, 100000]);
     const currentPriceFilter = `₹${value[0]}-₹${value[1]}`;
     const updatedFilter = selectedFilter.filter(
       (filter) => filter !== currentPriceFilter
@@ -147,7 +155,6 @@ function ProductPage() {
     if (e.target.checked) {
       setAssuredCheckbox(true);
       setSelectedFilter([...selectedFilter, "Plus(FAssured)"]);
-     
     } else {
       setAssuredCheckbox(false);
       // setAllProducts(allProducts)
@@ -180,8 +187,10 @@ function ProductPage() {
     }
   }
 
-  //handle search brand 
-  const searchBrands = brands.filter(brand => brand.label.toLowerCase().includes(searchQuery.toLowerCase()))
+  //handle search brand
+  const searchBrands = brands.filter((brand) =>
+    brand.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   //handle Rating
   function handleRaing(value, label) {
@@ -229,67 +238,138 @@ function ProductPage() {
   //Handle clear All btn
   function handleClearAllFilters() {
     setSelectedFilter([]);
-    setValue([100, 10000])
+    setValue([100, 100000]);
     setAssuredCheckbox(false);
 
     //for brand filter
-    const updatedBrands = brands.map(brand => ({...brand, checked: false}))
-      setBrands(updatedBrands)
-       //for rate filter
-    const updatedRate = rating.map(rate => ({...rate, checked: false}))
-      setRating(updatedRate)
-       //for discount filter
-    const updatedDiscount = discount.map(disc => ({...disc, checked: false}))
-      setDiscount(updatedDiscount)
-   
-    //if Brands filter present-
-    // const brandNames = brands.map((brand) => brand.label);
-    // const isBrandFilter = selectedFilter.some((item) =>
-    //   brandNames.includes(item)
-    // );
-    // if (isBrandFilter) {
-    //   const updatedBrands = brands.map(brand => ({...brand, checked: false}))
-    //   setBrands(updatedBrands)
-    // }
-   
+    const updatedBrands = brands.map((brand) => ({ ...brand, checked: false }));
+    setBrands(updatedBrands);
+    //for rate filter
+    const updatedRate = rating.map((rate) => ({ ...rate, checked: false }));
+    setRating(updatedRate);
+    //for discount filter
+    const updatedDiscount = discount.map((disc) => ({
+      ...disc,
+      checked: false,
+    }));
+    setDiscount(updatedDiscount);
 
   }
 
-  // useEffect(() => {
- 
-  //   const viewProdcts = PRODUCTDS?.filter(
-  //     (product) => product.type === categoryType 
-  //   );
-  //   setAllProducts(viewProdcts)
-  
-   
-  
-  // },[])
-
-  useEffect(() => {
-
-    const colRef = collection(db, 'products')
-    const q = query(colRef, where('type', '==', categoryType))
-    setLoading(true)
-    const getData =  onSnapshot(q, (snaps) => {
-    let list =[]
-   
+  // Function for handle Ascending order
+  function handleAscendingOrder() {
+    const colRef = collection(db, "products");
+    const q = query(colRef, where("type", "==", categoryType),orderBy('actual_price', 'asc'))
+   const querySnap = onSnapshot(q, (snaps) => {
+    let list = []
     snaps.docs.forEach((doc) => {
       list.push({...doc.data(), id: doc.id})
     })
-    setLoading(false)
     setAllProducts(list);
-    dispatch(ALLProducts(list))
+    navigate(`/product/${params.id}/sort=price_asc`)
    }, (error) => {
     console.log(error);
-    setLoading(false)
    })
+  }
+    // Function for handle Descending order
+ async function handleDescendingOrder() {
+    const colRef = collection(db, "products");
+    const q = query(colRef, where("type", "==", categoryType),orderBy('actual_price', 'desc'))
+   const querySnap = onSnapshot(q, (snaps) => {
+    let list = []
+    snaps.docs.forEach((doc) => {
+      list.push({...doc.data(), id: doc.id})
+    })
+    setAllProducts(list);
+    navigate(`/product/${params.id}/sort=price_desc`)
+   }, (error) => {
+    console.log(error);
+   })
+  }
 
-
-    return () => {
-      getData()
+    // Function for handle Newest order
+    async function handleNewestOrder(){
+      const colRef = collection(db, "products");
+      const q = query(colRef, where("type", "==", categoryType),orderBy('uploadedTime', 'desc'))
+     const querySnap = onSnapshot(q, (snaps) => {
+      let list = []
+      snaps.docs.forEach((doc) => {
+        list.push({...doc.data(), id: doc.id})
+      })
+      setAllProducts(list);
+      navigate(`/product/${params.id}/sort=newest`)
+     }, (error) => {
+      console.log(error);
+     })
     }
-  }, []);
+
+     // Function for handle populer order
+     async function handlePopularity(){
+      const colRef = collection(db, "products");
+      const q = query(colRef, where("type", "==", categoryType))
+     const querySnap = onSnapshot(q, (snaps) => {
+      let list = []
+      snaps.docs.forEach((doc) => {
+        list.push({...doc.data(), id: doc.id})
+      })
+      setAllProducts(list);
+      navigate(`/product/${params.id}/sort=popular`)
+     }, (error) => {
+      console.log(error);
+     })
+     }
+
+
+
+  useEffect(() => {
+    const colRef = collection(db, "products");
+    let q = query(colRef, where("type", "==", categoryType))
+  // console.log(value);
+    // Apply filters based on selectedFilter
+    // const filterConditions = []
+    selectedFilter.forEach((filter) => {
+      if (filter.startsWith("₹")) {
+       q = query(q, where("actual_price", ">=", value[0]),where("actual_price", "<", value[1]))
+        
+      } else if (filter === "Plus(FAssured)") {
+        // Filter for assured products
+       q = query(q, where("assured", "==", 'true'));
+        
+      } else {
+        // Filter by brand, rating, or discount
+        q = query(colRef, where("type", "==", categoryType))
+      }
+      
+    });
+    // if(filterConditions.length>0){
+    //   filterConditions.forEach((condition) => {
+    //     q = query(q, condition)
+    //   })
+    // }
+  
+    setLoading(true);
+    const getData = onSnapshot(
+      q,
+      (snaps) => {
+        let list = [];
+  
+        snaps.docs.forEach((doc) => {
+          list.push({ ...doc.data(), id: doc.id });
+        });
+        setLoading(false);
+        setAllProducts(list);
+      },
+      (error) => {
+        console.log(error);
+        setLoading(false);
+      }
+    );
+  
+    return () => {
+      getData();
+    };
+  }, [selectedFilter, categoryType]);
+  
 
   return (
     <div className={style.product_main}>
@@ -300,7 +380,7 @@ function ProductPage() {
           <div className={style.clrBtn}>
             <span className={style.filterSpan}>Filters</span>
             {selectedFilter.length > 0 && (
-              <Button onClick={handleClearAllFilters}>Clear all</Button>
+              <Button onClick={handleClearAllFilters} sx={{fontSize:".7rem"}}>Clear all</Button>
             )}
           </div>
           <div className={style.filterContainer}>
@@ -308,17 +388,17 @@ function ProductPage() {
               ?.slice(0, showAll ? selectedFilter.length : 4)
               .map((item, i) => (
                 <span
-                  key={i}
+                  key={i+item}
                   className={style.curFilter}
                   onClick={() => handleRemoveFilter(item)}
                 >
-                  <CloseIcon sx={{ fontSize: "12px", mb: "-2px" }} /> {item}
+                  <CloseIcon sx={{ fontSize: ".8rem", mb: "-2px",color:'gray' }} /> {item}
                 </span>
               ))}
           </div>
           {selectedFilter.length > 4 && (
             <div>
-              <Button onClick={() => setShowAll(!showAll)}>
+              <Button sx={{fontSize:".7rem"}} onClick={() => setShowAll(!showAll)}>
                 {showAll ? "Show Less" : "Show More"}
               </Button>
             </div>
@@ -336,10 +416,10 @@ function ProductPage() {
             <Box>
               <Slider
                 min={100}
-                max={10000}
+                max={100000}
                 value={value}
                 onChange={handleChange}
-                valueLabelDisplay="auto"
+                // valueLabelDisplay="auto"
                 getAriaValueText={valuetext}
               />
             </Box>
@@ -382,12 +462,17 @@ function ProductPage() {
               <div className={style.searchDiv}>
                 <SearchIcon sx={{ fontSize: "20px", color: "gray" }} />
 
-                <input type="text" placeholder=" Search Brand" value={searchQuery} onChange={(e) =>setSearchQuery(e.target.value)} />
+                <input
+                  type="text"
+                  placeholder=" Search Brand"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
               {searchBrands
                 .slice(0, showAllBrands ? searchBrands.length : 6)
                 .map((brand, i) => (
-                  <div key={i} className={style.brandMap}>
+                  <div key={i+brand} className={style.brandMap}>
                     <input
                       type="checkbox"
                       checked={brand.checked}
@@ -399,7 +484,7 @@ function ProductPage() {
               {brands.length > 6 && (
                 <div>
                   <Button onClick={() => setShowAllBrands(!showAllBrands)}>
-                    {showAllBrands ? `show Less` : `${brands.length -6} more`}
+                    {showAllBrands ? `show Less` : `${brands.length - 6} more`}
                   </Button>
                 </div>
               )}
@@ -470,10 +555,22 @@ function ProductPage() {
         </div>
       </div>
       <div className={style.productListDiv}>
-        {
-          loading? <CircularProgress sx={{ml:'50%',mt:'20%'}} thickness={4} size={40}/> : <ProductList viewProdcts={allProducts}/>
-        }
-        
+        {loading ? (
+          <CircularProgress
+            sx={{ ml: "50%", mt: "20%" }}
+            thickness={4}
+            size={40}
+          />
+        ) : (
+          <>
+       {allProducts.length===0 ? <div> <NoResult/> </div> : <ProductList viewProdcts={allProducts} 
+          handleAscendingOrder={handleAscendingOrder}
+          handleDescendingOrder={handleDescendingOrder}
+          handleNewestOrder={handleNewestOrder}
+          handlePopularity={handlePopularity}
+          />}
+          </>
+        )}
       </div>
     </div>
   );

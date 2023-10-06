@@ -1,0 +1,13 @@
+.noResult{
+    text-align: center;
+    padding-top: 10%;
+}
+.noResult h2{
+    font-size: 2rem;
+    font-weight: 400;
+    margin: 1rem 0;
+}
+.noResult span{
+    font-size: 1.1rem;
+    color: gray;
+}

@@ -39,6 +39,7 @@
     background-color: #ffff;
     border-radius: 5px;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    height:auto;
 }
 .mainOrderDiv{
     border-bottom: 1px solid #eeeded;
@@ -91,9 +92,6 @@
 /* right section style from here */
 
 .mainAccRight{
-    background-color: #ffff;
-    border-radius: 5px;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
     width: 75%;
 }
 
@@ -101,6 +99,9 @@
 
 .mainInfoDiv{
     padding: 1.5rem 2rem;
+    background-color: #ffff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    border-radius: 4px;
 }
 .infoContainer{
     margin-bottom: 2rem;
@@ -162,6 +163,9 @@
 
 .mainAddressDiv{
     padding: 1.5rem 2rem;
+    background-color: #ffff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    border-radius: 4px;
 }
 .mainAddressDiv div:first-child{
     font-size: 1.2rem;
@@ -297,6 +301,8 @@
     padding: 1.5rem 2rem;
     font-size: 1.2rem;
     font-weight: 500;
+    background-color: #ffff;
+    border-radius: 5px 5px 0 0;
 }
 .myReview span{
     color: #898787;
@@ -306,6 +312,8 @@
     border-bottom: 1px solid #e0e0e0;
     padding: 1rem 2rem;
     display: flex;
+    background-color: #ffff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
 }
 .reviewImgDiv{
     width: 15%;
@@ -381,6 +389,8 @@
     padding: 1rem 2rem;
     display: flex;
     cursor: pointer;
+    background-color: #ffff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
 }
 .wishProdImg{
     width: 20%;
