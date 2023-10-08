@@ -12,6 +12,7 @@ import {
   collection,
   getCountFromServer,
   getDoc,
+  getDocs,
   limit,
   onSnapshot,
   orderBy,
@@ -24,23 +25,10 @@ import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import NoResult from "../../components/empty/NoResult";
 
+
 function valuetext(value) {
   return `${value}Rs`;
 }
-
-const allBrands = [
-  { value: "Happilo", label: "Happilo", checked: false },
-  { value: "Naturoz", label: "Naturoz", checked: false },
-  { value: "Granola", label: "Granola", checked: false },
-  { value: "Tulsi", label: "Tulsi", checked: false },
-  { value: "Nutraj", label: "Nutraj", checked: false },
-  { value: "Scoris", label: "Scoris", checked: false },
-  { value: "Scoris", label: "Scoris", checked: false },
-  { value: "Scoris", label: "Scoris", checked: false },
-  { value: "Scoris", label: "Scoris", checked: false },
-  { value: "Scoris", label: "Scoris", checked: false },
-  { value: "Scoris", label: "Scoris", checked: false },
-];
 
 const allRating = [
   { value: "4", label: `4☆ & above`, checked: false },
@@ -58,7 +46,7 @@ const allDiscount = [
 ];
 
 function ProductPage() {
-  const [brands, setBrands] = useState(allBrands);
+  // const [brands, setBrands] = useState(allBrands);
   const [rating, setRating] = useState(allRating);
   const [discount, setDiscount] = useState(allDiscount);
   const [selectedFilter, setSelectedFilter] = useState(["Plus(FAssured)"]);
@@ -71,7 +59,7 @@ function ProductPage() {
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [brands, setBrands] = useState([])
 
   const navigate = useNavigate();
   const params = useParams();
@@ -79,10 +67,30 @@ function ProductPage() {
 
   const [allProducts, setAllProducts] = useState([]);
 
-  // console.log(allProducts);
-  // consol'p09e.log(allProducts);
+  const myBrands = allProducts?.map((product) => product.brand )
+  const brandsList = []
+  const brandName = []
+  myBrands.forEach((doc) => {
+    brandsList.push({value:doc, label:doc, checked: false})
+   brandName.push(doc)
+  })
+ 
+ const uniqueBrandName = [...new Set(brandName)]
 
-  const handleChange = (event, newValue) => {
+
+  //handle search brand
+  const searchBrands = brands.filter((brand) =>
+    brand.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+ 
+  const uniqueBrandsMap = new Map()
+  searchBrands.forEach((brandObj) => {
+    uniqueBrandsMap.set(brandObj.value, brandObj)
+  })
+  const uniqueBrandsArray = [...uniqueBrandsMap.values()]
+
+  // Function for handleprice range
+  const handleRange = async (event, newValue) => {
     setValue(newValue);
     const newPriceFilter = `₹${newValue[0]}-₹${newValue[1]}`;
     if (!selectedFilter.includes(newPriceFilter)) {
@@ -90,10 +98,11 @@ function ProductPage() {
         (filter) => !filter.startsWith("₹")
       );
       setSelectedFilter([...updatedFilters, newPriceFilter]);
+  
     }
   };
 
-  //Remove perticuler filter
+  //Remove perticuler filter from selectedFilter
   function handleRemoveFilter(item) {
     const updatedFilters = selectedFilter.filter((filter) => filter !== item);
     setSelectedFilter(updatedFilters);
@@ -101,7 +110,7 @@ function ProductPage() {
 
     //for remove price filter
     if (item.startsWith("₹")) {
-      setValue([100, 10000]);
+      setValue([100, 100000]);
     }
 
     //for remove Assured filter
@@ -155,13 +164,14 @@ function ProductPage() {
     if (e.target.checked) {
       setAssuredCheckbox(true);
       setSelectedFilter([...selectedFilter, "Plus(FAssured)"]);
+   
     } else {
       setAssuredCheckbox(false);
-      // setAllProducts(allProducts)
       const updatedAssured = selectedFilter.filter(
         (filter) => filter !== "Plus(FAssured)"
       );
       setSelectedFilter(updatedAssured);
+   
     }
   }
 
@@ -187,11 +197,8 @@ function ProductPage() {
     }
   }
 
-  //handle search brand
-  const searchBrands = brands.filter((brand) =>
-    brand.label.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
+ 
   //handle Rating
   function handleRaing(value, label) {
     if (!selectedFilter.includes(label)) {
@@ -242,7 +249,7 @@ function ProductPage() {
     setAssuredCheckbox(false);
 
     //for brand filter
-    const updatedBrands = brands.map((brand) => ({ ...brand, checked: false }));
+    const updatedBrands = uniqueBrandsArray.map((brand) => ({ ...brand, checked: false }));
     setBrands(updatedBrands);
     //for rate filter
     const updatedRate = rating.map((rate) => ({ ...rate, checked: false }));
@@ -319,56 +326,71 @@ function ProductPage() {
      })
      }
 
+    
 
 
   useEffect(() => {
     const colRef = collection(db, "products");
     let q = query(colRef, where("type", "==", categoryType))
-  // console.log(value);
+  
     // Apply filters based on selectedFilter
-    // const filterConditions = []
+    const filterConditions = []
     selectedFilter.forEach((filter) => {
       if (filter.startsWith("₹")) {
-       q = query(q, where("actual_price", ">=", value[0]),where("actual_price", "<", value[1]))
+     filterConditions.push(where('actual_price', '>=', value[0]), where('actual_price', '<=', value[1]))
+   
         
-      } else if (filter === "Plus(FAssured)") {
+      }  if (filter === "Plus(FAssured)") {
         // Filter for assured products
-       q = query(q, where("assured", "==", 'true'));
-        
-      } else {
+       filterConditions.push(where("assured", "==", 'true'));
+   
+      } 
+      const checkBrand = uniqueBrandName.filter((value) => filter == value)
+      if(checkBrand.length>0)  {
         // Filter by brand, rating, or discount
-        q = query(colRef, where("type", "==", categoryType))
-      }
+        // const filterBransArray = []
+        checkBrand.forEach((brand) => {
+         const com = where('brand', '==', brand)
+         filterConditions.push(com)
+      })
+        // filterBransArray.push(brand)
+        //  console.log(filterBransArray);
+       
+      // console.log(checkBrand);
+          }
       
     });
-    // if(filterConditions.length>0){
-    //   filterConditions.forEach((condition) => {
-    //     q = query(q, condition)
-    //   })
-    // }
+    if(filterConditions.length>0){
+      filterConditions.forEach((condition) => {
+        q = query(q, condition)
+      })
+    }
   
     setLoading(true);
     const getData = onSnapshot(
       q,
       (snaps) => {
         let list = [];
-  
         snaps.docs.forEach((doc) => {
           list.push({ ...doc.data(), id: doc.id });
         });
         setLoading(false);
         setAllProducts(list);
+        
       },
       (error) => {
         console.log(error);
         setLoading(false);
       }
     );
+   
   
-    return () => {
-      getData();
+   return () => {
+   getData();
     };
-  }, [selectedFilter, categoryType]);
+  }, [selectedFilter]);
+
+
   
 
   return (
@@ -410,7 +432,7 @@ function ProductPage() {
         <div className={style.priceDiv}>
           <div className={style.clrBtn}>
             <span>Price</span>
-            <Button onClick={handlePriceRemove}>Clear all</Button>
+          {value[0] != 100 || value[1]!=100000? <Button onClick={handlePriceRemove} sx={{fontSize:".7rem"}}>Clear all</Button> : null}
           </div>
           <div>
             <Box>
@@ -418,9 +440,10 @@ function ProductPage() {
                 min={100}
                 max={100000}
                 value={value}
-                onChange={handleChange}
+                onChange={handleRange}
                 // valueLabelDisplay="auto"
                 getAriaValueText={valuetext}
+                size="small"
               />
             </Box>
           </div>
@@ -447,7 +470,9 @@ function ProductPage() {
         <div className={style.brandContainer}>
           <div
             className={style.brandDiv}
-            onClick={() => setIsBrandShow(!isBrandShow)}
+            onClick={() => {setIsBrandShow(!isBrandShow);
+              setBrands(brandsList);
+            }}
           >
             <span>BRAND</span>
             {isBrandShow ? (
@@ -469,8 +494,8 @@ function ProductPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              {searchBrands
-                .slice(0, showAllBrands ? searchBrands.length : 6)
+              {uniqueBrandsArray
+                .slice(0, showAllBrands ? uniqueBrandsArray.length : 6)
                 .map((brand, i) => (
                   <div key={i+brand} className={style.brandMap}>
                     <input

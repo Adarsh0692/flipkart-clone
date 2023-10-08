@@ -520,7 +520,9 @@
 
 .addressDiv{
     padding: 1rem 2rem;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #ffff;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.08);
+    border-radius: 3px;
 }
 .addressDiv div:first-child {
     margin-bottom: .5rem;
@@ -543,9 +545,11 @@
 .orCart{
     display: flex;
   margin-top: 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  border-top: 1px solid #e0e0e0;
   padding: 0 1rem;
+  background-color: #ffff;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.08);
+  border-radius: 3px;
+
 }
 
 .odImgDiv{

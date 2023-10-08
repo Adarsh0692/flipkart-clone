@@ -96,6 +96,9 @@
     align-items: center;
     margin: 15px 0;
 }
+.brandMap label{
+    font-size: .9rem;
+}
 .brandDiv{
     display: flex;
     align-items: center;
