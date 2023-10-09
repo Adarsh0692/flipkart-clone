@@ -2,20 +2,20 @@ import React from 'react'
 import style from './ProductPage.module.css'
 import { Button } from '@mui/material'
 
-function Pagination() {
+function Pagination({products,page,setPage}) {
   return (
     <div className={style.pagination_container}>
-        <span>Page 1 of 100</span>
+        <span>Page {page} of {Math.ceil(products.length/16)}</span>
           <div className={style.pagination}>
-            <Button>Previous</Button>
+          {page>1 && <Button onClick={()=> setPage(page-1)} >Previous</Button>}
       {
-        [...Array(10)].map((_,i) => (
-            <div key={i} className={`${style.page} ${style.activePage}`}>
+        [...Array(Math.ceil(products.length/16))].map((_,i) => (
+            <div key={i} className={`${style.page} ${page === i+1? style.activePage : null}`} onClick={()=>setPage(i+1)}>
                 {i+1}
             </div>
         ))
       }
-       <Button>next</Button>
+      {page>=products.length/16 ? null : <Button onClick={()=> setPage(page+1)}>next</Button>}
     </div>
     </div>
    

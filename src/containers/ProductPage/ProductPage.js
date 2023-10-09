@@ -47,7 +47,7 @@ function ProductPage() {
   const [rating, setRating] = useState(allRating);
   const [discount, setDiscount] = useState(allDiscount);
   const [selectedFilter, setSelectedFilter] = useState([]);
-  const [value, setValue] = useState([100, 100000]);
+  const [value, setValue] = useState([100, 10000]);
   const [assuredCheckbox, setAssuredCheckbox] = useState(false);
   const [isBrandShow, setIsBrandShow] = useState(false);
   const [isRatingShow, setIsRatingShow] = useState(true);
@@ -57,6 +57,8 @@ function ProductPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [brands, setBrands] = useState([]);
+  const [page, setPage] = useState(1)
+
 
   const navigate = useNavigate();
   const params = useParams();
@@ -90,7 +92,7 @@ function ProductPage() {
   // Function for handleprice range
   const handleRange = async (event, newValue) => {
     setValue(newValue);
-    const newPriceFilter = `₹${newValue[0]}-₹${newValue[1]}`;
+    const newPriceFilter = `₹${newValue[0]}-₹${newValue[1]}${newValue[1]===10000? '+':''}`;
     if (!selectedFilter.includes(newPriceFilter)) {
       const updatedFilters = selectedFilter.filter(
         (filter) => !filter.startsWith("₹")
@@ -106,7 +108,7 @@ function ProductPage() {
 
     //for remove price filter
     if (item.startsWith("₹")) {
-      setValue([100, 100000]);
+      setValue([100, 10000]);
     }
 
     //for remove Assured filter
@@ -147,7 +149,7 @@ function ProductPage() {
 
   //Price reset from clear btn
   function handlePriceRemove() {
-    setValue([100, 100000]);
+    setValue([100, 10000]);
     const currentPriceFilter = `₹${value[0]}-₹${value[1]}`;
     const updatedFilter = selectedFilter.filter(
       (filter) => filter !== currentPriceFilter
@@ -350,8 +352,7 @@ function ProductPage() {
 
   useEffect(() => {
     const colRef = collection(db, "products");
-    let q = query(colRef, where("type", "==", categoryType));
-    let q1 = query(colRef, where("type", "==", categoryType));
+    let q = query(colRef,where('type', '==', categoryType));
 
     // Apply filters based on selectedFilter
     const filterConditions = [];
@@ -359,10 +360,17 @@ function ProductPage() {
     selectedFilter.forEach((filter) => {
       // Filter by price range
       if (filter.startsWith("₹")) {
-        filterConditions.push(
-          where("final_price", ">=", value[0]),
-          where("final_price", "<=", value[1])
-        );
+        if(value[1] === 10000){
+          filterConditions.push(
+            where("final_price", ">=", value[0])
+          );
+        }else{
+          filterConditions.push(
+            where("final_price", ">=", value[0]),
+            where("final_price", "<=", value[1])
+          );
+        }
+       
       }
       if (filter === "Plus(FAssured)") {
         // Filter of assured products
@@ -416,7 +424,7 @@ function ProductPage() {
 
   useEffect(() => {
     window.scrollTo(0,0)
-  },[])
+  },[page])
 
   return (
     <div className={style.product_main}>
@@ -478,7 +486,7 @@ function ProductPage() {
             <Box>
               <Slider
                 min={100}
-                max={100000}
+                max={10000}
                 value={value}
                 onChange={handleRange}
                 // valueLabelDisplay="auto"
@@ -641,6 +649,7 @@ function ProductPage() {
                 handleDescendingOrder={handleDescendingOrder}
                 handleNewestOrder={handleNewestOrder}
                 handlePopularity={handlePopularity}
+                page={page} setPage={setPage}
               />
             )}
           </>

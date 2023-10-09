@@ -4,8 +4,6 @@
     gap: 10px;
 }
 .filterDiv{
-    /* box-shadow: 0 10px 16px 0 rgba(0,0,0,.11); */
- 
     width: 23%;
     height: auto;
 }
@@ -15,11 +13,7 @@
     font-weight: 500;
 }
 .productListDiv{
-    box-shadow: 0 10px 16px 0 rgba(0,0,0,.11);
-    background-color: white;
-   
     width: 77%;
-    min-height: 120vh;
 }
 .allFilters{
     padding: 15px;
@@ -109,7 +103,10 @@
 }
 
 /* Product List style from here */
-
+.mainList{
+     box-shadow: 0 10px 16px 0 rgba(0,0,0,.11);
+     background-color: #ffff;
+}
 .productType{
     display: flex;
     align-items: center;
@@ -119,7 +116,8 @@
 }
 .upperDiv{
     border-bottom: 1px solid lightgray;
-   
+    /* box-shadow: 0 10px 16px 0 rgba(0,0,0,.11); */
+    background-color: white;
 }
 .productType span{
     color: gray;
@@ -233,36 +231,40 @@
 /* pagination style from here */
 
 .pagination_container{
+    border-top: 2px solid #E0E0E0;
     height: 10vh;
-    /* border: 1px solid red; */
     display: flex;
     align-items: center;
-    /* justify-content: center; */
     gap: 8rem;
-    padding: 10px 15px;
+    padding: .5rem 1rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .pagination_container span{
-    font-size: 1.1rem;
+    font-size: .9rem;
     font-weight: 400;
+    position: absolute;
+    left: 1rem;
 }
 .pagination{
-    /* border: 1px solid red; */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-   
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 .page{
-    /* border: 1px solid red; */
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-   width: 30px;
-   height: 30px;
+   width: 18px;
+   height: 18px;
     border-radius: 50%;
+    padding: .4rem;
+    font-size: .8rem;
 }
 .activePage{
    

@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUserID } from "../../redux/authSlice";
 
-function ProductList({ viewProdcts,handleDescendingOrder, handleAscendingOrder,handleNewestOrder,handlePopularity }) {
+function ProductList({ viewProdcts,handleDescendingOrder, handleAscendingOrder,handleNewestOrder,handlePopularity,page,setPage }) {
   const navigate = useNavigate();
   const params = useParams()
   const userID = useSelector(selectUserID)
@@ -69,7 +69,7 @@ function ProductList({ viewProdcts,handleDescendingOrder, handleAscendingOrder,h
       <div className={style.upperDiv}>
         <div className={style.productType}>
           <h1>{params.id}</h1>
-          <span>{`(Showing 1 - 20 products of 1000 products)`}</span>
+          <span>{`(Showing ${page*16-16 +1} - ${viewProdcts.length>page*16? page*16 : viewProdcts.length} products of ${viewProdcts.length} products)`}</span>
         </div>
         <div className={style.sortBy}>
           <span>Sort By</span>
@@ -82,7 +82,7 @@ function ProductList({ viewProdcts,handleDescendingOrder, handleAscendingOrder,h
 
       <div className={style.proListDiv}>
         {viewProdcts &&
-          viewProdcts?.map((product) => (
+          viewProdcts.slice(page*16-16, page*16).map((product) => (
             <div key={product.id} className={style.cart}>
               <div
                 className={style.heart}
@@ -149,9 +149,9 @@ function ProductList({ viewProdcts,handleDescendingOrder, handleAscendingOrder,h
             </div>
           ))}
       </div>
-      {/* <div >
-        <Pagination />
-      </div> */}
+     {viewProdcts.length>16 && <div >
+        <Pagination products={viewProdcts} page={page} setPage={setPage} />
+      </div>}
     </div>
   );
 }

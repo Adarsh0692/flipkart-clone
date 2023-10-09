@@ -3,14 +3,9 @@ import style from "./Account.module.css";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
-  onSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
-import { useSelector } from "react-redux";
-import { selectUserID } from "../../redux/authSlice";
 import { format, isToday, isYesterday, differenceInDays, addDays } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import Empty from "../../components/empty/Empty";

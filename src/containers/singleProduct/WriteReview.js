@@ -27,9 +27,6 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { formatDistanceToNow } from "date-fns";
-import { Box, Typography } from "@mui/material";
-import CalculateAvgRate from "../ProductPage/CalculateAvgRate";
 
 function WriteReview() {
   const [product, setSProduct] = useState({});
