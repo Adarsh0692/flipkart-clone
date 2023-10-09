@@ -43,8 +43,9 @@ function MyOrder() {
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
-  // console.log(orders.length);
 
+  const sortedOrders = [...orders].sort((a, b) => b.orderTime - a.orderTime);
+ 
   useEffect(() => {
     const isAuth = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -91,7 +92,7 @@ function MyOrder() {
           <div className={style.myReview}>
             My Orders <span>({orders.length})</span>
           </div>
-          {orders.map((product,i) => (
+          {sortedOrders.map((product,i) => (
             <div className={style.wishProductDiv} key={product.orderID} onClick={() => navigate(`/account/orderDetails/${product.orderID}`)}>
               <div className={style.orderProdImgDiv}>
                 <div>

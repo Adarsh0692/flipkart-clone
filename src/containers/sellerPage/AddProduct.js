@@ -51,12 +51,19 @@ function AddProduct() {
 
  async function handleSubmit(e){
     e.preventDefault()
+    const finalPrice = Math.round(
+      actualPrice -
+        (discountPercentage / 100) *
+        actualPrice
+    )
     const product = {
+        uploadedTime: Date.now(),
         title: title,
         brand: brand,
         description: description,
         actual_price: +actualPrice,
         discount_percentage: +discountPercentage,
+        final_price : +finalPrice,
         category: productCategory,
         type: typeOfOption,
         quantity: quantity,
@@ -71,18 +78,7 @@ function AddProduct() {
           1: 20,
         },
         ratings:0,
-        reviews: [
-          { buyerName: "Falguni Naidu", rate: "1", description: "170 almonds r there", title: "Good quality product", images: [
-            {image:"https://rukminim1.flixcart.com/blobio/124/124/201904/blobio-201904_fm1jn5f9.jpg?q=90"},
-            {image:"https://rukminim1.flixcart.com/blobio/124/124/imr-202007/blobio-imr-202007_e5a44e1acc764529ab2df462f7d34419.jpg?q=90"}
-          ] },
-          { buyerName: "Shabbir Laskar", rate: "4", description: "Good product", title: "Wonderful", images: [
-            {image:"https://rukminim1.flixcart.com/blobio/124/124/imr-202007/blobio-imr-202007_0459019940744823b85e45691fa60b94.jpg?q=90"},
-            {image:"https://rukminim1.flixcart.com/blobio/124/124/imr-202007/blobio-imr-202007_5a5b086716e343a58f8d84aa4fb60bba.jpg?q=90"},
-            {image:"https://rukminim1.flixcart.com/blobio/124/124/20181025/blobio-20181025_kn33qohl.jpg?q=90"},
-    
-          ] }
-        ]
+        reviews: []
     }
 
     if(productCategory && typeOfOption && title && brand && description && actualPrice && discountPercentage && deliveryCharge && assured && images.length>=4){

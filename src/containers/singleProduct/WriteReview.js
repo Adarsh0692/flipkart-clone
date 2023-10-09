@@ -180,7 +180,7 @@ function WriteReview() {
         time: formattedDate,
       };
       const revRef = doc(db, "products", params.id);
-      setDisable(false);
+      setDisable(true);
       await updateDoc(revRef, {
         reviews: arrayUnion(reviewData),
       });

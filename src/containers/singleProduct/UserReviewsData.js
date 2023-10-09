@@ -40,7 +40,7 @@ function UserReviewsData({usersReviews}) {
             <div className={style.userName}>
               <p>{user.buyerName}</p>
               <span>
-                <CheckCircleIcon sx={{ fontSize: "1rem" }} />
+                <CheckCircleIcon sx={{ fontSize: ".9rem" }} />
               </span>
               <p>Certified Buyer</p>
               <p><ReactTimeAgo date={user.time} locale="en-US"/></p> {/* Use the dynamic time ago here */}

@@ -21,20 +21,18 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase.config";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import NoResult from "../../components/empty/NoResult";
-
 
 function valuetext(value) {
   return `${value}Rs`;
 }
 
 const allRating = [
-  { value: "4", label: `4☆ & above`, checked: false },
-  { value: "3", label: `3☆ & above`, checked: false },
-  { value: "2", label: `2☆ & above`, checked: false },
-  { value: "1", label: `1☆ & above`, checked: false },
+  { value: 4, label: `4☆ & above`, checked: false },
+  { value: 3, label: `3☆ & above`, checked: false },
+  { value: 2, label: `2☆ & above`, checked: false },
+  { value: 1, label: `1☆ & above`, checked: false },
 ];
 
 const allDiscount = [
@@ -46,12 +44,11 @@ const allDiscount = [
 ];
 
 function ProductPage() {
-  // const [brands, setBrands] = useState(allBrands);
   const [rating, setRating] = useState(allRating);
   const [discount, setDiscount] = useState(allDiscount);
-  const [selectedFilter, setSelectedFilter] = useState(["Plus(FAssured)"]);
+  const [selectedFilter, setSelectedFilter] = useState([]);
   const [value, setValue] = useState([100, 100000]);
-  const [assuredCheckbox, setAssuredCheckbox] = useState(true);
+  const [assuredCheckbox, setAssuredCheckbox] = useState(false);
   const [isBrandShow, setIsBrandShow] = useState(false);
   const [isRatingShow, setIsRatingShow] = useState(true);
   const [isDiscountShow, setIsDiscountShow] = useState(true);
@@ -59,7 +56,7 @@ function ProductPage() {
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [brands, setBrands] = useState([])
+  const [brands, setBrands] = useState([]);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -67,27 +64,28 @@ function ProductPage() {
 
   const [allProducts, setAllProducts] = useState([]);
 
-  const myBrands = allProducts?.map((product) => product.brand )
-  const brandsList = []
-  const brandName = []
+  const myBrands = allProducts?.map((product) => product.brand);
+  const brandsList = [];
+  const brandName = [];
   myBrands.forEach((doc) => {
-    brandsList.push({value:doc, label:doc, checked: false})
-   brandName.push(doc)
-  })
- 
- const uniqueBrandName = [...new Set(brandName)]
+    brandsList.push({ value: doc, label: doc, checked: false });
+    brandName.push(doc);
+  });
 
+  const uniqueBrandName = [...new Set(brandName)];
+  const ratingArray = allRating.map((rate) => rate.label);
+  const discountArray = allDiscount.map((disc) => disc.label);
 
   //handle search brand
   const searchBrands = brands.filter((brand) =>
     brand.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
- 
-  const uniqueBrandsMap = new Map()
+
+  const uniqueBrandsMap = new Map();
   searchBrands.forEach((brandObj) => {
-    uniqueBrandsMap.set(brandObj.value, brandObj)
-  })
-  const uniqueBrandsArray = [...uniqueBrandsMap.values()]
+    uniqueBrandsMap.set(brandObj.value, brandObj);
+  });
+  const uniqueBrandsArray = [...uniqueBrandsMap.values()];
 
   // Function for handleprice range
   const handleRange = async (event, newValue) => {
@@ -98,7 +96,6 @@ function ProductPage() {
         (filter) => !filter.startsWith("₹")
       );
       setSelectedFilter([...updatedFilters, newPriceFilter]);
-  
     }
   };
 
@@ -106,7 +103,6 @@ function ProductPage() {
   function handleRemoveFilter(item) {
     const updatedFilters = selectedFilter.filter((filter) => filter !== item);
     setSelectedFilter(updatedFilters);
-    // console.log(updatedFilters);
 
     //for remove price filter
     if (item.startsWith("₹")) {
@@ -164,14 +160,12 @@ function ProductPage() {
     if (e.target.checked) {
       setAssuredCheckbox(true);
       setSelectedFilter([...selectedFilter, "Plus(FAssured)"]);
-   
     } else {
       setAssuredCheckbox(false);
       const updatedAssured = selectedFilter.filter(
         (filter) => filter !== "Plus(FAssured)"
       );
       setSelectedFilter(updatedAssured);
-   
     }
   }
 
@@ -197,8 +191,6 @@ function ProductPage() {
     }
   }
 
-
- 
   //handle Rating
   function handleRaing(value, label) {
     if (!selectedFilter.includes(label)) {
@@ -249,7 +241,10 @@ function ProductPage() {
     setAssuredCheckbox(false);
 
     //for brand filter
-    const updatedBrands = uniqueBrandsArray.map((brand) => ({ ...brand, checked: false }));
+    const updatedBrands = uniqueBrandsArray.map((brand) => ({
+      ...brand,
+      checked: false,
+    }));
     setBrands(updatedBrands);
     //for rate filter
     const updatedRate = rating.map((rate) => ({ ...rate, checked: false }));
@@ -260,112 +255,142 @@ function ProductPage() {
       checked: false,
     }));
     setDiscount(updatedDiscount);
-
   }
 
   // Function for handle Ascending order
   function handleAscendingOrder() {
     const colRef = collection(db, "products");
-    const q = query(colRef, where("type", "==", categoryType),orderBy('actual_price', 'asc'))
-   const querySnap = onSnapshot(q, (snaps) => {
-    let list = []
-    snaps.docs.forEach((doc) => {
-      list.push({...doc.data(), id: doc.id})
-    })
-    setAllProducts(list);
-    navigate(`/product/${params.id}/sort=price_asc`)
-   }, (error) => {
-    console.log(error);
-   })
+    const q = query(
+      colRef,
+      where("type", "==", categoryType),
+      orderBy("actual_price", "asc")
+    );
+    const querySnap = onSnapshot(
+      q,
+      (snaps) => {
+        let list = [];
+        snaps.docs.forEach((doc) => {
+          list.push({ ...doc.data(), id: doc.id });
+        });
+        setAllProducts(list);
+        navigate(`/product/${params.id}/sort=price_asc`);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
-    // Function for handle Descending order
- async function handleDescendingOrder() {
+  // Function for handle Descending order
+  async function handleDescendingOrder() {
     const colRef = collection(db, "products");
-    const q = query(colRef, where("type", "==", categoryType),orderBy('actual_price', 'desc'))
-   const querySnap = onSnapshot(q, (snaps) => {
-    let list = []
-    snaps.docs.forEach((doc) => {
-      list.push({...doc.data(), id: doc.id})
-    })
-    setAllProducts(list);
-    navigate(`/product/${params.id}/sort=price_desc`)
-   }, (error) => {
-    console.log(error);
-   })
+    const q = query(
+      colRef,
+      where("type", "==", categoryType),
+      orderBy("actual_price", "desc")
+    );
+    const querySnap = onSnapshot(
+      q,
+      (snaps) => {
+        let list = [];
+        snaps.docs.forEach((doc) => {
+          list.push({ ...doc.data(), id: doc.id });
+        });
+        setAllProducts(list);
+        navigate(`/product/${params.id}/sort=price_desc`);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
-    // Function for handle Newest order
-    async function handleNewestOrder(){
-      const colRef = collection(db, "products");
-      const q = query(colRef, where("type", "==", categoryType),orderBy('uploadedTime', 'desc'))
-     const querySnap = onSnapshot(q, (snaps) => {
-      let list = []
-      snaps.docs.forEach((doc) => {
-        list.push({...doc.data(), id: doc.id})
-      })
-      setAllProducts(list);
-      navigate(`/product/${params.id}/sort=newest`)
-     }, (error) => {
-      console.log(error);
-     })
-    }
+  // Function for handle Newest order
+  async function handleNewestOrder() {
+    const colRef = collection(db, "products");
+    const q = query(
+      colRef,
+      where("type", "==", categoryType),
+      orderBy("uploadedTime", "desc")
+    );
+    const querySnap = onSnapshot(
+      q,
+      (snaps) => {
+        let list = [];
+        snaps.docs.forEach((doc) => {
+          list.push({ ...doc.data(), id: doc.id });
+        });
+        setAllProducts(list);
+        navigate(`/product/${params.id}/sort=newest`);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 
-     // Function for handle populer order
-     async function handlePopularity(){
-      const colRef = collection(db, "products");
-      const q = query(colRef, where("type", "==", categoryType))
-     const querySnap = onSnapshot(q, (snaps) => {
-      let list = []
-      snaps.docs.forEach((doc) => {
-        list.push({...doc.data(), id: doc.id})
-      })
-      setAllProducts(list);
-      navigate(`/product/${params.id}/sort=popular`)
-     }, (error) => {
-      console.log(error);
-     })
-     }
-
-    
-
+  // Function for handle populer order
+  async function handlePopularity() {
+    const colRef = collection(db, "products");
+    const q = query(colRef, where("type", "==", categoryType));
+    const querySnap = onSnapshot(
+      q,
+      (snaps) => {
+        let list = [];
+        snaps.docs.forEach((doc) => {
+          list.push({ ...doc.data(), id: doc.id });
+        });
+        setAllProducts(list);
+        navigate(`/product/${params.id}/sort=popular`);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 
   useEffect(() => {
     const colRef = collection(db, "products");
-    let q = query(colRef, where("type", "==", categoryType))
-  
+    let q = query(colRef, where("type", "==", categoryType));
+    let q1 = query(colRef, where("type", "==", categoryType));
+
     // Apply filters based on selectedFilter
-    const filterConditions = []
+    const filterConditions = [];
+
     selectedFilter.forEach((filter) => {
+      // Filter by price range
       if (filter.startsWith("₹")) {
-     filterConditions.push(where('actual_price', '>=', value[0]), where('actual_price', '<=', value[1]))
-   
-        
-      }  if (filter === "Plus(FAssured)") {
-        // Filter for assured products
-       filterConditions.push(where("assured", "==", 'true'));
-   
-      } 
-      const checkBrand = uniqueBrandName.filter((value) => filter == value)
-      if(checkBrand.length>0)  {
-        // Filter by brand, rating, or discount
-        // const filterBransArray = []
-        checkBrand.forEach((brand) => {
-         const com = where('brand', '==', brand)
-         filterConditions.push(com)
-      })
-        // filterBransArray.push(brand)
-        //  console.log(filterBransArray);
-       
-      // console.log(checkBrand);
-          }
-      
+        filterConditions.push(
+          where("final_price", ">=", value[0]),
+          where("final_price", "<=", value[1])
+        );
+      }
+      if (filter === "Plus(FAssured)") {
+        // Filter of assured products
+        filterConditions.push(where("assured", "==", "true"));
+      }
+
+      if (uniqueBrandName.includes(filter)) {
+        // Filter by brand
+        filterConditions.push(where("brand", "in", selectedFilter));
+      }
+      // Filter by rating
+      if (ratingArray.includes(filter)) {
+        filterConditions.push(where("ratings", ">=", +filter[0]));
+      }
+      // Filter by discount
+      if (discountArray.includes(filter)) {
+        filterConditions.push(
+          where("discount_percentage", ">=", +(filter[0] + filter[1]))
+        );
+      }
     });
-    if(filterConditions.length>0){
+
+    if (filterConditions.length > 0) {
       filterConditions.forEach((condition) => {
-        q = query(q, condition)
-      })
+        q = query(q, condition);
+      });
     }
-  
+
     setLoading(true);
     const getData = onSnapshot(
       q,
@@ -373,25 +398,25 @@ function ProductPage() {
         let list = [];
         snaps.docs.forEach((doc) => {
           list.push({ ...doc.data(), id: doc.id });
+          brandName.push(doc.data().brand);
         });
         setLoading(false);
         setAllProducts(list);
-        
       },
       (error) => {
         console.log(error);
         setLoading(false);
       }
     );
-   
-  
-   return () => {
-   getData();
+
+    return () => {
+      getData();
     };
   }, [selectedFilter]);
 
-
-  
+  useEffect(() => {
+    window.scrollTo(0,0)
+  },[])
 
   return (
     <div className={style.product_main}>
@@ -402,7 +427,12 @@ function ProductPage() {
           <div className={style.clrBtn}>
             <span className={style.filterSpan}>Filters</span>
             {selectedFilter.length > 0 && (
-              <Button onClick={handleClearAllFilters} sx={{fontSize:".7rem"}}>Clear all</Button>
+              <Button
+                onClick={handleClearAllFilters}
+                sx={{ fontSize: ".7rem" }}
+              >
+                Clear all
+              </Button>
             )}
           </div>
           <div className={style.filterContainer}>
@@ -410,17 +440,23 @@ function ProductPage() {
               ?.slice(0, showAll ? selectedFilter.length : 4)
               .map((item, i) => (
                 <span
-                  key={i+item}
+                  key={i + item}
                   className={style.curFilter}
                   onClick={() => handleRemoveFilter(item)}
                 >
-                  <CloseIcon sx={{ fontSize: ".8rem", mb: "-2px",color:'gray' }} /> {item}
+                  <CloseIcon
+                    sx={{ fontSize: ".8rem", mb: "-2px", color: "gray" }}
+                  />{" "}
+                  {item}
                 </span>
               ))}
           </div>
           {selectedFilter.length > 4 && (
             <div>
-              <Button sx={{fontSize:".7rem"}} onClick={() => setShowAll(!showAll)}>
+              <Button
+                sx={{ fontSize: ".7rem" }}
+                onClick={() => setShowAll(!showAll)}
+              >
                 {showAll ? "Show Less" : "Show More"}
               </Button>
             </div>
@@ -432,7 +468,11 @@ function ProductPage() {
         <div className={style.priceDiv}>
           <div className={style.clrBtn}>
             <span>Price</span>
-          {value[0] != 100 || value[1]!=100000? <Button onClick={handlePriceRemove} sx={{fontSize:".7rem"}}>Clear all</Button> : null}
+            {value[0] != 100 || value[1] != 100000 ? (
+              <Button onClick={handlePriceRemove} sx={{ fontSize: ".7rem" }}>
+                Clear all
+              </Button>
+            ) : null}
           </div>
           <div>
             <Box>
@@ -470,7 +510,8 @@ function ProductPage() {
         <div className={style.brandContainer}>
           <div
             className={style.brandDiv}
-            onClick={() => {setIsBrandShow(!isBrandShow);
+            onClick={() => {
+              setIsBrandShow(!isBrandShow);
               setBrands(brandsList);
             }}
           >
@@ -497,7 +538,7 @@ function ProductPage() {
               {uniqueBrandsArray
                 .slice(0, showAllBrands ? uniqueBrandsArray.length : 6)
                 .map((brand, i) => (
-                  <div key={i+brand} className={style.brandMap}>
+                  <div key={i + brand} className={style.brandMap}>
                     <input
                       type="checkbox"
                       checked={brand.checked}
@@ -588,12 +629,20 @@ function ProductPage() {
           />
         ) : (
           <>
-       {allProducts.length===0 ? <div> <NoResult/> </div> : <ProductList viewProdcts={allProducts} 
-          handleAscendingOrder={handleAscendingOrder}
-          handleDescendingOrder={handleDescendingOrder}
-          handleNewestOrder={handleNewestOrder}
-          handlePopularity={handlePopularity}
-          />}
+            {allProducts.length === 0 ? (
+              <div>
+                {" "}
+                <NoResult />{" "}
+              </div>
+            ) : (
+              <ProductList
+                viewProdcts={allProducts}
+                handleAscendingOrder={handleAscendingOrder}
+                handleDescendingOrder={handleDescendingOrder}
+                handleNewestOrder={handleNewestOrder}
+                handlePopularity={handlePopularity}
+              />
+            )}
           </>
         )}
       </div>

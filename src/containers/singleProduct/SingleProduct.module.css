@@ -532,6 +532,9 @@ cursor: pointer;
     color: #878787;
     font-size: .8rem;
 }
+.userName span{
+    margin-right: -.5rem;
+}
 .likeDiv{
     color: #878787;
     display: flex;
