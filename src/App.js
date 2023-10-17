@@ -17,11 +17,18 @@ import MyWishlist from "./containers/profile/MyWishlist";
 import AddProduct from "./containers/sellerPage/AddProduct";
 import OrderDetails from "./containers/profile/OrderDetails";
 import OrderSuccess from "./components/success/OrderSuccess";
+import SellerDashBoard from "./containers/sellerPage/SellerDashBoard";
+import SellerAccount from "./containers/sellerPage/SellerAccount";
+import ShowHeader from "./components/header/ShowHeader";
+import SellerOrders from "./containers/sellerPage/SellerOrders";
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
+      <ShowHeader>
+        <Header />
+      </ShowHeader>
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id/:name" element={<ProductPage />} />
@@ -37,11 +44,15 @@ function App() {
           <Route path="reviews" element={<MyReviews />} />
           <Route path="wishlist" element={<MyWishlist />} />
         </Route>
-      
+
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/write-review/:id" element={<WriteReview />} />
         <Route path="/login" element={<Auth />} />
-        <Route path="/seller" element={<AddProduct />} />
+        
+        <Route path="/seller-addProduct" element={<AddProduct />} />
+        <Route path="/seller-dashBoard" element={<SellerDashBoard />} />
+        <Route path="/seller-account" element={<SellerAccount />} />
+        <Route path="/seller-orders" element={<SellerOrders />} />
       </Routes>
     </BrowserRouter>
   );

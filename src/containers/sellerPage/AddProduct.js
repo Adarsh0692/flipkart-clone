@@ -71,11 +71,11 @@ function AddProduct() {
         assured: assured,
         deliveryCharge: deliveryCharge,
         stars: {
-          5: 350,
-          4: 230,
-          3: 100,
-          2: 80,
-          1: 20,
+          5: 0,
+          4: 0,
+          3: 0,
+          2: 0,
+          1: 0,
         },
         ratings:0,
         reviews: []

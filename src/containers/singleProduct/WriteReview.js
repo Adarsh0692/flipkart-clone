@@ -12,8 +12,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase.config";
 import { useNavigate, useParams } from "react-router-dom";
@@ -207,7 +209,7 @@ function WriteReview() {
         const userID = user.uid;
         const getDetails = async () => {
           const list = [];
-          const docSnap = await getDocs(collection(db, "orders " + userID));
+          const docSnap = await getDocs(query(collection(db, "orders"),where('buyerID', '==', userID)));
           docSnap.forEach((doc) => {
             list.push(doc.data());
           });

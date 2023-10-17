@@ -22,7 +22,7 @@ function OrderDetails() {
 
 
    async function handleCancelOrder(){
-        const docRef = doc(db, 'orders ' + userID, params.id)
+        const docRef = doc(db, 'orders', params.id)
         await updateDoc(docRef, {
             status: "Cancelled",
             deliveryTime: Date.now()
@@ -36,7 +36,7 @@ function OrderDetails() {
       if (user) {
         const uid = user.uid;
          setUserID(uid)
-         const docRef = doc(db, "orders " + uid, params.id);
+         const docRef = doc(db, "orders", params.id);
          setLoading(true)
         const getData = onSnapshot(docRef, (doc)=> {
             setOrderProduct(doc.data())

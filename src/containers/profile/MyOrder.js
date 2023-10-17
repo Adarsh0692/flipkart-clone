@@ -4,6 +4,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {
   collection,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import { format, isToday, isYesterday, differenceInDays, addDays } from 'date-fns';
@@ -49,7 +51,7 @@ function MyOrder() {
         const getOrderData = async () => {
           setLoading(true);
           let list = [];
-          const docSnap = await getDocs(collection(db, "orders " + uid));
+          const docSnap = await getDocs(query(collection(db, "orders"),where('buyerID', '==', uid)));
           docSnap.forEach((doc) => {
             list.push({orderID: doc.id , ...doc.data()});
             setOrders(list);

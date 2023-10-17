@@ -240,19 +240,11 @@ function CheckOut() {
   }
 
  async function handleOrderConfirm() {
-    const orderProduct = 
-      {
-        orderID: Date.now(),
-        status: "Confirmed",
-        address: selectedDeliveryAddress,
-        payment: selectedPaymentMethod,
-        buyerID: userID,
-      }
-    //  console.log(...cartProduct);
+  
     setLoading(true)
     for(let snap of cartProduct){
       let data = snap
-      await addDoc(collection(db, "orders " + userID), {orderTime: Date.now(), status: "Confirmed",  address: selectedDeliveryAddress, payment: selectedPaymentMethod, ...data})
+      await addDoc(collection(db, "orders"), {buyerID: userID, orderTime: Date.now(), status: "Confirmed",  address: selectedDeliveryAddress, payment: selectedPaymentMethod, ...data})
       const cartRef = doc(db, 'users', userID)
       await updateDoc(cartRef, {
         cart: []

@@ -69,6 +69,7 @@ function Header() {
   const dispatch = useDispatch();
   const toastId = useRef(null);
   const [cartLength, setCartLength] = useState(0)
+  const [sellerUser, setSellerUser] = useState([])
 
   const [open, setOpen] = useState(false);
 
@@ -299,6 +300,14 @@ function Header() {
     setIsEditEmail(false);
   }
 
+  function handleSellerPage(){
+    if(sellerUser.seller){
+      navigate('/seller-dashBoard')
+    }else{
+      navigate("/seller-account")
+    }
+  }
+
 
   useEffect(() => {
     
@@ -317,6 +326,7 @@ function Header() {
         const getCartData = async () => {
           const cartDoc =  onSnapshot(doc(db, 'users', user.uid), (doc) => {
             setCartLength(doc.data().cart.length)
+            setSellerUser(doc.data());
           })
         
            
@@ -652,7 +662,7 @@ function Header() {
             )}
             {location.pathname !== "/viewCart" &&
               location.pathname !== "/checkout" && (
-                <span className={style.cartdiv} onClick={() => navigate('/seller')}>Become a seller</span>
+                <span className={style.cartdiv} onClick={handleSellerPage}>Become a seller</span>
               )}
 
             {location.pathname !== "/viewCart" &&

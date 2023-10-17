@@ -205,7 +205,7 @@ function SingleProduct() {
         const userID = user.uid;
         const getDetails = async () => {
           const list = [];
-          const docSnap = await getDocs(collection(db, "orders " + userID));
+          const docSnap = await getDocs(query(collection(db, "orders"),where('buyerID', '==', userID)));
           docSnap.forEach((doc) => {
             list.push(doc.data());
           });
