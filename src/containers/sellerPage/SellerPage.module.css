@@ -188,6 +188,18 @@
     color: black;
     font-weight: 500;
   }
+  .stock{
+    border: none;
+    width: 5vw;
+  }
+  .stockBtn{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    font-size: 1rem;
+    margin: 0 .5rem;
+  }
   /* end dash board */
 
   /* navbar style from here */

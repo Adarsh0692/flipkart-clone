@@ -270,7 +270,7 @@ function CheckOut() {
     const docData = docSnap.data()
     const updatedCart = docData.cart.map((item) => {
      if(btn === 'inc'){
-       if(item.id === product.id && item.productQuantity<10 ){
+       if(item.id === product.id && item.productQuantity<product.quantity ){
          return {
            ...item, productQuantity: item.productQuantity + 1
          }

@@ -397,12 +397,7 @@ function SingleProduct() {
                   <button>Check</button>
                 </div>
               </div>
-              <div className={style.deliver}>
-                <span>Quantity</span>
-                <div>
-                  <span>{product.quantity}</span>
-                </div>
-              </div>
+             
               <div className={style.deliver}>
                 <span>Services</span>
                 <div className={style.service}>

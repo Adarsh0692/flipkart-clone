@@ -21,6 +21,8 @@ import SellerDashBoard from "./containers/sellerPage/SellerDashBoard";
 import SellerAccount from "./containers/sellerPage/SellerAccount";
 import ShowHeader from "./components/header/ShowHeader";
 import SellerOrders from "./containers/sellerPage/SellerOrders";
+import SellerProtect from "./components/header/SellerProtect";
+import EditProduct from "./containers/sellerPage/EditProduct";
 
 function App() {
   return (
@@ -49,10 +51,23 @@ function App() {
         <Route path="/write-review/:id" element={<WriteReview />} />
         <Route path="/login" element={<Auth />} />
         
-        <Route path="/seller-addProduct" element={<AddProduct />} />
+        <Route path="/seller-dashBoard" element={<SellerProtect/>}>
         <Route path="/seller-dashBoard" element={<SellerDashBoard />} />
-        <Route path="/seller-account" element={<SellerAccount />} />
+        </Route>
+        <Route path="/seller-orders" element={<SellerProtect/>}>
         <Route path="/seller-orders" element={<SellerOrders />} />
+        </Route>
+        <Route path="/seller-addProduct" element={<SellerProtect/>}>
+        <Route path="/seller-addProduct" element={<AddProduct />} />
+        </Route>
+        <Route path="/seller-editProduct/:id" element={<SellerProtect/>}>
+        <Route path="/seller-editProduct/:id" element={<EditProduct />} />
+        </Route>
+        
+       
+       
+        <Route path="/seller-account" element={<SellerAccount />} />
+       
       </Routes>
     </BrowserRouter>
   );

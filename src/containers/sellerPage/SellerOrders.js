@@ -6,7 +6,6 @@ import { auth, db } from "../../firebase.config";
 import {
   collection,
   doc,
-  getDocs,
   onSnapshot,
   query,
   updateDoc,
@@ -25,12 +24,17 @@ function SellerOrders() {
 
   const sortedOrders = [...orders].sort((a, b) => b.orderTime - a.orderTime);
 
-  async function handleDeliveredOrder(id) {
-    const docRef = doc(db, "orders",id);
+  async function handleDeliveredOrder(product) {
+    const docRef = doc(db, "orders",product.orderID);
+    const productRef = doc(db, 'products', product.id)
+    const newStock = product.quantity - product.productQuantity
     await updateDoc(docRef, {
       status: "Delivered",
       deliveryTime: Date.now(),
     });
+    await updateDoc(productRef, {
+      quantity: newStock
+    })
     toast.success("Success! Item has been Delivered.");
   }
   async function handleCancelOrder(id) {
@@ -55,7 +59,6 @@ function SellerOrders() {
             querySnap.forEach((doc) => {
               list.push({ orderID: doc.id, ...doc.data() });
               setOrders(list);
-              console.log('hh');
             });
           });
   
@@ -80,7 +83,7 @@ function SellerOrders() {
         </>
       ) : (
         <>
-          {sortedOrders.length === 0 ? (
+          {sortedOrders.length < 0 ? (
             <Empty name="Order List" />
           ) : (
             <table className={style.productTable}>
@@ -132,7 +135,7 @@ function SellerOrders() {
                         </div>
                         <button
                           className={style.btn}
-                          onClick={() => handleDeliveredOrder(product.orderID)}
+                          onClick={() => handleDeliveredOrder(product)}
                         >
                           Delivered
                         </button>

@@ -64,6 +64,14 @@ function ViewCart() {
   const totalAmount =
     totalActualPrice - (totalActualPrice - finalPrice) + totalDeliveryCharge;
 
+    const isSoldOut = cartProduct.find((product) => product.quantity==0)
+    // if(isSoldOut){
+    //   console.log(isSoldOut);
+    // }else{
+    //   console.log('isSoldOut');
+    // }
+    
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -91,11 +99,12 @@ function ViewCart() {
     const docData = docSnap.data();
     const updatedCart = docData.cart.map((item) => {
       if (btn === "inc") {
-        if (item.id === product.id && item.productQuantity < 10) {
+        if (item.id === product.id && item.productQuantity < product.quantity) {
           return {
             ...item,
             productQuantity: item.productQuantity + 1,
           };
+       
         }
       } else {
         if (item.id === product.id && item.productQuantity > 1) {
@@ -103,6 +112,7 @@ function ViewCart() {
             ...item,
             productQuantity: item.productQuantity - 1,
           };
+  
         }
       }
 
@@ -116,9 +126,10 @@ function ViewCart() {
 
     try {
       await updateDoc(docRef, updatedData);
+    
       toast.success(
         `You've chnaged '${product.title}' QUANTITY to '${
-          btn === "inc"
+          btn === "inc" 
             ? product.productQuantity + 1
             : product.productQuantity - 1
         }' `
@@ -259,9 +270,9 @@ function ViewCart() {
                   </div>
                   <div className={style.cartDetails}>
                     <div>{product.title} </div>
-                    <div>{product.quantity}</div>
+                    <div></div>
                     <div>
-                      Seller: {product.sellerName}{" "}
+                      Seller: {product.seller}{" "}
                       {product.assured && (
                         <span>
                           <img
@@ -271,7 +282,7 @@ function ViewCart() {
                         </span>
                       )}
                     </div>
-                    <div className={style.cartPrice}>
+                  {product.quantity==0 ? <div className={style.sold}>Sold Out</div> : <div className={style.cartPrice}>
                       <span>
                         ₹{product.actual_price * product.productQuantity}
                       </span>
@@ -284,7 +295,7 @@ function ViewCart() {
                         )}{" "}
                       </span>
                       <span>{product.discount_percentage}% Off</span>
-                    </div>
+                    </div>}
                   </div>
                   <div className={style.cartDelivery}>
                     <div>Delivery by 11 PM, {format(addDays(Date.now(), 2), "eee do MMM")} |</div>
@@ -307,6 +318,7 @@ function ViewCart() {
                 </div>
                 <div className={style.cartItemQnty}>
                   <div className={style.qtybtn}>
+                 {product.quantity>0 &&  <>
                     <button onClick={() => handleQuantity(product, "dec")}>
                       -
                     </button>
@@ -314,6 +326,7 @@ function ViewCart() {
                     <button onClick={() => handleQuantity(product, "inc")}>
                       +
                     </button>
+                    </>}
                   </div>
                   <div className={style.removeDiv}>
                     <button>SAVE FOR LETER</button>
@@ -322,11 +335,12 @@ function ViewCart() {
                     </button>
                   </div>
                 </div>
+                
               </div>
             ))}
 
             <div className={style.orderBtn}>
-              <button onClick={() => navigate("/checkout")}>PLACE ORDER</button>
+              <button disabled={isSoldOut? true: false} onClick={() => navigate("/checkout")}>PLACE ORDER</button>
             </div>
           </div>
 

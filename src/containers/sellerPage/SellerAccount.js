@@ -12,7 +12,7 @@ function SellerAccount() {
   const [userID, setUserID] = useState(null)
 
   const navigate = useNavigate()
-console.log(userID);
+
  async function handleSubmit(e){
   e.preventDefault()
     try {
@@ -20,6 +20,7 @@ console.log(userID);
       await updateDoc(userRef, {
         seller: seller
       })
+      localStorage.setItem('seller', true)
      navigate('/seller-dashBoard')
     } catch (error) {
       console.log(error);
@@ -35,6 +36,14 @@ console.log(userID);
     })
     return () => unSub()
   },[])
+
+  useEffect(() => {
+    const seller = localStorage.getItem('seller')
+    if(seller=='true'){
+      navigate('/seller-dashBoard')
+    }
+  },[])
+
   return (
     <div className={style.mainWrap}>
       <div className={style.card}>

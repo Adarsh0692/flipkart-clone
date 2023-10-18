@@ -8,6 +8,7 @@ import { createSlice } from "@reduxjs/toolkit";
         userEmail: null,
         userID: null,
         addresses: null,
+        seller: null
     },
     reducers: {
        setUser: (state, action) => {
@@ -23,11 +24,15 @@ import { createSlice } from "@reduxjs/toolkit";
        setAddress: (state, action) => {
         state.addresses= action.payload
        },
+       setSeller: (state, action) => {
+        state.seller=action.payload
+       
+       }
      
     }
 })
 
-export const {setUser, setLogoutUser, setAddress} = authSlice.actions
+export const {setUser, setLogoutUser, setAddress, setSeller} = authSlice.actions
 
 export const selectUserName = state => state.auth.userName
 export const selectUserEmail = state => state.auth.userEmail

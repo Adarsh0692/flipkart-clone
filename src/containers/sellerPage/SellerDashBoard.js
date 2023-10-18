@@ -1,22 +1,47 @@
 import React, { useEffect } from "react";
 import style from "./SellerPage.module.css";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../firebase.config";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
 import Empty from "../../components/empty/Empty";
+import { useNavigate } from "react-router-dom";
 
 function SellerDashBoard() {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  function handleEdit(product) {
-     alert(product.id)
+  const navigate = useNavigate()
+
+  // function handleEdit(product) {
+  //   navigate(`/seller-editProduct/${product.id}`)
+  // }
+
+  async function handleStockInc(product){
+    const newStock = product.quantity + 10
+    const docRef = doc(db, 'products', product.id)
+  
+    await updateDoc(docRef, {
+      quantity: +newStock
+    })
+   
+  }
+  async function handleStockDec(product){
+    if(product.quantity>=10){
+      const newStock = product.quantity - 10
+      const docRef = doc(db, 'products', product.id)
+     
+      await updateDoc(docRef, {
+        quantity: newStock
+      })
+     
+    }
+   
   }
 
-  function handleDelete(product) {
-     alert(product.id)
+ async function handleDelete(product) {
+    await deleteDoc(doc(db, 'products', product.id))
   }
 
   useEffect(() => {
@@ -25,13 +50,15 @@ function SellerDashBoard() {
         try {
           setLoading(true)
           const q = query(collection(db, 'products'), where('sellerID', '==', user.uid))
-          const list = []
-          const querySnap = await getDocs(q)
-          querySnap.forEach((doc) => {
-           list.push({id: doc.id, ...doc.data()});
+      
+          const unsub = onSnapshot(q, (querSnap) => {
+            const list = []
+            querSnap.forEach((doc) => {
+              list.push({id: doc.id, ...doc.data()});
+            })
+            setProducts(list)
+            setLoading(false)
           })
-          setProducts(list)
-          setLoading(false)
         } catch (error) {
           console.log(error);
           setLoading(false)
@@ -79,10 +106,10 @@ function SellerDashBoard() {
               </td>
               <td>₹{product.actual_price}</td>
               <td>₹{product.final_price}</td>
-              <td>{product.quantity}</td>
+              <td><button onClick={()=>handleStockDec(product)} className={style.stockBtn}>-</button> {product.quantity} <button onClick={()=>handleStockInc(product)} className={style.stockBtn}>+</button></td>
               <td>{product.category}</td>
               <td>
-                <button className={style.btn} onClick={()=>handleEdit(product)}>Edit</button>
+                {/* <button className={style.btn} onClick={()=>handleEdit(product)}>Edit</button> */}
                 <button className={style.btn} onClick={()=>handleDelete(product)}>Delete</button>
               </td>
             </tr>

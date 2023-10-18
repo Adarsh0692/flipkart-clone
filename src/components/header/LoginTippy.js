@@ -75,7 +75,7 @@ function LoginTippy({ handleOpen, currentUser, toastId, toast }) {
       {!currentUser && (
         <div>
           <span>New customer?</span>
-          <button onClick={() => handleOpen("signup")}>Sign Up</button>
+          <button style={{fontSize:".8rem"}} onClick={() => handleOpen("signup")}>Sign Up</button>
         </div>
       )}
 

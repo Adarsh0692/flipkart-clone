@@ -66,7 +66,7 @@ function AddProduct() {
         final_price : +finalPrice,
         category: productCategory,
         type: typeOfOption,
-        quantity: quantity,
+        quantity: +quantity,
         images: images,
         assured: assured,
         deliveryCharge: deliveryCharge,
@@ -167,7 +167,7 @@ function AddProduct() {
         <div className={style.formDiv}>
           <input type="text" className={style.inputGroup} value={imageURL} onChange={(e)=> setImageURL(e.target.value)} placeholder="Image URL (min 4 images)" />
           <button className={style.addImgBtn} onClick={()=> {setImages([...images, {image:imageURL}]); setImageURL('')}}>ADD</button>
-          <input type="text" className={style.inputGroup} value={quantity} onChange={(e)=> setQuantity(e.target.value)} placeholder="Quantity" />
+          <input type="number" className={style.inputGroup} value={quantity} onChange={(e)=> setQuantity(e.target.value)} placeholder="Quantity" />
           {/* <div></div> */}
         </div>
       {images.length>0 &&  <div className={style.imgContainer}>
