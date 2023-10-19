@@ -438,6 +438,15 @@
     border: none;
     cursor: pointer;
 }
+.orderBtn button:disabled{
+    background-color: #fb661b5a;
+    cursor: not-allowed;
+}
+.sold{
+    color: red;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
 
 .mainRight{
     background-color: #ffff;

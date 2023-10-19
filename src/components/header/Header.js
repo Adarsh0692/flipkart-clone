@@ -29,7 +29,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { selectUserID, selectUserName, setLogoutUser, setUser } from "../../redux/authSlice";
 import CircularProgress from '@mui/material/CircularProgress';
 import { collection, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import { ALLProducts, addToCart } from "../../redux/productSlice";
+import {categories} from '../../containers/sellerPage/categoryData'
 
 const styles = {
   position: "absolute",
@@ -56,6 +56,7 @@ function Header() {
   const [userInput, setUserInput] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [FNerr, setFNerr] = useState("");
   const [LNerr, setLNerr] = useState("");
@@ -308,6 +309,14 @@ function Header() {
     }
   }
 
+  // product search funcionality
+  const searchProduct = categories.map((product) => product.typeOf)
+  const conArray = [].concat(...searchProduct)
+// console.log(conArray);
+
+function handleSearchQuery(value){
+  setSearchQuery(value)
+}
 
   useEffect(() => {
     
@@ -403,6 +412,8 @@ function Header() {
                   <input
                     className={style.searchInput}
                     type="text"
+                    value={searchQuery}
+                    onChange={(e)=>handleSearchQuery(e.target.value)}
                     placeholder="Search for products, brand and more"
                   />
                   <SearchIcon

@@ -105,7 +105,6 @@ function ProductList({ viewProdcts,handleDescendingOrder, handleAscendingOrder,h
               <div>
                 <div className={style.gram}>Sponsored</div>
                 <p className={style.discp}>{product.title}</p>
-                <div className={style.gram}>{product.quantity}</div>
                 <div className={style.rateDiv}>
                   {product.ratings > 0 && (
                     <div

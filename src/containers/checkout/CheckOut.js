@@ -83,6 +83,8 @@ function CheckOut() {
     (address) => address.loginUserID === userID
   );
 
+  const isSoldOut = cartProduct.find((product) => product.quantity==0)
+
   const [isStepOneDone, setIsStepOneDone] = useState(currentUser.userName);
   const [isStepTwoDone, setIsStepTwoDone] = useState(false);
   const [isStepThreeDone, setIsStepThreeDone] = useState(false);
@@ -618,7 +620,7 @@ function CheckOut() {
                     </div>
                     <div className={style.cartDetails}>
                       <div>{product.title} </div>
-                      <div>{product.quantity}</div>
+                      <div></div>
                       <div>
                         Seller: {product.sellerName}{" "}
                         {product.assured && (
@@ -630,20 +632,20 @@ function CheckOut() {
                           </span>
                         )}
                       </div>
-                      <div className={style.cartPrice}>
-                        <span>
-                          ₹{product.actual_price * product.productQuantity}
-                        </span>
-                        <span>
-                          ₹
-                          {Math.floor(
-                            product.actual_price * product.productQuantity -
-                              (product.discount_percentage / 100) *
-                                (product.actual_price * product.productQuantity)
-                          )}
-                        </span>
-                        <span>{product.discount_percentage}% Off</span>
-                      </div>
+                      {product.quantity==0 ? <div className={style.sold}>Sold Out</div> : <div className={style.cartPrice}>
+                      <span>
+                        ₹{product.actual_price * product.productQuantity}
+                      </span>
+                      <span>
+                        ₹
+                        {Math.floor(
+                          product.actual_price * product.productQuantity -
+                            (product.discount_percentage / 100) *
+                              (product.actual_price * product.productQuantity)
+                        )}{" "}
+                      </span>
+                      <span>{product.discount_percentage}% Off</span>
+                    </div>}
                     </div>
                     <div className={style.cartDelivery}>
                       <div className={style.delivTime}>Delivery by 11 PM, {format(addDays(Date.now(), 2), "eee do MMM")} |</div>
@@ -667,9 +669,11 @@ function CheckOut() {
                   </div>
                   <div className={style.cartItemQnty}>
                     <div className={style.qtybtn}>
+                    {product.quantity>0 &&  <>
                       <button onClick={() =>handleQuantity(product, 'dec')}>-</button>
                       <div> {product.productQuantity} </div>
                       <button onClick={() =>handleQuantity(product, 'inc')}>+</button>
+                      </>}
                     </div>
                     <div className={style.removeDiv}>
                       <button>SAVE FOR LETER</button>
@@ -681,7 +685,7 @@ function CheckOut() {
             </div>
             <div>
            { cartProduct.length>0?  <div className={style.orderBtn}>
-                <button onClick={handleOrderSummryContinue}>CONTINUE</button>
+                <button disabled={isSoldOut? true: false} onClick={handleOrderSummryContinue}>CONTINUE</button>
               </div>
               :
               <div className={style.noCheckout}>

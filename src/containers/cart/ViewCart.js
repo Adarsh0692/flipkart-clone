@@ -65,11 +65,7 @@ function ViewCart() {
     totalActualPrice - (totalActualPrice - finalPrice) + totalDeliveryCharge;
 
     const isSoldOut = cartProduct.find((product) => product.quantity==0)
-    // if(isSoldOut){
-    //   console.log(isSoldOut);
-    // }else{
-    //   console.log('isSoldOut');
-    // }
+ 
     
 
   const handleClickOpen = () => {
