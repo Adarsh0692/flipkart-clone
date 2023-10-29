@@ -57,6 +57,7 @@ function Header() {
   const [signupPassword, setSignupPassword] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchQuery, setIsSearchQuery] = useState(false);
 
   const [FNerr, setFNerr] = useState("");
   const [LNerr, setLNerr] = useState("");
@@ -316,6 +317,18 @@ function Header() {
 
 function handleSearchQuery(value){
   setSearchQuery(value)
+  setIsSearchQuery(true)
+}
+
+const searchResult = conArray.filter((query) => {
+  return query.toLowerCase().includes(searchQuery.toLowerCase())
+}
+)
+
+function handleSearchRes(res){
+  setIsSearchQuery(false)
+  setSearchQuery('')
+  navigate(`/product/${res}/sort=popular`)
 }
 
   useEffect(() => {
@@ -408,17 +421,18 @@ function handleSearchQuery(value){
                 </span>
               </div>
               {location.pathname !== "/checkout" && (
-                <div className={style.searchDiv}>
+                <div className={style.searchDiv} >
                   <input
                     className={style.searchInput}
                     type="text"
                     value={searchQuery}
                     onChange={(e)=>handleSearchQuery(e.target.value)}
                     placeholder="Search for products, brand and more"
+                    
                   />
                   <SearchIcon
                     sx={{
-                      backgroundColor: "white",
+                      backgroundColor: "#F0F5FF",
                       color: "blue",
                       height: "2.1rem",
                       width: "2rem",
@@ -426,7 +440,15 @@ function handleSearchQuery(value){
                       cursor: "pointer",
                     }}
                   />
+                  {isSearchQuery && <div className={style.searchResult}>
+                     {
+                      searchQuery.length>0 && searchResult.map((res,i) => (
+                        <li key={i} className={style.res} onClick={()=>handleSearchRes(res)}>{res}</li>
+                      ))
+                     }
+                  </div>}
                 </div>
+               
               )}
             </div>
             <Modal open={open} onClose={handleClose}>

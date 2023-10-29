@@ -5,7 +5,7 @@
     font-size: .9rem;
     border: none;
     border-radius: 2px 0 0 2px;
-
+    background-color: #F0F5FF;
 }
 .logo{
     cursor: pointer;
@@ -46,6 +46,27 @@
 }
 .searchDiv{
     display: flex;
+    position: relative;
+}
+.searchResult{
+  width: 100%;
+  max-height: 200px;
+  overflow: hidden;
+  overflow: scroll;
+  margin-top: 2rem;
+  border-radius: 0 0 10px 10px;
+  background-color: white;
+  position: absolute;
+}
+.searchResult::-webkit-scrollbar{
+    display: none;
+}
+.res{
+    padding: 0.5rem 1rem;
+    font-size: .9rem;
+    cursor: pointer;
+}.res:hover{
+    background-color: #F0F0F0;
 }
 .cart{
    margin-left: 5px;
