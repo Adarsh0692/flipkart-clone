@@ -26,9 +26,9 @@ function Home() {
       <Carousel categoryFor='Home & Kitchen Essentials' data={homeAndKitchen}/>
       <Carousel categoryFor='Monsoon Essentials' data={monsoon}/>
       <Carousel categoryFor='Sports, Healthcare & more' data={sportHealth}/>
-      <Carousel categoryFor='Discounts category for You' data={electronicsData}/>
+      {/* <Carousel categoryFor='Discounts category for You' data={electronicsData}/> */}
 
-      <Carousel categoryFor='Get Set category for Sportsdata' data={electronicsData}/>
+      {/* <Carousel categoryFor='Get Set category for Sportsdata' data={electronicsData}/> */}
     </div>
   )
 }
