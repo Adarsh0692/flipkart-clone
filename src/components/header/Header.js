@@ -303,11 +303,7 @@ function Header() {
   }
 
   function handleSellerPage(){
-    if(sellerUser.seller){
-      navigate('/seller-dashBoard')
-    }else{
-      navigate("/seller-account")
-    }
+    navigate('/seller-mainPage')
   }
 
   // product search funcionality

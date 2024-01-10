@@ -5,6 +5,26 @@
     gap: 1rem;
     padding: 2rem;
 }
+.mainSellerWrap{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15%;
+}
+.mainSellerWrap h2{
+  color: #2874f0;
+}
+.mainSellerWrap button{
+  margin-top: 2rem;
+  border: none;
+  border-radius: 5px;
+  height: 8vh;
+  width: 10vw;
+  font-size: 1.1rem;
+  font-weight: 400;
+  background-color: #FB641B;
+  color: white;
+}
 .addFormContainer{
    border-radius: 10px;
     background-color: #ffff;

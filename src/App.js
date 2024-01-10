@@ -19,6 +19,7 @@ import OrderDetails from "./containers/profile/OrderDetails";
 import OrderSuccess from "./components/success/OrderSuccess";
 import SellerDashBoard from "./containers/sellerPage/SellerDashBoard";
 import SellerAccount from "./containers/sellerPage/SellerAccount";
+import SelerMainPage from "./containers/sellerPage/MainSellerPage"
 import ShowHeader from "./components/header/ShowHeader";
 import SellerOrders from "./containers/sellerPage/SellerOrders";
 import SellerProtect from "./components/header/SellerProtect";
@@ -67,6 +68,7 @@ function App() {
        
        
         <Route path="/seller-account" element={<SellerAccount />} />
+        <Route path="/seller-mainPage" element={<SelerMainPage />} />
        
       </Routes>
     </BrowserRouter>

@@ -27,6 +27,15 @@ function SellerAccount() {
     }
   }
 
+  // useEffect(() => {
+  //   const seller = localStorage.getItem('seller')
+  //   if(seller=='true'){
+  //     navigate('/seller-dashBoard')
+  //   }else{
+  //     navigate('/seller-account')
+  //   }
+  // },[])
+
   useEffect(() => {
     const unSub = auth.onAuthStateChanged((user) => {
       if(user){
@@ -37,12 +46,7 @@ function SellerAccount() {
     return () => unSub()
   },[])
 
-  useEffect(() => {
-    const seller = localStorage.getItem('seller')
-    if(seller=='true'){
-      navigate('/seller-dashBoard')
-    }
-  },[])
+
 
   return (
     <div className={style.mainWrap}>
