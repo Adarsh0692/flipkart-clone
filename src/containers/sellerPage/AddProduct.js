@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import style from "./SellerPage.module.css";
 import { categories } from "./categoryData";
 import CloseIcon from '@mui/icons-material/Close';
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase.config";
 import { useSelector } from "react-redux";
-import { selectUserID } from "../../redux/authSlice";
+import { selectSellerName, selectUserID } from "../../redux/authSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 
@@ -25,6 +25,7 @@ function AddProduct() {
   const [loading, setLoading] = useState(false)
 
   const userID = useSelector(selectUserID)
+  const sellerName = useSelector(selectSellerName) 
 
   const typeOfArray = categories.find(
     (categories) => categories.category === productCategory
@@ -58,6 +59,7 @@ function AddProduct() {
     )
     const product = {
         uploadedTime: Date.now(),
+        sellerName: sellerName,
         title: title,
         brand: brand,
         description: description,

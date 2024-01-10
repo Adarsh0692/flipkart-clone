@@ -37,5 +37,6 @@ export const {setUser, setLogoutUser, setAddress, setSeller} = authSlice.actions
 export const selectUserName = state => state.auth.userName
 export const selectUserEmail = state => state.auth.userEmail
 export const selectUserID = state => state.auth.userID
+export const selectSellerName = state => state.auth.seller
 
 export default authSlice.reducer;

@@ -268,7 +268,7 @@ function ViewCart() {
                     <div>{product.title} </div>
                     <div></div>
                     <div>
-                      Seller: {product.seller}{" "}
+                      Seller: {product.sellerName}{" "}
                       {product.assured && (
                         <span>
                           <img

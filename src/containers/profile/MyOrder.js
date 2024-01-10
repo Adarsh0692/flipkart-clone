@@ -37,7 +37,7 @@ function OrderTime({ orderDate }) {
 
 function MyOrder() {
   const navigate = useNavigate()
-
+  const [selleruser, setSellerUser] = useState([]);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -99,7 +99,7 @@ function MyOrder() {
               <div className={style.orderProdName}>
                 <div> {product.title}</div>
 
-                <div>Seller: Blue Tide 
+                <div>Seller: {product.sellerName}
                   <div>
                     Quantity: {product.productQuantity}
                   </div>

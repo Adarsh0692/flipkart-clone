@@ -87,7 +87,7 @@ function OrderDetails() {
             </div>
             <div className={style.odTitleDiv}>
               <div>{product?.title}</div>
-              <div>Seller: AdarshNet</div>
+              <div>Seller: {product.sellerName}</div>
               <div>Quantity: {product?.productQuantity}</div>
               <div>
                 ₹

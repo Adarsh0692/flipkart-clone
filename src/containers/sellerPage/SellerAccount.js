@@ -27,14 +27,6 @@ function SellerAccount() {
     }
   }
 
-  // useEffect(() => {
-  //   const seller = localStorage.getItem('seller')
-  //   if(seller=='true'){
-  //     navigate('/seller-dashBoard')
-  //   }else{
-  //     navigate('/seller-account')
-  //   }
-  // },[])
 
   useEffect(() => {
     const unSub = auth.onAuthStateChanged((user) => {
